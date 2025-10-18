@@ -6,7 +6,7 @@ const contentSchema = new Schema({
     type: { type: String, enum: contentTypes, required: true },
     title: { type: String, required: true },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 });
 // Create the model with proper types
 export const ContentModel = mongoose.models?.content ||

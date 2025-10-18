@@ -1,6 +1,4 @@
 import express from 'express'
-
-
 import * as z from "zod";
 import jwt from "jsonwebtoken";
 import {connectDB } from './models/db.js';
@@ -8,6 +6,8 @@ import {UserModel} from './models/userSchema.js';
 import { ContentModel } from './models/contentSchema.js';
 import { userMiddleware} from './midlleware.js';
 import { jwt_password } from './config.js';
+import { random } from './utils.js';
+import LinkModel from './models/linkSchema.js';
 
 const app = express();
 app.use(express.json());
@@ -105,15 +105,10 @@ app.post("/app/v1/signin", async(req,res)=>{
 })
 
 
- type contentData= {
-  type : "document" | "tweet" | "youtube" | "link",
-  title: string,
-  link: string,
-  tags: string[],
-}
 app.post("/app/v1/content", userMiddleware, async(req,res)=>{
  const link = req.body.link;
     const type = req.body.type;
+    await connectDB();
     // @ts-ignore
    const newContent= await ContentModel.create({
         link:link,
@@ -140,15 +135,96 @@ app.get("/app/v1/content", userMiddleware,async(req,res)=>{
         content
     })
 })
+app.delete("/app/v1/content", userMiddleware,async(req,res)=>{
+   
+    const contentId = req.body.contentId;
+    await connectDB();
 
-app.post("/app/v1/brain/share", async(req,res)=>{
+    const deletedContent = await ContentModel.deleteMany(
+      { 
+       contentId,
+      userId: req.userId,
+      }
+    );
+    if (!deletedContent) {
+      res.json({
+        message: "Content not found"
+      })
+    }else{
+      res.json({
+        message: "Content deleted"
+      })
+    }
+})
+app.post("/app/v1/brain/share", userMiddleware,async(req,res)=>{
+ 
+  const share = req.body.share;
+  if (share){
+    // checking if link already exists
+    await connectDB();  
+    const existingLink = await LinkModel.findOne({
+      userId: req.userId
+    })
+    if (existingLink) {
+        res.json({
+          message: "Link already exists",
+          link: existingLink.hash 
+        })
+        return;
+    }
+    // link does not exist now:- creating new link
+    const hash = random(10);
+    const newLink = await LinkModel.create({
+        hash: hash,
+        userId: req.userId
+    })
+    res.json({
+      message: "Link created",
+      link: "/share/" + newLink.hash
+    })
+  }else{
+   await LinkModel.deleteOne({
+    userId: req.userId
+   })
+   // link deleted
+   res.json({
+    message: "Link deleted"
+   })
+  }
 
 })
 
 
-app.post("/app/v1/brain/:sharelink", async(req,res)=>{
-
+app.get("/app/v1/brain/:sharelink", async(req,res)=>{
+const sharelink = req.params.sharelink;
+await connectDB();
+const link = await LinkModel.findOne({
+  hash: sharelink
 })
+// if link not found
+if (!link) {
+  res.status(404).json({
+    message: "Link not found"
+  })
+  return;
+} 
+//  link found
+const userId = link.userId;
+const content = await ContentModel.find({
+  userId
+}).populate("userId", "username")
+  if (!content) {
+    res.status(404).json({
+      message: "Content not found"
+    })
+    return;
+  }
+res.status(200).json({
+    message: "Link found",
+    content: content
+  })
+})
+
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');

@@ -10,7 +10,8 @@ export const userMiddleware = (req, res, next) => {
             });
             return;
         }
-        req.userId = decoded.id;
+        const decodedId = decoded.id;
+        req.userId = decodedId;
         next();
     }
     else {
