@@ -5,10 +5,10 @@ import { ShareIcon } from "./components/svg/shareicon";
 import { CardComponent } from "./components/card";
 import "./App.css";
 import SidebarComponent from "./components/sidebarcomponent";
-
+//  Compilation of all components put together to show UI.
 export default function App() {
     return (
-        <div className="outerdiv bg-gray-150  p-2">
+        <div className="outerdiv bg-gray-150  p-2 ">
             {/* buttons */}
             <div className=" flex  " 
             style={{justifyContent:'space-between'}}>
@@ -16,7 +16,8 @@ export default function App() {
 
                 <h1>Second brain</h1>
                 </div>
-                <div className=" flex gap-3">
+                {/* buttons - Add Content & share */}
+                <div className=" flex gap-3 pr-3">
 
                 <ButtonElement variant="secondary" size="sm" 
                                 text="Add Content" startIcon={<PlusIcon/>}
@@ -35,23 +36,35 @@ export default function App() {
                     <SidebarComponent/>
                 </div>
                 {/* cards */}
-                <div className="   ">
+                <div className="mr-0 pr-0 ">
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                         <CardComponent type='linkedIn' heading="Lets try it" 
                         description="      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus ab optio ut illum quis tempora quos asperiores aliquam voluptatum vitae, quidem modi veritatis dignissimos harum voluptatem temporibus doloremque aperiam velit?
-        " 
-                        linkedinUrl="https://www.linkedin.com/posts/dhanraj-shinemaven_software-engineering-internship-janjun-activity-7385528825272643585--wJF?"/>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus ab optio ut illum quis tempora quos asperiores aliquam voluptatum vitae, quidem modi veritatis dignissimos harum voluptatem temporibus doloremque aperiam velit? " 
+                        url="https://www.linkedin.com/posts/dhanraj-shinemaven_software-engineering-internship-janjun-activity-7385528825272643585--wJF?"/>
 
-                        <CardComponent type='linkedIn' heading="New Post" description="Description" 
-                        linkedinUrl="https://www.linkedin.com/posts/krrish-tayal-a14010294_googlecloud-arcadelegend-gcp-activity-7383839207644921857-d2Ho"/>
+                       
 
                         <CardComponent type='linkedIn' heading="Yokoso Watashino soul Society" 
-                        description="Description" linkedinUrl="https://www.linkedin.com/posts/chuckkeith_httpsyoutubeexl8mmuxs88featureshared-activity-7385704651142152192-TCgX?"/>
+                        description="sit amet consectetur adipisicing elit. Doloribus ab optio ut illum quis tempora quos asperiores aliquam voluptatum vitae, quidem modi veritatis digni" 
+                        url="https://www.linkedin.com/posts/chuckkeith_httpsyoutubeexl8mmuxs88featureshared-activity-7385704651142152192-TCgX?"/>
+
+                        <CardComponent type='youtube' heading="YouTube Video" 
+                        description="Text could be movies, scripts, paintings, songs, political cartoons, advertisements and maps. If we can look at something with words and sentences, explore it, find layers of meaning in it, and draw information and conclusions from it, you're looking at a text." 
+                        url="https://youtu.be/oCDIpQ2jp-o?si=5_iyd9fiifJ0yzKT"/>
+
+                        <CardComponent type='youtube' heading="Another YouTube Video is gon ti be liv n a miut" 
+                        description="Text could be movies, scripts, paintings, songs, political cartoons, advertisements and maps. If we can look at something with words and sentences, explore it, find layers of meaning in it, and draw information and conclusions from it, you're looking at a text." 
+                        url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"/>
                     </div>
+                    <blockquote className="twitter-tweet">
+  <a href="https://twitter.com/darshal_/status/1980322975305146510"></a> 
+</blockquote>
+
                 </div>
             </div>
-            <iframe width="360" height="315" src="https://www.youtube.com/embed/orJSJGHjBLI?si=jnlvDHjknbm5lvaz" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen={false}></iframe>
+           
         </div>
     )
 }

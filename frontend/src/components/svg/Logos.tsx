@@ -3,7 +3,7 @@ import ytImage from "../../assets/youtubeImage.svg"
 import image3 from "../../assets/documentImage.svg"
 // Defines the structure for the icon props
 export interface Icons {
-    type: 'linkedIn' | 'youtube'; // It's good practice to narrow down string literal types
+    type: 'linkedIn' | 'youtube'| 'twitter'; // It's good practice to narrow down string literal types
 }
 
 // Rename the component to something more generic since it handles multiple icons

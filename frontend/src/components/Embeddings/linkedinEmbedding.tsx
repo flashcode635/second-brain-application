@@ -1,10 +1,9 @@
-export interface LinkedInProps{
-    url: string
-}
+import { height, width, type EmbeddingProps } from '../../config';
+
+
 export const LinkedInEmbedding = ({
-  url,
- 
-}: LinkedInProps) => {
+  url
+}: EmbeddingProps) => {
         if (!url) {
             return <p>No URL provided to embed.</p>;
         }
@@ -17,12 +16,13 @@ const postId = getLinkedInPostId(url);
 if (!postId) return <p>Invalid LinkedIn URL</p>;
   return (
    // wrapper becomes the scrollable element we style
-    <div className="" >
-            <iframe className=""
+   <div className="linkedin-embed-wrapper w-full thin-scrollbar" style={{ maxHeight: `${height}px` }}>
+            <iframe className="block w-full h-full border-0"
             src={`https://www.linkedin.com/embed/feed/update/urn:li:activity:${postId}`}
-            width="390"
-            height="250"
-            
+            loading='lazy'
+            // scrolling="no"
+            // width={width} 
+            // height={height}
             // style={{"scrollbarWidth":"thin"}}
             // allowFullScreen={false}
             title="LinkedIn Post"
