@@ -1,4 +1,4 @@
-import { height, width, type EmbeddingProps } from '../../config';
+import { height, type EmbeddingProps } from '../../config';
 
 
 export const LinkedInEmbedding = ({
@@ -16,13 +16,14 @@ const postId = getLinkedInPostId(url);
 if (!postId) return <p>Invalid LinkedIn URL</p>;
   return (
    // wrapper becomes the scrollable element we style
-   <div className="linkedin-embed-wrapper w-full thin-scrollbar" style={{ maxHeight: `${height}px` }}>
-            <iframe className="block w-full h-full border-0"
+   <div className="linkedin-embed-wrapper w-full thin-scrollbar overflow-y-auto" style={{ height: `${height}px`, }}>
+            <iframe 
+            className="block w-full h-full border-0"
             src={`https://www.linkedin.com/embed/feed/update/urn:li:activity:${postId}`}
             loading='lazy'
-            // scrolling="no"
+            scrolling="no"
             // width={width} 
-            // height={height}
+            height={height+90}
             // style={{"scrollbarWidth":"thin"}}
             // allowFullScreen={false}
             title="LinkedIn Post"

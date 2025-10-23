@@ -1,13 +1,13 @@
 import linkedinImage from "../../assets/linkedinImage.svg"
 import ytImage from "../../assets/youtubeImage.svg"
-import image3 from "../../assets/documentImage.svg"
-// Defines the structure for the icon props
-export interface Icons {
-    type: 'linkedIn' | 'youtube'| 'twitter'; // It's good practice to narrow down string literal types
-}
+import documentImage from "../../assets/documentImage.svg"
+import type { CardProps } from "../../config";
+import twitterImage from "../../assets/twitterImage.svg"; 
+// Defines the structure for the icon props is imported from card props
+
 
 // Rename the component to something more generic since it handles multiple icons
-export const DynamicIcon = ({ type }: Icons) => {
+export const DynamicIcon = ({ type }: CardProps) => {
     // 1. Declare a variable to hold the image source
     let imageSrc: string;
 
@@ -21,10 +21,13 @@ export const DynamicIcon = ({ type }: Icons) => {
             // Correctly assign the imported image variable
             imageSrc = ytImage; // Logically, this should be image2 for YouTube
             break;
+        case "twitter":
+            imageSrc = twitterImage; // Logically, this should be documentImage for Twitter
+            break;
         default:
             // Optional: Handle a default case (e.g., set to image1 or an empty string)
             // For now, it will be handled by the TypeScript type if it's strict
-            imageSrc = image3; 
+            imageSrc = documentImage; 
     }
 
     // 3. Use the defined variable in the return statement

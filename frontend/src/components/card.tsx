@@ -70,23 +70,21 @@ import { LinkedInEmbedding } from "./Embeddings/linkedinEmbedding"
 import { DeleteIcon } from "./svg/deleteicon"
 import { DynamicIcon } from "./svg/logos";
 import YouTubeEmbed from "./Embeddings/youtubeEmbedding";
-import { height, width } from "../config";
-export interface CardProps{
-   type: 'linkedIn' | 'youtube'| 'twitter';  // used in DynamicIcon too.
-    heading: string,
-    description: string,
-    url: string
-}
+import { height, width, type CardProps } from "../config";
+import { TwitterEmbedding } from "./Embeddings/twitterEmbedding";
+
 // ...existing code...
 export const CardComponent = ({type, heading, description, url}: CardProps)=>{
-
+if (!url) {
+    return <p style={{height:`${height}px`, width:`${width}px`}}>No URL provided to embed.</p>;
+}
     return(
         <>
         <div
-          className="rounded-lg shadow-md bg-[#f5f9ff] border-gray-150 border-[1px] p-2"
+          className="rounded-lg shadow-md bg-[#f5f9ff] border-gray-150 border-[1px] p-2 mb-2"
           style={{ width: `${width + 102}px` }} // use style so Tailwind doesn't purge a dynamic class
         >
-
+            {/* top bar of card */}
             <div 
              className="text-center max-h-[400px] overflow-y-auto overflow-x-hidden p-2 thin-scrollbar">
                 <div className="flex justify-between">
@@ -107,8 +105,10 @@ export const CardComponent = ({type, heading, description, url}: CardProps)=>{
                 </div>
                 
                 <div className="mb-3 mt-2 flex items-center justify-center w-full">
-                      {type == "linkedIn" && <LinkedInEmbedding url={url} />}
+                    {/* embedded content */}
+                     {type == "linkedIn" && <LinkedInEmbedding url={url} />}
                       {type == "youtube" && <YouTubeEmbed url={url}  />}
+                      {type == "twitter" && <TwitterEmbedding url={url}  />}
                 </div>
 
                 <div>
@@ -119,4 +119,3 @@ export const CardComponent = ({type, heading, description, url}: CardProps)=>{
         </>
     )
 }
-// ...existing code...
