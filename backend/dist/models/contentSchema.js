@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from "mongoose";
 const { Schema } = mongoose;
-const contentTypes = ['image', 'video', 'article', 'audio']; // Make it a const assertion for type safety
+const contentTypes = ["twitter", "youtube", "linkedIn"]; // Make it  for type safety
 const contentSchema = new Schema({
     link: { type: String, required: true },
     type: { type: String, enum: contentTypes, required: true },

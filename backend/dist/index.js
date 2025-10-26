@@ -10,6 +10,8 @@ import { random } from './utils.js';
 import LinkModel from './models/linkSchema.js';
 const app = express();
 app.use(express.json());
+import cors from 'cors';
+app.use(cors());
 if (!jwt_password) {
     throw new Error("JWT_PASSWORD is not set in environment variables");
 }
@@ -105,7 +107,6 @@ app.post("/app/v1/content", userMiddleware, async (req, res) => {
     });
 });
 app.get("/app/v1/content", userMiddleware, async (req, res) => {
-    // @ts-ignore
     const userId = req.userId;
     const content = await ContentModel.find({
         userId: userId

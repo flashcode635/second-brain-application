@@ -1,5 +1,5 @@
 import mongoose, { Document, Model } from "mongoose";
-declare const contentTypes: readonly ["image", "video", "article", "audio"];
+declare const contentTypes: readonly ["twitter", "youtube", "linkedIn"];
 export interface IContent extends Document {
     link: string;
     type: typeof contentTypes[number];

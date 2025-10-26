@@ -11,4 +11,9 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      '/app': 'http://localhost:3000'
+    }
+  }
 })

@@ -1,7 +1,7 @@
 import mongoose, { Document, Model } from "mongoose";
 const { Schema } = mongoose;
 
-const contentTypes = ['image', 'video', 'article', 'audio'] as const; // Make it a const assertion for type safety
+const contentTypes = ["twitter","youtube","linkedIn"] as const; // Make it  for type safety
 
 // Define the interface for the document
 export interface IContent extends Document {
