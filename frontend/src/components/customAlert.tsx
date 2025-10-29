@@ -13,7 +13,7 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({ message, onClose, isVi
         <div className="fixed inset-0  flex justify-center items-center h-[300px] w-[100vw] z-50 " >
 
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
-                <h2 className="text-xl font-bold mb-4 text-red-700">Second Brain App Error </h2>
+                <h2 className="text-xl font-bold mb-4 text-gray-800">Second Brain App </h2>
                 <p className="mb-6 text-gray-600">{message}</p>
                 <button
                     onClick={onClose}

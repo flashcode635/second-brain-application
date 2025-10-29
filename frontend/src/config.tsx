@@ -7,10 +7,13 @@ export interface EmbeddingProps {
 }
 // card props for content cards
 export interface CardProps{
-   type: 'linkedIn' | 'youtube'| 'twitter';  // used in DynamicIcon too.
+   // CHANGE: Added 'document' type to support all content types from backend
+   // This allows CardComponent to accept document type in addition to social media types
+   type: 'linkedIn' | 'youtube'| 'twitter' | 'document';  // used in DynamicIcon too.
     heading?: string,
   tags?: string[],
     url?: string
+    key?: any
 }
 // common className for input fields
 export const className = "px-4 py-2 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200  outline-none transition-all text-slate-900 bg-slate-50 shadow-sm"
@@ -19,4 +22,4 @@ export const className = "px-4 py-2 rounded-lg border border-slate-300 focus:bor
 export const BACKEND_URL= "http://localhost:3000"
 export const SIGN_UP= "/app/v1/signup"
 export const SIGN_IN= "/app/v1/signin"
-export const ADD_CONTENT= "/app/v1/content"
+export const CONTENT= "/app/v1/content"  // POST endpoint to  content

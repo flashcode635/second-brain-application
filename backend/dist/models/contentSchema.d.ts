@@ -4,7 +4,7 @@ export interface IContent extends Document {
     link: string;
     type: typeof contentTypes[number];
     title: string;
-    tags: mongoose.Types.ObjectId[];
+    tags: string[];
     userId: mongoose.Types.ObjectId;
 }
 export declare const ContentModel: Model<IContent>;

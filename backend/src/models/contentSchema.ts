@@ -8,15 +8,17 @@ export interface IContent extends Document {
   link: string;
   type: typeof contentTypes[number];
   title: string;
-  tags: mongoose.Types.ObjectId[];
+  tags: string[]; // changed from mongoose.Types.ObjectId[] to string[]
   userId: mongoose.Types.ObjectId;
 }
 
 const contentSchema = new Schema<IContent>({
-  link: { type: String, required: true },
+  link: { type: String, required: true , unique: true },
   type: { type: String, enum: contentTypes, required: true },
-  title: { type: String, required: true },
-  tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
+  title: { type: String, required: true , unique: true },
+   tags: [{
+        type: String  // Changed from ObjectId to String
+    }],
   userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
 });
 

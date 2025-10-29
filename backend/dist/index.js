@@ -36,7 +36,7 @@ app.post('/app/v1/signup', async (req, res) => {
         });
         //  checking existing user
         if (existingUser) {
-            res.json({
+            return res.status(400).json({
                 message: "user exist please sign in",
             });
         }
@@ -57,7 +57,7 @@ app.post('/app/v1/signup', async (req, res) => {
 app.post("/app/v1/signin", async (req, res) => {
     const { username, password } = UserObject.parse(req.body);
     if (!username || !password) {
-        res.status(401).json({
+        return res.status(401).json({
             message: "enter credentials properly",
         });
     }
@@ -68,15 +68,15 @@ app.post("/app/v1/signin", async (req, res) => {
             password: password
         });
         if (!existingUser) {
-            res.status(401).json({
-                message: "use not found, plz sign up",
+            return res.status(401).json({
+                message: "user not found, please sign up",
             });
         }
         else {
             const token = jwt.sign({
                 id: existingUser._id
             }, jwt_password);
-            res.status(200).json({
+            return res.status(200).json({
                 message: "logging in....",
                 token: token,
                 id: existingUser._id
@@ -84,8 +84,9 @@ app.post("/app/v1/signin", async (req, res) => {
         }
     }
     catch (error) {
-        res.json({
-            message: " user login failed!",
+        console.error("Signin error:", error);
+        return res.status(500).json({
+            message: "user login failed!",
         });
     }
 });
@@ -99,7 +100,7 @@ app.post("/app/v1/content", userMiddleware, async (req, res) => {
         type: type,
         title: req.body.title,
         userId: req.userId,
-        tags: []
+        tags: Array.isArray(req.body.tags) ? req.body.tags : []
     });
     res.json({
         message: "Content added",
@@ -117,24 +118,27 @@ app.get("/app/v1/content", userMiddleware, async (req, res) => {
 });
 app.delete("/app/v1/content", userMiddleware, async (req, res) => {
     const contentId = req.body.contentId;
+    if (!contentId) {
+        return res.status(400).json({ message: "contentId is required" });
+    }
     await connectDB();
-    const deletedContent = await ContentModel.deleteMany({
-        contentId,
+    const deletedResult = await ContentModel.deleteOne({
+        _id: contentId,
         userId: req.userId,
     });
-    if (!deletedContent) {
-        res.json({
+    if (!deletedResult || deletedResult.deletedCount === 0) {
+        return res.status(404).json({
             message: "Content not found"
         });
     }
     else {
-        res.json({
+        return res.json({
             message: "Content deleted"
         });
     }
 });
 app.post("/app/v1/brain/share", userMiddleware, async (req, res) => {
-    const share = req.body.share;
+    const share = req.body.share; // send true to create link, false to delete link
     if (share) {
         // checking if link already exists
         await connectDB();
@@ -150,13 +154,14 @@ app.post("/app/v1/brain/share", userMiddleware, async (req, res) => {
         }
         // link does not exist now:- creating new link
         const hash = random(10);
+        const FrontendURL = "http://localhost:5173";
         const newLink = await LinkModel.create({
             hash: hash,
             userId: req.userId
         });
         res.json({
             message: "Link created",
-            link: "/share/" + newLink.hash
+            link: `${FrontendURL}/app/v1/brain/${newLink.hash}`
         });
     }
     else {
@@ -186,7 +191,12 @@ app.get("/app/v1/brain/:sharelink", async (req, res) => {
     const userId = link.userId;
     const content = await ContentModel.find({
         userId
-    }).populate("userId", "username");
+    }); //  no useful since give username for every content piece
+    // .populate("userId", "username")
+    const user = await UserModel.findById({
+        _id: userId
+    }).select("username");
+    console.log("user is", user);
     if (!content) {
         res.status(404).json({
             message: "Content not found"
@@ -195,7 +205,9 @@ app.get("/app/v1/brain/:sharelink", async (req, res) => {
     }
     res.status(200).json({
         message: "Link found",
-        content: content
+        content: content,
+        loading: true,
+        username: user?.username
     });
 });
 app.listen(3000, () => {

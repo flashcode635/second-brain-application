@@ -1,11 +1,13 @@
 // import { useState } from "react"
 import { useRef, useState } from "react"
-import { ADD_CONTENT, BACKEND_URL, className } from "../config"
+import { BACKEND_URL, className, CONTENT } from "../config"
 import ButtonElement from "./button"
 import { InputField } from "./inputfield"
 import { CancelIcon } from "./svg/cancelicon"
 import { CustomAlert } from "./customAlert"
 import axios from "axios"
+// Imported Zustand store to trigger dashboard refresh after adding content
+import { useDashboardStore } from "../atoms"
 
 export interface fieldprops{
     label?:string, 
@@ -17,21 +19,25 @@ const tagsample = ["tag1", "tag2", "tag3"]
 interface InputBoxProps {
     onClose: () => void;
 }
-const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
-// for alert popups:-
-            //tells message to alert
-     const [alertMessage, setAlertMessage] = useState(''); 
-     //controls alert visibility
-     const [showAlert, setShowAlert] = useState(false); 
+const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
+    // CHANGE: Get triggerRefresh function from Zustand store
+    // This will be called after successfully adding content to refresh the dashboard
+    const triggerRefresh = useDashboardStore((state) => state.triggerRefresh);
+    // for alert popups:-
+    //tells message to alert
+    const [alertMessage, setAlertMessage] = useState(''); 
+    //controls alert visibility
+    const [showAlert, setShowAlert] = useState(false); 
 
     //  to get data
-    const [type, setType]= useState<'linkedIn' | 'youtube'| 'twitter'| 'document'>("document")
+    // default to a valid content type that backend supports
+    const [type, setType]= useState<'linkedIn' | 'youtube' | 'twitter'>("youtube")
+
     const titleref= useRef<HTMLInputElement>(null)
     const linkref= useRef<HTMLInputElement>(null)
     const tagref1= useRef<HTMLInputElement>(null)
     const tagref2= useRef<HTMLInputElement>(null)
     const tagref3= useRef<HTMLInputElement>(null)
-    
    
 // adds contents to db
     async function addContent() {
@@ -46,11 +52,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
         ]
         const tags = rawTags.map(t => t.trim()).filter(Boolean)
 
-        console.log("DEBUG tags raw:", rawTags, "filtered:", tags, "refs:", {
-            t1: tagref1.current,
-            t2: tagref2.current,
-            t3: tagref3.current
-        })
+        // minimal logging removed
 
         const contentType = type
 
@@ -76,11 +78,11 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
 
             // ✅ Normalize and check domain
             const hostname = parsed.hostname.toLowerCase();
-            const allowed = ['x.com', 'twitter.com', 'linkedin.com', 'youtube.com'];
+            const allowed = ['x.com', 'twitter.com', 'linkedin.com', 'youtube.com', 'youtu.be'];
             const isAllowed = allowed.some(
                 (d) => hostname === d || hostname.endsWith('.' + d)
             );
-            // If domain is not in FOUND in list
+            // If domain is not FOUND in list
             if (!isAllowed) {
                 setAlertMessage('Please enter a link from LinkedIn, Twitter (X), or YouTube.');
                 setShowAlert(true);
@@ -93,7 +95,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
                 // mapping of types with their respective domains.
                 twitter: ['x.com', 'twitter.com'],
                 linkedIn: ['linkedin.com'],
-                youtube: ['youtube.com'],
+                youtube: ['youtube.com', 'youtu.be'],
             };
 
             // If `contentType` is defined, make sure the link belongs to that platform
@@ -104,7 +106,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
                 );
 
                 if (!matchesContentType) {
-                setAlertMessage(`The link does not match the type===" linkdedIn" content type: ${contentType}.`);
+                setAlertMessage(`The link does not match the selected content type (${contentType}).`);
                 setShowAlert(true);
                 return;
                 }
@@ -112,7 +114,6 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
 
             // ✅ If all checks passed, proceed
             // e.g. handleValidLink(link)
-
         } catch {
             setAlertMessage('Please enter a valid URL.');
             setShowAlert(true);
@@ -123,7 +124,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
 
 
         console.log("Adding content payload:", { title, link, tags, contentType })
-        await axios.post(BACKEND_URL + ADD_CONTENT, {
+        await axios.post(BACKEND_URL + CONTENT, {
             title,
             link,
             type: contentType,
@@ -133,9 +134,22 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
                 "Content-Type": "application/json",
                 Authorization: localStorage.getItem("token") || ""
             }
-        }).then(() => {
-            console.log("Content added successfully")
-            onClose()
+        }  )
+        .then((res) => {
+            if (res.status === 200) {
+                setAlertMessage('Content added successfully!');
+                setShowAlert(true);
+                // CHANGE: Trigger dashboard refresh by calling triggerRefresh()
+                // This increments the refreshKey in Zustand store (0 -> 1 -> 2...)
+                // Dashboard component is watching refreshKey, so it will detect the change
+                // and automatically re-fetch all content from the database
+                // Result: New content appears on dashboard without manual page refresh!
+                triggerRefresh();
+                // Close the modal after successful submission
+                setTimeout(() => {
+                    onClose();
+                }, 1500);
+            }
         }).catch(err => {
             const msg = axios.isAxiosError(err) ? (err.response?.data?.message || err.response?.data?.error || "Failed to add content") : "Failed to add content"
             setAlertMessage(msg)
@@ -148,20 +162,15 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
     return (
         <>
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-    <div className="pointer-events-auto">
-        <CustomAlert 
-            message={alertMessage}
-            isVisible={showAlert}
-            onClose={() => setShowAlert(false)}
-        />
-    </div>
+                <div className="pointer-events-auto">
+                    <CustomAlert 
+                        message={alertMessage}
+                        isVisible={showAlert}
+                        onClose={() => setShowAlert(false)}
+                    />
+                </div>
+          </div>
 
-            <CustomAlert 
-                message={alertMessage}
-                isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
-            />
-        </div>
             <div 
             className="w-full max-w-md mx-auto bg-yellow-50 rounded-2xl 
             shadow-2xl pt-0 pr-5 pl-5 pb-4   flex flex-col fixed
@@ -182,7 +191,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
                 </div>  
                     
             {/* input fields */}
-                <div className="flex flex-col  gap-2">
+            <div className="flex flex-col  gap-2">
                         <InputField label="Title" ref={titleref} />
                         <InputField label="Link" ref={linkref} />
                 {/* <InputField label="Description"/> */}
@@ -201,24 +210,23 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose}) => {
                         <button className={` content-button ${className} w-40 mb-3 ${type ==="twitter" ? "bg-purple-850 text-amber-50" : ""}`} 
                         onClick={() => setType("twitter")}
                         >Twitter</button>
-                        {/* <button className={`${className} w-40 mb-3`} onClick={() => setType("document")}>Document</button> */}
                     </div>
                 
-                <label htmlFor="title" className="text-slate-700 
-                font-medium mb-1.5">Enter tags</label>
-                <div className="grid grid-cols-3">
-                    {tagsample.map((tag, index) => (
-                        <span key={index} className="mr-3">
-                            <InputField 
-                                placeholder={`Enter ${tag}`} 
-                                ref={index === 0 ? tagref1 : index === 1 ? tagref2 : tagref3}
-                            />
-                        </span>
-                    ))}
-                </div>
+                    <label htmlFor="title" className="text-slate-700 
+                    font-medium mb-1.5">Enter tags</label>
+                    <div className="grid grid-cols-3">
+                        {tagsample.map((tag, index) => (
+                            <span key={index} className="mr-3">
+                                <InputField 
+                                    placeholder={`Enter ${tag}`} 
+                                    ref={index === 0 ? tagref1 : index === 1 ? tagref2 : tagref3}
+                                />
+                            </span>
+                        ))}
+                    </div>
 
                 </div>
-                </div>
+            </div>
             
                 <ButtonElement variant="secondary" size="lg" 
                 onClickfn={addContent} text="Add Content"/>
@@ -234,21 +242,14 @@ interface modelProps{
     onClose: ()=>void
 }
 export const CreateContentModel = ({open ,onClose}:modelProps) => {
-    // const [close, setClose]= useState(open)
     return (
         <>
             {open &&
-             <div className="h-screen w-screen left-0 top-0 fixed 
-           
-            bg-gray-50
-             z-1000">
-                <div>
-                       
+             <div className="h-screen w-screen left-0 top-0 fixed     bg-gray-50 z-1000">
+                <div> 
                     <div 
                     className=" h-screen w-full fixed flex items-center justify-center opacity-120 ">
-                                <InputBox onClose={onClose} />
-                            {/* <div className="bg-white"> 
-                            </div> */}
+                                <InputBox onClose={onClose} />       
                    </div>
                 </div>
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { height, width, type EmbeddingProps } from '../../config';
 
 
-
 const YouTubeEmbed: React.FC<EmbeddingProps> = ({
   url,
 
@@ -16,18 +15,17 @@ const YouTubeEmbed: React.FC<EmbeddingProps> = ({
   };
 
   const videoId = getVideoId(url);
-
   if (!videoId) return <p>Invalid YouTube URL</p>;
 
   const embedSrc = `https://www.youtube.com/embed/${videoId}`;
-
   return (
     <iframe style={{height: `${height}px`, width: `${width+60}px`, borderRadius:'8px'}}
       src={embedSrc}
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       allowFullScreen
-    ></iframe>
+      title="YouTube video"
+    />
   );
 };
 
