@@ -12,17 +12,7 @@ import BrainPage from "./pages/Brainpage";
 
 // Main App component
 export default function App() {
-//    const location = useLocation();
-//   //  @ts-ignore
-//    const { refreshKey, triggerRefresh } = useDashboardStore((state) => ({
-//  refreshKey: state.refreshKey,
-//  triggerRefresh: state.triggerRefresh
-//  }));
-//  useEffect(() => {
-//  if (location.pathname === '/dashboard') {
-//  triggerRefresh();
-//  }
-// }, [location.pathname]);
+
   return (
     // CHANGE: Removed RecoilRoot wrapper that was previously here
     // WHY? Zustand doesn't require a provider wrapper like Recoil or Redux
