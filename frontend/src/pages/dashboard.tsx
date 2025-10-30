@@ -1,97 +1,92 @@
-import  ButtonElement from "../components/button";
+import { useState, useEffect, useCallback } from "react";
+import ButtonElement from "../components/button";
 import { PlusIcon } from "../components/svg/plusicon";
 import { ShareIcon } from "../components/svg/shareicon";
-
 import { CardComponent } from "../components/card";
 import "../App.css";
 import SidebarComponent from "../components/sidebarcomponent";
 import { CreateContentModel } from "../components/createContentModel";
-import { useState, useEffect } from "react";
-// CHANGE: Import Zustand store instead of Recoil hooks
 import { useDashboardStore } from "../atoms";
-// CHANGE: Import CONTENT endpoint constant for fetching data
 import { BACKEND_URL, CONTENT } from "../config";
 import axios from "axios";
 import { CustomAlert } from "../components/customAlert";
 
-//  Compilation of all components put together to show UI.
-
+interface ContentItem {
+  id: string;
+  type: 'linkedIn' | 'youtube' | 'twitter';
+  title: string;
+  link: string;
+  tags?: string[];
+}
 
 export default function Dashboard() {
-    const [modelOpen, setModelOpen] = useState(false);
-    // CHANGE: Added state to store content fetched from database
-    const [content, setContent] = useState([]);
-    // CHANGE: Added loading state to show loading indicator while fetching
-    const [loading, setLoading] = useState(true);
-    // CHANGE: Subscribe to refreshKey from Zustand store
-    // When refreshKey changes (incremented by triggerRefresh), this component re-renders
-    // and the useEffect below runs again to fetch fresh data
-    const refreshKey = useDashboardStore((state) => state.refreshKey);
-  // for alert popups:-
-    //tells message to alert
-    const [alertMessage, setAlertMessage] = useState(''); 
-    //controls alert visibility
-    const [showAlert, setShowAlert] = useState(false); 
-
-     // CHANGE: Get triggerRefresh function from Zustand store
-    // This will be called after successfully adding content to refresh the dashboard
-    const triggerRefresh = useDashboardStore((state) => state.triggerRefresh);
-    const fetchContent = async () => {
-          try {
-              setLoading(true);
-              const response = await axios.get(BACKEND_URL + CONTENT, {
-                  headers: {
-                      Authorization: localStorage.getItem("token") || ""
-                  }
-              });
-                triggerRefresh(); // Trigger refresh in Zustand store
-
-              if (response.status === 200) {
-                  // Handle both array response and object with content array
-                  const contentData = Array.isArray(response.data) 
-                      ? response.data 
-                      : response.data.content || [];
+  const [modelOpen, setModelOpen] = useState(false);
+  const [content, setContent] = useState<ContentItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
   
-                  setContent(contentData);
-              }
-          } catch (error) {
-              console.error("Error fetching content:", error);
-              setContent([]); // Set empty array on error
-          } finally {
-              setLoading(false);
-          }
-      };
-useEffect(() => {
+  const { refreshKey } = useDashboardStore();
 
-    fetchContent();
-}, [refreshKey]); // This will re-run when refreshKey changes
+  const fetchContent = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get<ContentItem[] | { content: ContentItem[] }>(
+        `${BACKEND_URL}${CONTENT}`,
+        {
+          headers: {
+            Authorization: localStorage.getItem("token") || "",
+          },
+        }
+      );
 
-function shareContent() {
-    const FrontendURL = "http://localhost:5173"
-   
-    console.log("Share content clicked");
-    // Implement share functionality here
-     axios.post(`${BACKEND_URL}/app/v1/brain/share`, {
-         share: true
-     }, {
-         headers: {
-             Authorization: localStorage.getItem("token") || ""
-         }
-     }).then(response => {
-       const link = response.data.link;
-         // persist link so the brain page can read it if needed
-         localStorage.setItem("sharedBrainLink", link);
-         const brainURL = `${FrontendURL}/brain/${link}`;
-         // show alert with full share URL
-         setShowAlert(true);
-         setAlertMessage("Share link created: " + brainURL);
-         console.log("Share link created:", brainURL, response.data);
-       
-     }).catch(error => {
-         console.error("Error sharing content:", error);
-     });
-}
+      if (response.status === 200) {
+        const contentData = Array.isArray(response.data)
+          ? response.data
+          : response.data.content || [];
+        setContent(contentData);
+      }
+    } catch (error) {
+      console.error("Error fetching content:", error);
+      setContent([]);
+      setShowAlert(true);
+      setAlertMessage("Failed to load content. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const shareContent = useCallback(async () => {
+    const FrontendURL = "http://localhost:5173";
     
+    try {
+      const response = await axios.post<{ link: string }>(
+        `${BACKEND_URL}/app/v1/brain/share`,
+        { share: true },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token") || "",
+          },
+        }
+      );
+
+      const link = response.data.link;
+      localStorage.setItem("sharedBrainLink", link);
+      const brainURL = `${FrontendURL}/brain/${link}`;
+      
+      setShowAlert(true);
+      setAlertMessage(`Share link created: ${brainURL}`);
+    } catch (error) {
+      console.error("Error sharing content:", error);
+      setShowAlert(true);
+      setAlertMessage("Failed to create share link. Please try again.");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchContent();
+  }, [fetchContent, refreshKey]);
+
     return (
         <div className="outerdiv  bg-yellow-50 ">
             <CustomAlert 
@@ -131,6 +126,7 @@ function shareContent() {
 
                     {/* cards outer div*/}
                     <div className="flex justify-start-safe mt-[57px] items-baseline-last ml-[270px] mr-3">
+                        
                             {/* cards sections */}
                             <div className="mr-0 pr-0 ">
 
@@ -138,16 +134,19 @@ function shareContent() {
                                     {loading ? (
                                         <div className="col-span-full text-center">Loading your content...</div>
                                     ) : content.length > 0 ? (
-                                        content.map((item: any) => (
-                                            <CardComponent key={item.id} 
+                                        content.map((item) => (
+                                            <CardComponent 
+                                                key={item.id}
                                                 type={item.type}
-                                                heading={item.title} 
+                                                heading={item.title}
                                                 tags={item.tags || []}
                                                 url={item.link}
                                             />
                                         ))
                                     ) : (
-                                        <div className="col-span-full text-center">No content available. Add some content to get started!</div>
+                                        <div className="col-span-full text-center">
+                                            No content available. Add some content to get started!
+                                        </div>
                                     )}
                                 </div>
               

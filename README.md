@@ -102,6 +102,117 @@ second-brain-application/
     └── package.json       # Frontend dependencies
 ```
 
+## 📚 API Documentation
+
+### Authentication
+
+#### Sign Up 🔓
+```http
+POST /app/v1/signup
+```
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+#### Sign In 🔓
+```http
+POST /app/v1/signin
+```
+**Request Body:**
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+**Response:**
+```json
+{
+  "token": "jwt_token_here"
+}
+```
+
+### Content Management
+
+#### Get All Content 🔒
+```http
+GET /app/v1/content
+```
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+```
+
+#### Add New Content 🔒
+```http
+POST /app/v1/content
+```
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+```
+**Request Body:**
+```json
+{
+  "link": "string",
+  "type": "youtube | twitter | linkedIn",
+  "title": "string",
+  "tags": ["string"]
+}
+```
+
+#### Delete Content 🔒
+```http
+DELETE /app/v1/content
+```
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+```
+**Request Body:**
+```json
+{
+  "contentId": "string"
+}
+```
+
+### Sharing
+
+#### Create Shareable Link 🔒
+```http
+POST /app/v1/brain/share
+```
+**Headers:**
+```
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+```
+**Request Body:**
+```json
+{
+  "share": true
+}
+```
+**Response:**
+```json
+{
+  "link": "unique_shareable_link"
+}
+```
+
+#### View Shared Content 🔓 (No auth needed)
+```http
+GET /app/v1/brain/:sharelink
+```
+**URL Parameters:**
+- `sharelink`: The unique shareable link ID
+
 ## 🤔 Why These Technologies?
 
 - **React 19 + TypeScript**: Provides a robust, type-safe foundation for building maintainable UIs
