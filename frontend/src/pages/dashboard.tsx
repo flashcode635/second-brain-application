@@ -32,6 +32,10 @@ export default function Dashboard() {
     const [alertMessage, setAlertMessage] = useState(''); 
     //controls alert visibility
     const [showAlert, setShowAlert] = useState(false); 
+
+     // CHANGE: Get triggerRefresh function from Zustand store
+    // This will be called after successfully adding content to refresh the dashboard
+    const triggerRefresh = useDashboardStore((state) => state.triggerRefresh);
     const fetchContent = async () => {
           try {
               setLoading(true);
@@ -40,6 +44,8 @@ export default function Dashboard() {
                       Authorization: localStorage.getItem("token") || ""
                   }
               });
+                triggerRefresh(); // Trigger refresh in Zustand store
+
               if (response.status === 200) {
                   // Handle both array response and object with content array
                   const contentData = Array.isArray(response.data) 
