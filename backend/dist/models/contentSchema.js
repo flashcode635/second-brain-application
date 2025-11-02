@@ -4,7 +4,7 @@ const contentTypes = ["twitter", "youtube", "linkedIn"]; // Make it  for type sa
 const contentSchema = new Schema({
     link: { type: String, required: true, unique: true },
     type: { type: String, enum: contentTypes, required: true },
-    title: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
     tags: [{
             type: String // Changed from ObjectId to String
         }],

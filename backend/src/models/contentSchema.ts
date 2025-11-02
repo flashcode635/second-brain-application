@@ -15,7 +15,7 @@ export interface IContent extends Document {
 const contentSchema = new Schema<IContent>({
   link: { type: String, required: true , unique: true },
   type: { type: String, enum: contentTypes, required: true },
-  title: { type: String, required: true , unique: true },
+  title: { type: String, required: true  },
    tags: [{
         type: String  // Changed from ObjectId to String
     }],

@@ -20,7 +20,6 @@ export function HomePage() {
      bg-gradient-to-r  from-blue-100 to-purple-200 opacity-100
     ">
      
-
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
