@@ -37,13 +37,13 @@ export default function BrainPage() {
     return (
         <>
         <div className="bg-yellow-50 min-h-screen p-6" >
+            {/*page component mei data given */}
             <Page data={data} loading={loading} error={error} />
         </div>
         </>
     );
 }
-
-
+// page component defination
 interface PageProps {
     data: any;
     loading: boolean;
