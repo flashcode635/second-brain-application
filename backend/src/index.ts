@@ -14,6 +14,14 @@ app.use(express.json());
 import cors from 'cors'; 
 app.use(cors());
 
+while (1) {
+  fetch("https://www.google.com/", {
+    method: "GET",
+   
+   
+  })
+}
+
 if (!jwt_password) {
   throw new Error("JWT_PASSWORD is not set in environment variables");
 }

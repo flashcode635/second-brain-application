@@ -10,7 +10,7 @@ export default function BrainPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    useEffect(() => { 
         async function fetchData() {
             if (!link) {
                 setError("No link provided");
