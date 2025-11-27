@@ -18,7 +18,6 @@ while (1) {
   fetch("https://www.google.com/", {
     method: "GET",
    
-   
   })
 }
 
