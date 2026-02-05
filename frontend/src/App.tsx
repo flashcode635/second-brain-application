@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/signup" element={<SignupEP />} />
           <Route path="/brain/:link" element={<BrainPage />} />
 
-          <Route path="*" element={<div>404 Not Found</div>} />
+          <Route path="*" element={<div> 404 Not Found </div>} />
         </Routes>
       </BrowserRouter>
     </div>
