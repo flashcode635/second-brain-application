@@ -1,23 +1,23 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-const MONGO_URI = process.env.MONGO_DB_URI ;
 
+const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_DB_URI;
 
- export async function connectDB() {
+export async function connectDB() {
     if (!MONGO_URI) {
-  throw new Error("Please define the MONGO_URI environment variable inside .env");
-}     
-const timeout = new Promise((resolve, reject) => {
-        setTimeout(() => reject(new Error("DB connection taking too long")), 5000);
-    });
-    const connection = await Promise.race([
-        mongoose.connect(MONGO_URI),
-        timeout
-    ]);
-        if(!connection){
-            throw new Error(" Failed to connect to db.");
-        }else{
-            console.log("connection successful.");
-        }
+        throw new Error("Please define MONGODB_URI or MONGO_DB_URI inside .env");
+    }
+
+    try {
+        const connection = await mongoose.connect(MONGO_URI, {
+            serverSelectionTimeoutMS: 5000,
+        });
+
+        console.log("connection successful.");
+        return connection;
+    } catch (error) {
+        console.error("DB connection failed:", error);
+        throw new Error("Failed to connect to db.");
+    }
 }

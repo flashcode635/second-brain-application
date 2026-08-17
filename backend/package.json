@@ -13,18 +13,18 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@types/express": "^5.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.1",
-    "zod": "^4.1.12"
+    "@types/express": "^5.0.6",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/mongoose": "^5.11.96",
-    "typescript": "^5.9.3"
+    "@types/mongoose": "^5.11.97",
+    "typescript": "^7.0.2"
   }
 }

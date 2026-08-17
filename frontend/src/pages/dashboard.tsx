@@ -88,7 +88,7 @@ export default function Dashboard() {
   }, [fetchContent, refreshKey]);
 
     return (
-        <div className="outerdiv  bg-yellow-50 ">
+        <div className="outerdiv  bg-linear-to-b from-background via-55% via-bgvia to-[#f4f4f6]">
             <CustomAlert 
                         message={alertMessage}
                         isVisible={showAlert}
@@ -106,7 +106,7 @@ export default function Dashboard() {
             <div className="pt-2  mr-0 flex flex-col justify-start w-screen h-screen">
 
                     {/* buttons */}
-                    <div className="flex fixed w-full h-[57px] justify-end" >
+                    <div className="flex fixed w-full h-14.25 justify-end" >
                         {/* buttons - Add Content & share */}
                         <div className="flex gap-4 pr-3 mb-4">
 
@@ -125,7 +125,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* cards outer div*/}
-                    <div className="flex justify-start-safe mt-[57px] items-baseline-last ml-[270px] mr-3">
+                    <div className="flex justify-start-safe mt-14.25 items-baseline-last ml-67.5 mr-3">
                         
                             {/* cards sections */}
                             <div className="mr-0 pr-0 ">

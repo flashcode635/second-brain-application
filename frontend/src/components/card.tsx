@@ -94,7 +94,7 @@ sampleLink.map((tag)=>(
                    {tags?.map((tagValue)=>(
                     //  force wrapping and prevent horizontal expansion
                     <span className="block max-h-18 overflow-y-auto min-w-auto max-w-20 ">
-                        <h6 className={`block  ${variantStyles["primary"]} ${sizeStyles["sm"]} text-sm break-words whitespace-normal`}>
+                        <h6 className={`block  ${variantStyles["primary"]} ${sizeStyles["sm"]} text-sm wrap-break-words whitespace-normal`}>
                             #{tagValue}
                         </h6>
                     </span>

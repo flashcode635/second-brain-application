@@ -14,12 +14,12 @@ app.use(express.json());
 import cors from 'cors'; 
 app.use(cors());
 
-while (1) {
-  fetch("https://www.google.com/", {
-    method: "GET",
+// while (1) {
+//   fetch("https://www.google.com/", {
+//     method: "GET",
    
-  })
-}
+//   })
+// }
 
 if (!jwt_password) {
   throw new Error("JWT_PASSWORD is not set in environment variables");
@@ -112,7 +112,7 @@ app.post("/app/v1/signin", async(req,res)=>{
 
 })
 
-
+// content create krne ke liye
 app.post("/app/v1/content", userMiddleware, async(req,res)=>{
  const link = req.body.link;
     const type = req.body.type;
@@ -132,9 +132,9 @@ app.post("/app/v1/content", userMiddleware, async(req,res)=>{
     })
     
 })
-
+// content find krne ke liye
 app.get("/app/v1/content", userMiddleware,async(req,res)=>{
-  
+   await connectDB();   
    const userId = req.userId;
     const content = await ContentModel.find({
         userId: userId
@@ -245,6 +245,6 @@ res.status(200).json({
 })
 
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+app.listen(3001, () => {
+  console.log('Server is running on http://localhost:3001');
 });

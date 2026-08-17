@@ -176,7 +176,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
             shadow-2xl pt-0 pr-5 pl-5 pb-4   flex flex-col fixed
             gap-2 border border-slate-100">
                 {/* closing button */}
-                <div className=" flex justify-end-safe h-[30px]  w-full ">
+                <div className=" flex justify-end-safe h-7.5  w-full ">
                     <button className="hover:cursor-pointer" onClick={onClose}>
 
                                 <CancelIcon/>
