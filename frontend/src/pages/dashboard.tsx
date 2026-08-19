@@ -88,74 +88,81 @@ export default function Dashboard() {
   }, [fetchContent, refreshKey]);
 
     return (
-        <div className="outerdiv  bg-linear-to-b from-background via-55% via-bgvia 
-        to-[#f4f4f6]">
-            <CustomAlert 
-                        message={alertMessage}
-                        isVisible={showAlert}
-                        onClose={() => setShowAlert(false)}
-                    />
-            {/* create content model */}
-            <div className="h-auto w-auto">
-                <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
-            </div>
-            {/* sidebar */}
-            <div>
-                <SidebarComponent/>
-            </div>
-            {/* buttons & cards */}
-            <div className="pt-2  mr-0 flex flex-col justify-start w-screen h-screen">
+      <>
+        {/* alert */}
+          <CustomAlert 
+                      message={alertMessage}
+                      isVisible={showAlert}
+                      onClose={() => setShowAlert(false)}
+                  />
 
-                    {/* buttons */}
-                    <div className="flex fixed w-full h-14.25 justify-end" >
-                        {/* buttons - Add Content & share */}
-                        <div className="flex gap-4 pr-3 mb-4">
+          {/* create content model */}
+          <div className="h-auto w-auto">
+              <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
+          </div>
 
-                            <ButtonElement variant="secondary"
-                                text="Add Content" size="default" 
-                                onClickfn={()=>setModelOpen(true)}
-                                startIcon={<PlusIcon/>}
-                            />
+          <div className="outerdiv flex bg-linear-to-b from-background via-55% via-bgvia 
+          to-[#f4f4f6]">
 
-                        <ButtonElement variant="primary" 
-                        size="default" text="Share" onClickfn={shareContent}  
-                         startIcon={<ShareIcon/>}
-                        />   
-                        </div>
+              {/* sidebar */}
+              <div>
+                  <SidebarComponent/>
+              </div>
 
-                    </div>
+              {/* buttons & cards */}
+              <div className="pt-2  mr-0 flex flex-col  w-screen h-screen">
 
-                    {/* cards outer div*/}
-                    <div className="flex justify-start-safe mt-14.25 items-baseline-last ml-67.5 mr-3">
+                      {/* buttons */}
+                      <div className="flex w-full h-fit gap-4 justify-end pr-3" >
+                          {/* buttons - Add Content & share */}
+                          {/* <div className="flex gap-4 pr-3 mb-4"> */}
+
+                              <ButtonElement variant="secondary"
+                                  text="Add Content" size="default" 
+                                  onClickfn={()=>setModelOpen(true)}
+                                  startIcon={<PlusIcon/>}
+                              />
+
+                          <ButtonElement variant="primary" 
+                          size="default" text="Share" onClickfn={shareContent}  
+                          startIcon={<ShareIcon/>}
+                          />   
+                          {/* </div> */}
+
+                      </div>
+
+                      {/* cards outer div*/}
+                      <div className="flex justify-start-safe mt-14.25 items-baseline-last ml-67.5 mr-3">
+                          
+                              {/* cards sections */}
+                              <div className="mr-0 pr-0 ">
+
+                                  <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-3.5">
+                                      {loading ? (
+                                          <div className="col-span-full text-center">Loading your content...</div>
+                                      ) : content.length > 0 ? (
+                                          content.map((item) => (
+                                              <CardComponent 
+                                                  key={item.id}
+                                                  type={item.type}
+                                                  heading={item.title}
+                                                  tags={item.tags || []}
+                                                  url={item.link}
+                                              />
+                                          ))
+                                      ) : (
+                                          <div className="col-span-full text-center">
+                                              No content available. Add some content to get started!
+                                          </div>
+                                      )}
+                                  </div>
+                
+                              </div>
                         
-                            {/* cards sections */}
-                            <div className="mr-0 pr-0 ">
-
-                                <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-3.5">
-                                    {loading ? (
-                                        <div className="col-span-full text-center">Loading your content...</div>
-                                    ) : content.length > 0 ? (
-                                        content.map((item) => (
-                                            <CardComponent 
-                                                key={item.id}
-                                                type={item.type}
-                                                heading={item.title}
-                                                tags={item.tags || []}
-                                                url={item.link}
-                                            />
-                                        ))
-                                    ) : (
-                                        <div className="col-span-full text-center">
-                                            No content available. Add some content to get started!
-                                        </div>
-                                    )}
-                                </div>
-              
-                            </div>
-                      
-                    </div>
-                </div>
-           
-        </div>
+                      </div>
+              </div>
+            
+          </div>
+        </>
     )
 }

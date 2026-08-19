@@ -1,7 +1,7 @@
 import BrainIcon from "../components/svg/brainicon";
 
-import { LinkedInLogo } from "../components/svg/linkedinLogo";
-import {XLogo} from "../components/svg/xLogo";
+import { LinkedInLogo } from "./svg/linkedinLogo";
+import {XLogo} from "./svg/xLogo";
 import { YoutubeLogo } from "./svg/ytLogo";
 import { DocumentLogo } from "./svg/document";
 export type SidebarFieldsProps = {
@@ -22,11 +22,11 @@ const SidebarFields =({link,text}:SidebarFieldsProps)=>{
 }
 export default function SidebarComponent() {
     return (
-        <div className="h-screen md:w-70 bg-white mr-5 p-2 pl-0 pt-4 fixed ">
+        <div className="h-screen md:w-70 bg-white mr-5 p-2 pl-0 pt-4 ">
             <div className="flex items-center gap-2.5 mb-4 pl-3 ">
                 <BrainIcon/>
 
-                <span className="text-xl"><b> Second Brain App </b>  </span>
+                <span className="text-xl font-heading uppercase"><b> Your Brain </b>  </span>
             </div>
             {/* fields - tweet, yt, document etc. */}
             <div className="ml-3 grid grid-cols-1"> 

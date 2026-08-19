@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 @theme {
     /* gray shades */
     --color-gray-150: #eeeeef ;
@@ -14,6 +13,10 @@
     --color-purple-850:#4b3e99;
     --color-background:#f2f3f5;
     --color-bgvia:#ededef;
+
+    /* fonts */
+    --font-heading: var(--font-serif);
+  --font-body: "Merriweather", serif;
 
 }
 

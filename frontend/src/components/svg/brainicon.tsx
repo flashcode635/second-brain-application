@@ -1,5 +1,5 @@
 import React from 'react';
-
+import image from "../../assets/logo.png"
 interface BrainIconProps extends React.SVGProps<SVGSVGElement> {
   className?: string;
 }
@@ -7,9 +7,9 @@ interface BrainIconProps extends React.SVGProps<SVGSVGElement> {
 const BrainIcon: React.FC<BrainIconProps> = () => {
   return (
     <>
-        <img className='h-8 w-8 '
+        <img className='h-9 w-11 '
         // src='https://static.thenounproject.com/png/brain-icon-2023630-512.png'
-        src="https://img.icons8.com/pastel_glyph/512w/7950F2/brain.png"
+        src={image}
         />
     </>
   );
