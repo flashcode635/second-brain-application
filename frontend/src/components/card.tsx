@@ -63,19 +63,19 @@ sampleLink.map((tag)=>(
     return(
         <>
         <div key={key}
-          className="rounded-lg shadow-md bg-[#f5f9ff] border-gray-150 border-[1px] p-2 pt-0 mb-2"
+          className="rounded-lg shadow-md bg-[#f5f9ff] border-gray-150 border p-2 pt-0 mb-2"
           style={{ width: `${width + 102}px` }} // use style so Tailwind doesn't purge a dynamic class
         >
             {/* top bar of card */}
             <div 
-             className="text-center max-h-[400px] overflow-y-auto overflow-x-hidden p-2 thin-scrollbar">
+             className="text-center max-h-100 overflow-y-auto overflow-x-hidden p-2 thin-scrollbar">
                 <div className="flex justify-between">
                     <div className="flex justify-flex-start items-center ">
                  
                     { <DynamicIcon type={type} /> }
 
                     <h1
-                        className="font-semibold text-xl h-[30px]  overflow-y-auto pr-0"
+                        className="font-semibold text-xl h-7.5  overflow-y-auto pr-0"
                     >
                         {heading}
                     </h1>
