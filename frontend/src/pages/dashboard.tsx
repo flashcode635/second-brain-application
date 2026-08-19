@@ -88,7 +88,8 @@ export default function Dashboard() {
   }, [fetchContent, refreshKey]);
 
     return (
-        <div className="outerdiv  bg-linear-to-b from-background via-55% via-bgvia to-[#f4f4f6]">
+        <div className="outerdiv  bg-linear-to-b from-background via-55% via-bgvia 
+        to-[#f4f4f6]">
             <CustomAlert 
                         message={alertMessage}
                         isVisible={showAlert}

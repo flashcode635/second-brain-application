@@ -18,7 +18,7 @@ const SidebarFields =({link,text}:any)=>{
 }
 export default function SidebarComponent() {
     return (
-        <div className="h-[100vh] w-[240px] bg-gray-150 mr-5 p-2 pl-0 pt-4 fixed ">
+        <div className="h-screen w-60 bg-gray-150 mr-5 p-2 pl-0 pt-4 fixed ">
             <div className="flex items-center gap-2.5 mb-4 pl-3 ">
                 <BrainIcon/>
 
