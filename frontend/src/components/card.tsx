@@ -1,124 +1,231 @@
-
 import { LinkedInEmbedding } from "./Embeddings/linkedinEmbedding"
 import { DeleteIcon } from "./svg/deleteicon"
 import { DynamicIcon } from "./svg/logos";
 import YouTubeEmbed from "./Embeddings/youtubeEmbedding";
 import { BACKEND_URL, CONTENT, height, width, type CardProps } from "../config";
 import { TwitterEmbedding } from "./Embeddings/twitterEmbedding";
-import  {  sizeStyles, variantStyles, } from "./button";
 import axios, { type AxiosResponse } from "axios";
+import { useState } from "react";
 
-const Embedd=({type, url}: {type: string, url: string})=>{
-    return(
+const Embedd = ({ type, url }: { type: string, url: string }) => {
+    return (
         <>
-        { type == "linkedIn" && <div key={type}> <LinkedInEmbedding 
-        url={url} /></div>  }
-        { type == "youtube" && <div key={type}> <YouTubeEmbed 
-        url={url}  /></div> }
-        { type == "twitter" && <div key={type}> <TwitterEmbedding 
-        url={url}  /></div> }
+            {type == "linkedIn" && <div key={type}><LinkedInEmbedding url={url} /></div>}
+            {type == "youtube" && <div key={type}><YouTubeEmbed url={url} /></div>}
+            {type == "twitter" && <div key={type}><TwitterEmbedding url={url} /></div>}
         </>
     )
 }
-export let sampleLink =["link1","link2","link3"]
+
+export let sampleLink = ["link1", "link2", "link3"]
 const cardWidth = width + 102;
-const cardHeight = 350;
-const embedHeight = 205;
+const cardHeight = 350; // Optimized height - compact but airy
+const embedHeight = 210; // Optimized for space efficiency
 const tagsHeight = 50;
+
 // DELETE content function
-const deleteContent = async({id}: {id: any})=>{
+const deleteContent = async ({ id }: { id: any }) => {
     try {
         console.log("Delete content clicked");
-        // Implement delete functionality here
-        const response:AxiosResponse = await axios.delete(BACKEND_URL+CONTENT, 
-            {data:{
-    
-                contentId: id
-            },
-             headers: {
+        const response: AxiosResponse = await axios.delete(BACKEND_URL + CONTENT,
+            {
+                data: { contentId: id },
+                headers: {
                     "Content-Type": "application/json",
-                Authorization: localStorage.getItem("token") 
-            }
-        });
+                    Authorization: localStorage.getItem("token")
+                }
+            });
         return response.data;
     } catch (error) {
-    // Check if the error is an Axios error and log relevant details
-    if (axios.isAxiosError(error) ) {
-      console.error('Delete failed:', error.response?.data || error.message);
-      // Re-throw a standardized error or a custom error for the component to handle
-      throw new Error(error.response?.data.message || 'Failed to delete content.');
-    } else {
-      console.error('An unexpected error occurred:', error);
-      throw new Error('An unexpected error occurred during deletion.');
-    }
-  }
-  
-}
-export const CardComponent = ({type, heading, tags, url,key}: CardProps)=>{
-        if (!url) {
-            return (<p style={{height:`${height}px`, width:`${width}px`}}>
-                No URL provided to embed.</p>)
+        if (axios.isAxiosError(error)) {
+            console.error('Delete failed:', error.response?.data || error.message);
+            throw new Error(error.response?.data.message || 'Failed to delete content.');
+        } else {
+            console.error('An unexpected error occurred:', error);
+            throw new Error('An unexpected error occurred during deletion.');
         }
-        if (!tags) {
-        sampleLink.map((tag)=>(
-            <p className="text-gray-700"> {tag} </p>
-        ))
-
+    }
 }
-    return(
-        <>
-        <div key={url}
-            className="rounded-lg shadow-md bg-stone-50 
-            flex flex-col self-start border-gray-150 border 
-            p-2 pt-0 mb-2 overflow-hidden"
-    style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}
+
+export const CardComponent = ({ type, heading, tags, url, key }: CardProps) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    if (!url) {
+        return (<p style={{ height: `${height}px`, width: `${width}px` }}>
+            No URL provided to embed.</p>)
+    }
+
+    return (
+        <div
+            className="group relative"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+                width: `${cardWidth}px`,
+                height: `${cardHeight}px`,
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: isHovered
+                    ? '0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.06)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                overflow: 'hidden',
+                marginBottom: '16px'
+            }}
         >
-          
-            <div 
-                 className="text-center overflow-hidden p-3 md:pt-4 thin-scrollbar h-full">
-                {/* heading */}
-                <div className="flex justify-between items-center text-center h-8 overflow-hidden">
-                    <div className="flex h-full justify-start items-start gap-3">
-                    
-                        { <DynamicIcon type={type} /> }
-
-                        <h1
-                            className="font-semibold text-xl overflow-hidden pr-0 wrap-break-words"
-                        >
-                            {heading}
-                        </h1>
+            {/* Header */}
+            <div style={{
+                padding: '16px 20px 12px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: '10px'
+            }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '4px'
+                    }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '24px',
+                            height: '24px',
+                            background: '#F5F5F7',
+                            borderRadius: '6px'
+                        }}>
+                            <DynamicIcon type={type} />
+                        </div>
+                        <span style={{
+                            fontSize: '10px',
+                            fontWeight: 600,
+                            color: '#999999',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.5px'
+                        }}>
+                            {type}
+                        </span>
                     </div>
-                    <div className="flex justify-flex-end items-center" onClick={() => 
-                        deleteContent({ id: key })}>
-
-                    <DeleteIcon/>
-                    </div>
+                    <h3 style={{
+                        margin: 0,
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: '#000000',
+                        lineHeight: '1.3',
+                        letterSpacing: '-0.01em',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical'
+                    }}>
+                        {heading || 'Untitled'}
+                    </h3>
                 </div>
 
-                {/* embedding */}
-                <div
-                    className="mb-3 flex items-center justify-center w-full overflow-hidden"
-                    style={{ height: `${embedHeight}px` }}
+                {/* Delete Button */}
+                <button
+                    onClick={() => deleteContent({ id: key })}
+                    style={{
+                        opacity: isHovered ? 1 : 0,
+                        transform: isHovered ? 'scale(1)' : 'scale(0.8)',
+                        transition: 'all 0.2s ease',
+                        background: isHovered ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
+                        border: 'none',
+                        borderRadius: '8px',
+                        width: '32px',
+                        height: '32px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        flexShrink: 0
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                    }}
                 >
-                      <Embedd type={type} url={url}/>
-                </div>
+                    <DeleteIcon />
+                </button>
+            </div>
 
-                {/* tags */}
-                <div
-                    className="grid grid-cols-3 h-13 overflow-hidden"
-                    style={{ height: `${tagsHeight}px` }}
-                >
-                   {tags?.map((tagValue)=>(
-                    //  force wrapping and prevent horizontal expansion
-                    <span className="block max-h-18 overflow-y-auto min-w-auto max-w-20 ">
-                        <h6 className={`block  ${variantStyles["primary"]} ${sizeStyles["sm"]} text-sm wrap-break-words whitespace-normal`}>
-                            #{tagValue}
-                        </h6>
-                    </span>
-                   ))}
+            {/* Embed Container */}
+            <div style={{
+                padding: '0 25px',
+                marginBottom: '12px'
+            }}>
+                <div style={{
+                    height: `${embedHeight}px`,
+                    background: '#FAFAFA',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    border: '1px solid rgba(0, 0, 0, 0.06)'
+                }}>
+                    <div style={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden'
+                    }}>
+                        <Embedd type={type} url={url} />
+                    </div>
                 </div>
             </div>
+
+            {/* Tags Section */}
+            <div style={{
+                padding: '0 20px 16px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '6px',
+                maxHeight: `${tagsHeight}px`,
+                overflowY: 'auto',
+                overflowX: 'hidden'
+            }}>
+                {tags?.map((tagValue, index) => (
+                    <span
+                        key={index}
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            padding: '5px 10px',
+                            background: '#F5F5F7',
+                            borderRadius: '10px',
+                            fontSize: '11px',
+                            fontWeight: 500,
+                            color: '#000000',
+                            letterSpacing: '0.01em',
+                            whiteSpace: 'nowrap',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = '#EBEBED';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = '#F5F5F7';
+                        }}
+                    >
+                        #{tagValue}
+                    </span>
+                )) || (
+                    <span style={{
+                        fontSize: '11px',
+                        color: '#999999',
+                        fontStyle: 'italic'
+                    }}>
+                        No tags
+                    </span>
+                )}
+            </div>
         </div>
-        </>
     )
 }

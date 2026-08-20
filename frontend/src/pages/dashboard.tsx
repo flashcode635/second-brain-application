@@ -112,7 +112,7 @@ export default function Dashboard() {
               <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8 lg:px-12">
 
                       {/* buttons */}
-                  <div className="flex w-full items-center justify-end gap-2 border-b border-[#ededed] py-4" >
+                  <div className="flex w-full items-center justify-end gap-2 py-4" >
                           {/* buttons - Add Content & share */}
                           {/* <div className="flex gap-4 pr-3 mb-4"> */}
 

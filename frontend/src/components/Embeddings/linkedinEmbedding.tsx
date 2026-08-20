@@ -94,28 +94,15 @@ export const LinkedInEmbedding = ({ url }: EmbeddingProps) => {
   }, [url]);
 
   return (
-    <div className="w-[200px] h-[185px] overflow-hidden mx-auto">
+    <div className="w-60 h-51.75 overflow-hidden p-1 mx-auto">
       {loading && <p className="text-sm text-gray-500">Loading LinkedIn preview...</p>}
-      {/* <input 
-        type="text" 
-        placeholder="Paste lnkd.in or LinkedIn URL here..." 
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        className="w-full p-2 border rounded mb-2"
-      />
-      <button 
-        onClick={handleGeneratePreview} 
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        {loading ? "Fetching..." : "Generate Preview"}
-      </button> */}
 
       {/* PREVIEW CARD YAHAN DIKHEGA */}
       {preview && preview.success && (
         <div className="h-full w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
           
           {/* 1. The Rich Card (Guaranteed to work) */}
-          <div className="p-2 bg-white h-full overflow-hidden">
+          <div className="p-4 bg-white h-full overflow-hidden">
             <div className="flex items-center gap-2 mb-2">
               <span className="bg-blue-100
                text-blue-800 text-xs font-semibold 
@@ -156,7 +143,7 @@ export const LinkedInEmbedding = ({ url }: EmbeddingProps) => {
                  allow="encrypted-media" 
                  allowFullScreen 
                  title="Embedded LinkedIn Post"
-                 className="rounded w-[200px] h-[185px]"
+                 className="rounded w-50 h-46.25"
                ></iframe>
             </div>
           )}

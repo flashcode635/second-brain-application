@@ -1,4 +1,4 @@
-import { height, width } from "@/config"
+import { width } from "@/config"
 
 export const TwitterEmbedding = ({ url }: { url: string }) => {
     if (!url) {
@@ -10,8 +10,8 @@ export const TwitterEmbedding = ({ url }: { url: string }) => {
         <>
         <div 
         style={{ 
-        width: `${width}px`,
-        height: `${height}px`,
+        width: `${250}px`,
+        height: `${230}px`,
         overflowY: "hidden",
         marginBottom:"0",
          overflowX:"hidden"}}>
