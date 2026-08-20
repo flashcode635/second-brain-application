@@ -104,12 +104,14 @@ export default function Dashboard() {
             <div className="outerdiv flex min-h-screen bg-[#f7f8fa] text-purple-850">
 
               {/* sidebar */}
-              <div className="shrink-0 border-r border-[#e8e8e8] bg-[#fbfbfa]">
+              <div className="shrink-0 border-r fixed border-[#e8e8e8] bg-[#fbfbfa]">
                   <SidebarComponent/>
               </div>
-
+              <div className="h-screen flex flex-col items-baseline justify-start pt-4 
+        md:pt-8 pl-2 md:pl-8
+        md:w-70 bg-stone-50 gap-7"></div>
               {/* buttons & cards */}
-              <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8 lg:px-12">
+              <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
                       {/* buttons */}
                   <div className="flex w-full items-center justify-end gap-2 py-4" >
@@ -117,13 +119,13 @@ export default function Dashboard() {
                           {/* <div className="flex gap-4 pr-3 mb-4"> */}
 
                                 <ButtonElement variant="secondary"
-                                  text="Add Content" size="default" 
+                                   size="default" 
                                   onClickfn={()=>setModelOpen(true)}
                                   startIcon={<PlusIcon/>}
                               />
 
                           <ButtonElement variant="primary" 
-                          size="default" text="Share" onClickfn={shareContent}  
+                          size="default"  onClickfn={shareContent}  
                           startIcon={<ShareIcon/>}
                           />   
                           {/* </div> */}
@@ -136,17 +138,25 @@ export default function Dashboard() {
                               {/* cards sections */}
                                 <div className="mr-0 w-full pr-0 ">
 
-                                  <div className="grid grid-cols-1 justify-items-start gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                       {loading ? (
-                                          <div className="col-span-full text-center">Loading your content...</div>
+                                          <div className="col-span-full text-center">
+                                            Loading your content...</div>
                                       ) : content.length > 0 ? (
                                           content.map((item) => (
                                               <CardComponent 
-                                                  key={item.id}
+                                                  key={JSON.stringify(item.link)}
                                                   type={item.type}
                                                   heading={item.title}
                                                   tags={item.tags || []}
                                                   url={item.link}
+                                                  onDeleted={() => {
+                                                    setContent((currentContent) =>
+                                                      currentContent.filter(
+                                                        (contentItem) => contentItem.link !== item.link
+                                                      )
+                                                    );
+                                                  }}
                                               />
                                           ))
                                       ) : (

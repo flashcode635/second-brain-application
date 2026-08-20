@@ -24,12 +24,12 @@ const embedHeight = 210; // Optimized for space efficiency
 const tagsHeight = 50;
 
 // DELETE content function
-const deleteContent = async ({ id }: { id: any }) => {
+const deleteContent = async ({ link }: { link: string }) => {
     try {
         console.log("Delete content clicked");
         const response: AxiosResponse = await axios.delete(BACKEND_URL + CONTENT,
             {
-                data: { contentId: id },
+                data: { link },
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: localStorage.getItem("token")
@@ -47,7 +47,7 @@ const deleteContent = async ({ id }: { id: any }) => {
     }
 }
 
-export const CardComponent = ({ type, heading, tags, url, key }: CardProps) => {
+export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
     if (!url) {
@@ -111,9 +111,9 @@ export const CardComponent = ({ type, heading, tags, url, key }: CardProps) => {
                             {type}
                         </span>
                     </div>
-                    <h3 style={{
+                    <h3 className="font-heading" style={{
                         margin: 0,
-                        fontSize: '16px',
+                        fontSize: '20px',
                         fontWeight: 600,
                         color: '#000000',
                         lineHeight: '1.3',
@@ -130,7 +130,10 @@ export const CardComponent = ({ type, heading, tags, url, key }: CardProps) => {
 
                 {/* Delete Button */}
                 <button
-                    onClick={() => deleteContent({ id: key })}
+                    onClick={async () => {
+                        await deleteContent({ link: url });
+                        onDeleted?.();
+                    }}
                     style={{
                         opacity: isHovered ? 1 : 0,
                         transform: isHovered ? 'scale(1)' : 'scale(0.8)',

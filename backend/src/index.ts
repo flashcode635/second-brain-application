@@ -145,28 +145,30 @@ app.get("/app/v1/content", userMiddleware,async(req,res)=>{
     })
 })
 
-// delete content by id
+// delete content by link
 app.delete("/app/v1/content", userMiddleware,async(req,res)=>{
-    const contentId = req.body.contentId;
-    if (!contentId) {
-      return res.status(400).json({ message: "contentId is required" });
-    }
-    await connectDB();
-
-    const deletedResult = await ContentModel.deleteOne(
-      { 
-       _id: contentId,
-       userId: req.userId,
+    try {
+      const link = req.body.link;
+      if (typeof link !== "string" || !link.trim()) {
+        return res.status(400).json({ message: "link is required" });
       }
-    );
-    if (!deletedResult || deletedResult.deletedCount === 0) {
-      return res.status(404).json({
-        message: "Content not found"
-      })
-    }else{
-      return res.json({
-        message: "Content deleted"
-      })
+
+      await connectDB();
+      const deletedResult = await ContentModel.deleteOne({
+        link: link.trim(),
+        userId: req.userId,
+      });
+
+      if (deletedResult.deletedCount === 0) {
+        return res.status(404).json({ message: "Content not found" });
+      }
+
+      return res.status(200).json({
+        message: "Content deleted",
+      });
+    } catch (error) {
+      console.error("Delete content error:", error);
+      return res.status(500).json({ message: "Failed to delete content" });
     }
 })
 

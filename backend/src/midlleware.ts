@@ -4,20 +4,25 @@ import { jwt_password } from "./config.js";
 
 export const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const header = req.headers["authorization"];
-    const decoded = jwt.verify(header as string, jwt_password)
-    if (decoded) {
-        if (typeof decoded === "string") {
-            res.status(403).json({
+    try {
+        if (typeof header !== "string" || !header.trim()) {
+            return res.status(403).json({
                 message: "You are not logged in"
-            })
-            return;    
+            });
         }
-        const decodedId = (decoded as JwtPayload).id;
-        req.userId = decodedId;
-        next()
-    } else {
-        res.status(403).json({
+
+        const decoded = jwt.verify(header, jwt_password);
+        if (typeof decoded === "string" || !(decoded as JwtPayload).id) {
+            return res.status(403).json({
+                message: "You are not logged in"
+            });
+        }
+
+        req.userId = (decoded as JwtPayload).id;
+        return next();
+    } catch {
+        return res.status(403).json({
             message: "You are not logged in"
-        })
+        });
     }
 }

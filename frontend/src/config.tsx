@@ -13,7 +13,7 @@ export interface CardProps{
     heading?: string,
   tags?: string[],
     url?: string
-    key?: any
+    onDeleted?: () => void
 }
 // common className for input fields
 export const className = "px-4 py-2 rounded-lg border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200  outline-none transition-all text-slate-900 bg-slate-50 shadow-sm"
