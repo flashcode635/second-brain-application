@@ -110,7 +110,7 @@ export default function Dashboard() {
               </div>
 
               {/* buttons & cards */}
-              <div className="pt-2  mr-0 flex flex-col  w-screen h-screen">
+              <div className="p-4  mr-0 flex flex-col  w-full h-screen">
 
                       {/* buttons */}
                       <div className="flex w-full h-fit gap-4 justify-end pr-3" >
@@ -132,12 +132,13 @@ export default function Dashboard() {
                       </div>
 
                       {/* cards outer div*/}
-                      <div className="flex justify-start-safe mt-14.25 items-baseline-last ml-67.5 mr-3">
+                      <div className="flex mt-14.25 items-center mr-3">
                           
                               {/* cards sections */}
                               <div className="mr-0 pr-0 ">
 
-                                  <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-3.5">
+                                  <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 
+                                  gap-4">
                                       {loading ? (
                                           <div className="col-span-full text-center">Loading your content...</div>
                                       ) : content.length > 0 ? (

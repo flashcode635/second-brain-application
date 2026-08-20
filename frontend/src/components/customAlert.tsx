@@ -10,7 +10,7 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({ message, onClose, isVi
     if (!isVisible) return null;
 
     return (
-        <div className="fixed inset-0  flex justify-center items-center h-[300px] w-[100vw] z-50 " >
+        <div className="fixed inset-0  flex justify-center items-center h-75 w-screen z-50 " >
 
             <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full mx-4">
                 <h2 className="text-xl font-bold mb-4 text-gray-800">Second Brain App </h2>

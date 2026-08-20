@@ -26,7 +26,7 @@ const deleteContent = async({id}: {id: any})=>{
     try {
         console.log("Delete content clicked");
         // Implement delete functionality here
-        const response:AxiosResponse =await axios.delete(BACKEND_URL+CONTENT, 
+        const response:AxiosResponse = await axios.delete(BACKEND_URL+CONTENT, 
             {data:{
     
                 contentId: id
@@ -51,26 +51,29 @@ const deleteContent = async({id}: {id: any})=>{
   
 }
 export const CardComponent = ({type, heading, tags, url,key}: CardProps)=>{
-if (!url) {
-    return <p style={{height:`${height}px`, width:`${width}px`}}>No URL provided to embed.</p>;
-}
-if (!tags) {
-sampleLink.map((tag)=>(
-    <p className="text-gray-700"> {tag} </p>
-))
+        if (!url) {
+            return (<p style={{height:`${height}px`, width:`${width}px`}}>
+                No URL provided to embed.</p>)
+        }
+        if (!tags) {
+        sampleLink.map((tag)=>(
+            <p className="text-gray-700"> {tag} </p>
+        ))
 
 }
     return(
         <>
-        <div key={key}
-          className="rounded-lg shadow-md bg-[#f5f9ff] border-gray-150 border p-2 pt-0 mb-2"
-          style={{ width: `${width + 102}px` }} // use style so Tailwind doesn't purge a dynamic class
+        <div key={url}
+                    className="rounded-lg shadow-md bg-stone-50 flex flex-col h-fit self-start border-gray-150 border p-2 pt-0 mb-2"
+          style={{ width: `${width + 102}px` }} // use style so Tailwind doesn't 
+          // purge a dynamic class
         >
-            {/* top bar of card */}
+          
             <div 
-             className="text-center max-h-100 overflow-y-auto overflow-x-hidden p-2 thin-scrollbar">
-                <div className="flex justify-between">
-                    <div className="flex justify-flex-start items-center ">
+                 className="text-center overflow-y-auto overflow-x-hidden p-3 md:pt-4 thin-scrollbar">
+                {/* heading */}
+                     <div className="flex justify-between">
+                    <div className="flex justify-flex-start items-center gap-3">
                  
                     { <DynamicIcon type={type} /> }
 
@@ -80,17 +83,20 @@ sampleLink.map((tag)=>(
                         {heading}
                     </h1>
                     </div>
-                    <div className="flex justify-flex-end items-center" onClick={() => deleteContent({ id: key })}>
+                    <div className="flex justify-flex-end items-center" onClick={() => 
+                        deleteContent({ id: key })}>
 
                     <DeleteIcon/>
                     </div>
                 </div>
-                
+
+                {/* embedding */}
                 <div className="mb-3 mt-2 flex items-center justify-center w-full">
                       <Embedd type={type} url={url}/>
                 </div>
 
-                <div className="grid grid-cols-3 ">
+                {/* tags */}
+                <div className="grid grid-cols-3">
                    {tags?.map((tagValue)=>(
                     //  force wrapping and prevent horizontal expansion
                     <span className="block max-h-18 overflow-y-auto min-w-auto max-w-20 ">

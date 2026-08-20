@@ -132,6 +132,7 @@ app.post("/app/v1/content", userMiddleware, async(req,res)=>{
     })
     
 })
+
 // content find krne ke liye
 app.get("/app/v1/content", userMiddleware,async(req,res)=>{
    await connectDB();   
@@ -143,6 +144,8 @@ app.get("/app/v1/content", userMiddleware,async(req,res)=>{
         content
     })
 })
+
+// delete content by id
 app.delete("/app/v1/content", userMiddleware,async(req,res)=>{
     const contentId = req.body.contentId;
     if (!contentId) {
@@ -166,6 +169,63 @@ app.delete("/app/v1/content", userMiddleware,async(req,res)=>{
       })
     }
 })
+
+async function resolveLinkedInLink(shortUrl: string): Promise<string> {
+    try {
+        const response = await fetch(shortUrl, { 
+            redirect: 'follow',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' } 
+        });
+        return response.url; 
+    } catch (error) {
+        return shortUrl; 
+    }
+}
+
+function extractMetaFromUrl(fullUrl: string) {
+    const idMatch = fullUrl.match(/(activity-|urn:li:activity:|urn:li:share:)(\d+)/);
+    const postId = idMatch ? idMatch[2] : null;
+
+    const slugMatch = fullUrl.match(/\/posts\/[^_]+_(.*)-activity-/i);
+    let title = "LinkedIn Post";
+    if (slugMatch!=null && slugMatch[1]) {
+        title = slugMatch[1].replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    const authorMatch = fullUrl.match(/\/posts\/([^_]+)_/);
+    const author = authorMatch ? `@${authorMatch[1]}` : "Unknown Author";
+
+    return {
+        success: true,
+        provider: "linkedin",
+        postId,
+        title,
+        author,
+        embedUrl: postId ? `https://www.linkedin.com/embed/feed/update/urn:li:activity:${postId}` : null,
+        originalUrl: fullUrl
+    };
+}
+
+// API ENDPOINT
+app.get('/api/linkedinpreview', async (req, res) => {
+    const { url } = req.query;
+    if (!url) return res.status(400).json({ error: "URL required" });
+
+    try {
+        // 1. Link resolve karo (lnkd.in -> linkedin.com)
+        const resolvedUrl = await resolveLinkedInLink(url as string);
+        
+        // 2. Metadata extract karo
+        const metaData = extractMetaFromUrl(resolvedUrl);
+        console.log("metaData: ") 
+        console.log(metaData) 
+        // 3. Frontend ko bhejo
+        res.json(metaData);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to process link" });
+    }
+});
+
 app.post("/app/v1/brain/share", userMiddleware,async(req,res)=>{
  
 const share = req.body.share; // send true to create link, false to delete link

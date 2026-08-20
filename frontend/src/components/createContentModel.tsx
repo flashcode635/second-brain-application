@@ -78,7 +78,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
             // ✅ Normalize and check domain
             const hostname = parsed.hostname.toLowerCase();
-            const allowed = ['x.com', 'twitter.com', 'linkedin.com', 'youtube.com', 'youtu.be'];
+            const allowed = ['x.com', 'twitter.com', 'linkedin.com', 'lnkd.in', 'youtube.com', 'youtu.be'];
             const isAllowed = allowed.some(
                 (d) => hostname === d || hostname.endsWith('.' + d)
             );
@@ -94,7 +94,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
             const domainMap: Record<string, string[]> = {
                 // mapping of types with their respective domains.
                 twitter: ['x.com', 'twitter.com'],
-                linkedIn: ['linkedin.com'],
+                linkedIn: ['linkedin.com', 'lnkd.in'],
                 youtube: ['youtube.com', 'youtu.be'],
             };
 
