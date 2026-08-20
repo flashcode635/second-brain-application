@@ -1,6 +1,6 @@
 import BrainIcon from "../components/svg/brainicon";
-
-import { Book, Bulb, folder, Grid, SearchIcon, UserIcon } from "./svg/gridIcons";
+// @ts-ignore
+import { Book, Bulb, folder, Grid, SearchIcon, UserIcon } from "@svg/gridIcons";
 export type SidebarFieldsProps = {
     link: () => React.JSX.Element;
     text: string;
@@ -8,11 +8,12 @@ export type SidebarFieldsProps = {
 const SidebarFields =({link,text}:SidebarFieldsProps)=>{
     return(
         <>
-                <div className="flex justify-start gap-4 items-center w-3/4 mb-3 cursor-pointer hover:bg-stone-50 hover:text-black  rounded-md transition-all duration-175 p-2">          
+                <div className="flex justify-start gap-4 items-center w-3/4 cursor-pointer hover:bg-stone-200/70 hover:text-black  rounded-md transition-all
+                 duration-175 p-1.5">          
                
                     {link()}
                 
-                <span className="font-heading tracking-wider ">{text}</span>
+                <span className="font-heading tracking-wider font-medium ">{text}</span>
                 </div>
             
         </>
@@ -23,15 +24,16 @@ export default function SidebarComponent() {
     const sidebarFieldsData: SidebarFieldsProps[] = [
         {link: Grid, text: "All"},
         {link:SearchIcon, text:"Search"},
-        {link:Bulb, text:"Ideas"},
-        {link:UserIcon, text:"Profile"},
-        {link:folder, text:"Folder"},
-        {link:Book, text:"Book"},
+        {link:Bulb, text:"Inspirations"},
+        {link:UserIcon, text:"Personal"},
+        {link:folder, text:"Projects"},
+        {link:Book, text:"Reading List"},
         
     ];
     return (
-        <div className="h-screen flex flex-col items-baseline justify-start pt-4 md:pt-8 pl-2 md:pl-8
-        md:w-70 bg-white gap-9">
+        <div className="h-screen flex flex-col items-baseline justify-start pt-4 
+        md:pt-8 pl-2 md:pl-8
+        md:w-70 bg-stone-50 gap-7">
             <div className="flex items-center gap-4 ">
                 <BrainIcon/>
 
@@ -39,14 +41,17 @@ export default function SidebarComponent() {
             </div>
             {/* fields - tweet, yt, document etc. */}
             <p className="uppercase text-gray-500 w-full 
-            text-start font-heading text-xs tracking-widest"> 
+            text-start font-heading text-xs tracking-widest pt-2"> 
                 Spaces
             </p>
-            <div className="grid grid-cols-1 text-md tracking-wide text-gray-700 md:pl-2 w-full"> 
+            <div className="grid grid-cols-1 text-md tracking-wide
+             text-sidebartext md:pl-1 w-full gap-3 "> 
 
                 {
                     sidebarFieldsData.map((field, index) => (
-                        <SidebarFields key={index} link={field.link} text={field.text} />
+                    
+                            <SidebarFields key={index} link={field.link} text={field.text} />
+                    
                     ))
                 }
                

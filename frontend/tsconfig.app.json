@@ -15,7 +15,14 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    /* Alias */
 
+    "paths": {
+      "@/*": ["./src/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@svg/*": ["./src/assets/svg/*"]
+    },
+    
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,

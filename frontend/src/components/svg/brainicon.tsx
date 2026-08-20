@@ -1,6 +1,6 @@
 import React from 'react';
 // import image from "../../assets/logo.png"
-import img2 from"../../assets/image.png"
+import img2 from"@assets/image.png"
 interface BrainIconProps extends React.SVGProps<SVGSVGElement> {
   className?: string;
 }
