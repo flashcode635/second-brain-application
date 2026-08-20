@@ -21,6 +21,10 @@ const Embedd=({type, url}: {type: string, url: string})=>{
     )
 }
 export let sampleLink =["link1","link2","link3"]
+const cardWidth = width + 102;
+const cardHeight = 350;
+const embedHeight = 205;
+const tagsHeight = 50;
 // DELETE content function
 const deleteContent = async({id}: {id: any})=>{
     try {
@@ -64,24 +68,25 @@ export const CardComponent = ({type, heading, tags, url,key}: CardProps)=>{
     return(
         <>
         <div key={url}
-                    className="rounded-lg shadow-md bg-stone-50 flex flex-col h-fit self-start border-gray-150 border p-2 pt-0 mb-2"
-          style={{ width: `${width + 102}px` }} // use style so Tailwind doesn't 
-          // purge a dynamic class
+            className="rounded-lg shadow-md bg-stone-50 
+            flex flex-col self-start border-gray-150 border 
+            p-2 pt-0 mb-2 overflow-hidden"
+    style={{ width: `${cardWidth}px`, height: `${cardHeight}px` }}
         >
           
             <div 
-                 className="text-center overflow-y-auto overflow-x-hidden p-3 md:pt-4 thin-scrollbar">
+                 className="text-center overflow-hidden p-3 md:pt-4 thin-scrollbar h-full">
                 {/* heading */}
-                     <div className="flex justify-between">
-                    <div className="flex justify-flex-start items-center gap-3">
-                 
-                    { <DynamicIcon type={type} /> }
+                <div className="flex justify-between items-center text-center h-8 overflow-hidden">
+                    <div className="flex h-full justify-start items-start gap-3">
+                    
+                        { <DynamicIcon type={type} /> }
 
-                    <h1
-                        className="font-semibold text-xl h-7.5  overflow-y-auto pr-0"
-                    >
-                        {heading}
-                    </h1>
+                        <h1
+                            className="font-semibold text-xl overflow-hidden pr-0 wrap-break-words"
+                        >
+                            {heading}
+                        </h1>
                     </div>
                     <div className="flex justify-flex-end items-center" onClick={() => 
                         deleteContent({ id: key })}>
@@ -91,12 +96,18 @@ export const CardComponent = ({type, heading, tags, url,key}: CardProps)=>{
                 </div>
 
                 {/* embedding */}
-                <div className="mb-3 mt-2 flex items-center justify-center w-full">
+                <div
+                    className="mb-3 flex items-center justify-center w-full overflow-hidden"
+                    style={{ height: `${embedHeight}px` }}
+                >
                       <Embedd type={type} url={url}/>
                 </div>
 
                 {/* tags */}
-                <div className="grid grid-cols-3">
+                <div
+                    className="grid grid-cols-3 h-13 overflow-hidden"
+                    style={{ height: `${tagsHeight}px` }}
+                >
                    {tags?.map((tagValue)=>(
                     //  force wrapping and prevent horizontal expansion
                     <span className="block max-h-18 overflow-y-auto min-w-auto max-w-20 ">

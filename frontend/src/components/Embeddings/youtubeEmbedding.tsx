@@ -19,7 +19,7 @@ const YouTubeEmbed: React.FC<EmbeddingProps> = ({
 
   const embedSrc = `https://www.youtube.com/embed/${videoId}`;
   return (
-    <iframe style={{height: `${height}px`, width: `${width+60}px`, borderRadius:'8px'}}
+    <iframe style={{height: `${height}px`, width: `${width}px`, borderRadius:'8px'}}
       src={embedSrc}
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

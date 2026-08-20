@@ -97,27 +97,26 @@ export default function Dashboard() {
                   />
 
           {/* create content model */}
-          <div className="h-auto w-auto">
+            <div className="h-auto w-auto">
               <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
           </div>
 
-          <div className="outerdiv flex bg-linear-to-b from-background via-55% via-bgvia 
-          to-[#f4f4f6]">
+            <div className="outerdiv flex min-h-screen bg-[#f7f8fa] text-purple-850">
 
               {/* sidebar */}
-              <div>
+              <div className="shrink-0 border-r border-[#e8e8e8] bg-[#fbfbfa]">
                   <SidebarComponent/>
               </div>
 
               {/* buttons & cards */}
-              <div className="p-4  mr-0 flex flex-col  w-full h-screen">
+              <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8 lg:px-12">
 
                       {/* buttons */}
-                      <div className="flex w-full h-fit gap-4 justify-end pr-3" >
+                  <div className="flex w-full items-center justify-end gap-2 border-b border-[#ededed] py-4" >
                           {/* buttons - Add Content & share */}
                           {/* <div className="flex gap-4 pr-3 mb-4"> */}
 
-                              <ButtonElement variant="secondary"
+                                <ButtonElement variant="secondary"
                                   text="Add Content" size="default" 
                                   onClickfn={()=>setModelOpen(true)}
                                   startIcon={<PlusIcon/>}
@@ -132,13 +131,12 @@ export default function Dashboard() {
                       </div>
 
                       {/* cards outer div*/}
-                      <div className="flex mt-14.25 items-center mr-3">
+                      <div className="mx-auto mt-10 w-full max-w-270">
                           
                               {/* cards sections */}
-                              <div className="mr-0 pr-0 ">
+                                <div className="mr-0 w-full pr-0 ">
 
-                                  <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 
-                                  gap-4">
+                                  <div className="grid grid-cols-1 justify-items-start gap-5 sm:grid-cols-2 xl:grid-cols-3">
                                       {loading ? (
                                           <div className="col-span-full text-center">Loading your content...</div>
                                       ) : content.length > 0 ? (
@@ -161,7 +159,7 @@ export default function Dashboard() {
                               </div>
                         
                       </div>
-              </div>
+              </main>
             
           </div>
         </>
