@@ -35,7 +35,7 @@ export default function SidebarComponent() {
         md:pt-8 pl-2 md:pl-8
         md:w-70 theme-surface gap-7">
             <div className="flex items-center gap-4 ">
-                <BrainIcon/>
+                <BrainIcon size="small" />
 
                 <span className="text-xl font-heading uppercase"><b> Your Brain </b>  </span>
             </div>

@@ -1,5 +1,5 @@
 // import { useNavigate } from "react-router-dom";
-
+import pdf from "@assets/pdf.png";
 export interface SavedLink {
   id: string;
   title: string;
@@ -20,6 +20,7 @@ export interface MetricItem {
 
 import BrainIcon from '@/components/svg/brainicon';
 import { BookmarkIcon, GithubIcon, PdfIcon,PinterestIcon } from '@/components/svg/homepageicons';
+// import { PlusIcon } from '@/components/svg/plusicon';
 import React from 'react';
 // import { SavedLink } from '../types';
 
@@ -61,7 +62,7 @@ const CARDS_DATA: SavedLink[] = [
     icon: () => <BookmarkIcon />,
     title: "Link bookmark",
     subtitle: 'The Verge: Tech News',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80',
+    image: 'https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     author: { name: 'Alex', avatar: 'https://i.pravatar.cc/100?img=12' },
   },
   {
@@ -69,7 +70,7 @@ const CARDS_DATA: SavedLink[] = [
     icon:()=><PdfIcon/>,
     title: 'PDF',
     subtitle: 'Q4 Report 2024',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+    image: pdf,
     author: { name: 'Sarah', avatar: 'https://i.pravatar.cc/100?img=5' },
   },
   {
@@ -99,13 +100,13 @@ export const HeroSection: React.FC = () => {
           <h1 className="text-5xl lg:text-6xl font-semibold tracking-tight text-neutral-900 leading-tight">
             Collect. Organise.<br />Access.
           </h1>
-          <p className="text-neutral-600 text-base max-w-md leading-relaxed">
-            All your valuable links, effortlessly stored and instantly available. The digital link manager you've been waiting for.
+          <p className="text-neutral-600 text-base max-w-full leading-relaxed">
+            All your valuable media links, effortlessly stored, neatly organized, and instantly available at your fingertips. The powerful, intelligent digital link manager you've been patiently waiting for.
           </p>
           <div className="pt-2 space-y-3">
             <button className="bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3 px-6 rounded-full inline-flex items-center gap-2 transition-all shadow-md">
-              <span>Save Your First Link</span>
-              <span className="text-lg leading-none">+</span>
+              <span>Get Started</span>
+              {/* <span className="text-lg leading-none"> <PlusIcon/> </span> */}
             </button>
             
              {/* Pagination Indicators */}
@@ -138,9 +139,9 @@ export const HeroSection: React.FC = () => {
 // import { MetricItem } from '../types';
 
 const METRICS: MetricItem[] = [
-  { value: '1.2M+', label: 'LINKS STORED' },
-  { value: '25K+', label: 'ACTIVE USERS' },
-  { value: '99.9%', label: 'UPTIME' },
+  { value: '< 100ms', label: 'URL FETCH SPEED' },
+  { value: '1 Click', label: 'INSTANT SHARE' },
+  { value: '100%', label: 'FREE & OPEN SOURCE' },
 ];
 
 export const MetricsSection: React.FC = () => {
@@ -153,7 +154,7 @@ export const MetricsSection: React.FC = () => {
             Seamless Link<br />Management
           </h2>
           <p className="text-neutral-600 max-w-lg leading-relaxed text-sm md:text-base">
-            With our innovative link storing and organisation tools, never lose a web resource again. Intuitive, fast, and secure – designed for productivity.
+            With our innovative link storing and organisation tools, never lose a web resource again. Intuitive, fast, and secure , designed for productivity.
           </p>
           <button className="bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3 px-6 rounded-full text-sm shadow-md transition-all">
             Learn More
@@ -164,7 +165,7 @@ export const MetricsSection: React.FC = () => {
         <div className="lg:col-span-5 space-y-8">
           {METRICS.map((metric, idx) => (
             <div key={idx} className="border-b border-neutral-200/60 pb-4 last:border-b-0">
-              <div className="text-4xl font-bold tracking-tight text-neutral-900">{metric.value}</div>
+              <div className="text-4xl font-bold tracking-wide text-neutral-900">{metric.value}</div>
               <div className="text-xs tracking-widest text-neutral-500 font-semibold mt-1">{metric.label}</div>
             </div>
           ))}
@@ -179,15 +180,16 @@ export const MetricsSection: React.FC = () => {
 const footerColumns = [
   {
     title: 'Features',
-    links: ['Dashboard', 'Categories', 'Collaboration'],
+    links: [{title: 'Dashboard',link: "/signin"},
+       {title: 'Categories'}, {title: 'Collaboration'}],
   },
   {
     title: 'Resources',
-    links: ['Tutorials', 'API Docs', 'Community', 'Status'],
+    links: [{title: 'Tutorials'}, {title: "Privacy Policy"}, {title: "Terms of Service"}],
   },
   {
     title: 'Contact',
-    links: ['Pricing', 'Blog', 'Contact Us', 'Sign In'],
+    links: [{title: "Github",link:"https://github.com/flashcode635/second-brain-application"}, {title: "Sign In", link: "/signin"}],
   },
 ];
 
@@ -270,10 +272,10 @@ export const Footer: React.FC = () => {
               <div className="w-16 h-12 rounded-lg flex items-center justify-center shrink-0">
                 {/* Replace with your BrainIcon */}
                 <span className="text-xl">
-                  <BrainIcon />
+                  <BrainIcon size="medium" />
                 </span>
               </div>
-              <p className="text-sm text-text-primary leading-relaxed font-sans">
+              <p className="text-sm font-semibold text-text-primary leading-relaxed font-sans">
                 Thoughtfully Designed for Productivity.
               </p>
             </div>
@@ -285,15 +287,15 @@ export const Footer: React.FC = () => {
                   <h4 className="font-semibold text-white mb-4 text-base font-sans">
                     {column.title}
                   </h4>
-                  <ul className="space-y-2.5">
-                    {column.links.map((link) => (
-                      <li key={link}>
-                        <a
-                          href="#"
+                  <ul className="space-y-2">
+                    {column.links.map((link:any) => (
+                      <li key={link.link??link.title}>
+                        { link.link? (<a
+                          href={link.link}
                           className="hover:text-white transition-colors duration-200"
                         >
-                          {link}
-                        </a>
+                          {link.title}
+                        </a>) : (<span className="">{link.title}</span>)}
                       </li>
                     ))}
                   </ul>
