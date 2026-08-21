@@ -13,7 +13,7 @@ export interface ButtonProps {
 export const defaultStyles = "font-semibold flex justify-center hover:cursor-pointer"
 export const variantStyles={
     "primary":"theme-button-primary",
-    "secondary":"theme-button-primary"
+    "secondary":"theme-button-secondary"
 }
 export const sizeStyles={
     sm:"p-1.5 rounded-md ",

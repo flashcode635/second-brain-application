@@ -114,17 +114,17 @@ export default function Dashboard() {
               <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
                       {/* buttons */}
-                  <div className="flex w-full items-center justify-end gap-2 py-4" >
+                  <div className="flex w-full items-center justify-end gap-4 py-4" >
                           {/* buttons - Add Content & share */}
                           {/* <div className="flex gap-4 pr-3 mb-4"> */}
 
-                                <ButtonElement variant="primary"
+                                <ButtonElement variant="secondary"
                                    size="sm" 
                                   onClickfn={()=>setModelOpen(true)}
                                   startIcon={<PlusIcon/>}
                               />
 
-                          <ButtonElement variant="primary" 
+                          <ButtonElement variant="secondary" 
                           size="sm"  onClickfn={shareContent}  
                           startIcon={<ShareIcon/>}
                           />   
