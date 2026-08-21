@@ -10,13 +10,13 @@ export const YoutubeLogo: () => React.JSX.Element = () => (
   <defs>
     {/* Premium Vibrant Red Gradient */}
     <linearGradient id="ytPremiumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#FF0000" />
-      <stop offset="100%" stopColor="#C40000" />
+      <stop offset="0%" stopColor="var(--brand-youtube-start)" />
+      <stop offset="100%" stopColor="var(--brand-youtube-end)" />
     </linearGradient>
 
     {/* Subtle Drop Shadow for Elevation */}
     <filter id="ytGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="#FF0000" floodOpacity="0.25" />
+      <feDropShadow dx="0" dy="2" stdDeviation="1.5" floodColor="var(--brand-youtube-start)" floodOpacity="0.25" />
     </filter>
   </defs>
 
@@ -29,7 +29,7 @@ export const YoutubeLogo: () => React.JSX.Element = () => (
 
   {/* Pure White Crisp Inner Play Button */}
   <path 
-    fill="#FFFFFF" 
+    fill="var(--color-text-on-dark)" 
     d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" 
   />
 </svg>

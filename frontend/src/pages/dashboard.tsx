@@ -13,7 +13,7 @@ import { CustomAlert } from "../components/customAlert";
 
 interface ContentItem {
   id: string;
-  type: 'linkedIn' | 'youtube' | 'twitter';
+  type: 'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit';
   title: string;
   link: string;
   tags?: string[];
@@ -101,15 +101,15 @@ export default function Dashboard() {
               <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
           </div>
 
-            <div className="outerdiv flex min-h-screen bg-[#f7f8fa] text-purple-850">
+            <div className="outerdiv theme-page flex min-h-screen">
 
               {/* sidebar */}
-              <div className="shrink-0 border-r fixed border-[#e8e8e8] bg-[#fbfbfa]">
+              <div className="shrink-0 border-r fixed border-border bg-surface">
                   <SidebarComponent/>
               </div>
               <div className="h-screen flex flex-col items-baseline justify-start pt-4 
         md:pt-8 pl-2 md:pl-8
-        md:w-70 bg-stone-50 gap-7"></div>
+        md:w-70 theme-surface gap-7"></div>
               {/* buttons & cards */}
               <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
@@ -119,13 +119,13 @@ export default function Dashboard() {
                           {/* <div className="flex gap-4 pr-3 mb-4"> */}
 
                                 <ButtonElement variant="primary"
-                                   size="default" 
+                                   size="sm" 
                                   onClickfn={()=>setModelOpen(true)}
                                   startIcon={<PlusIcon/>}
                               />
 
                           <ButtonElement variant="primary" 
-                          size="default"  onClickfn={shareContent}  
+                          size="sm"  onClickfn={shareContent}  
                           startIcon={<ShareIcon/>}
                           />   
                           {/* </div> */}
@@ -140,7 +140,7 @@ export default function Dashboard() {
 
                                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                       {loading ? (
-                                          <div className="col-span-full text-center text-gray-600">
+                                          <div className="col-span-full text-center text-text-secondary">
                                             Loading your content...</div>
                                       ) : content.length > 0 ? (
                                           content.map((item) => (
@@ -160,7 +160,7 @@ export default function Dashboard() {
                                               />
                                           ))
                                       ) : (
-                                          <div className="col-span-full text-center text-gray-600">
+                                          <div className="col-span-full text-center text-text-secondary">
                                               No content available. Add some content to get started!
                                           </div>
                                       )}

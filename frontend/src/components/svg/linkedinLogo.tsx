@@ -4,13 +4,13 @@ export const LinkedInLogo: () => React.JSX.Element = () => (
                     <defs>
                         {/* Official LinkedIn Blue Depth Gradient */}
                         <linearGradient id="linkedInBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#0A66C2" />
-                        <stop offset="100%" stopColor="#004182" />
+                        <stop offset="0%" stopColor="var(--brand-linkedin-start)" />
+                        <stop offset="100%" stopColor="var(--brand-linkedin-end)" />
                         </linearGradient>
 
                         {/* Soft Drop Shadow */}
                         <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
-                        <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.3" />
+                        <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="var(--color-surface-dark)" floodOpacity="0.3" />
                         </filter>
                     </defs>
 
@@ -18,10 +18,10 @@ export const LinkedInLogo: () => React.JSX.Element = () => (
                     <rect width="256" height="256" rx="56" fill="url(#linkedInBg)" filter="url(#dropShadow)" />
                     
                     {/* Subtle Inner Highlight */}
-                    <rect x="1" y="1" width="254" height="254" rx="55" fill="none" stroke="#FFFFFF" strokeOpacity="0.2" strokeWidth="2" />
+                    <rect x="1" y="1" width="254" height="254" rx="55" fill="none" stroke="var(--color-text-on-dark)" strokeOpacity="0.2" strokeWidth="2" />
 
                     {/* LinkedIn Official White Logo */}
-                    <g fill="#FFFFFF">
+                    <g fill="var(--color-text-on-dark)">
                         {/* "i" dot */}
                         <circle cx="72" cy="72" r="14" />
                         

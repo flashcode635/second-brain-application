@@ -92,11 +92,11 @@ function EmbedFrame({ html, title, initialHeight = 450 }: {
 }
 
 function EmbedSkeleton() {
-  return <div style={{ background: "#f0f0f0", height: 400, borderRadius: 8 }} />;
+  return <div style={{ background: "var(--color-surface-muted)", height: 400, borderRadius: 8 }} />;
 }
 
 function EmbedError({ message }: { message: string }) {
-  return <p style={{ color: "#c00", fontSize: 14 }}> {message}</p>;
+  return <p style={{ color: "var(--color-danger)", fontSize: 14 }}> {message}</p>;
 }
 
 // ---------- Public components ----------

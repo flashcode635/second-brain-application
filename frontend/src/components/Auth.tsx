@@ -86,9 +86,9 @@ export default function Authentication({endpoint,Title, destination}: {endpoint:
         </div>
          <div >
             {/* outer screen */}
-                <div className="w-screen h-screen bg-gray-50 fixed z-100 flex justify-center items-center ">
+                <div className="theme-page w-screen h-screen fixed z-100 flex justify-center items-center ">
                             {/* input box  */}
-                    <div className="bg-yellow-50 flex flex-col 
+                    <div className="theme-surface flex flex-col 
                     gap-3 rounded-md p-4 pt-0 pr-0">
                            
 

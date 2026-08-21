@@ -8,7 +8,7 @@ export type SidebarFieldsProps = {
 const SidebarFields =({link,text}:SidebarFieldsProps)=>{
     return(
         <>
-                <div className="flex justify-start gap-4 items-center w-3/4 cursor-pointer hover:bg-stone-200/70 hover:text-black  rounded-md transition-all
+                <div className="theme-sidebar-item flex justify-start gap-4 items-center w-3/4 cursor-pointer rounded-md transition-all
                  duration-175 p-1.5">          
                
                     {link()}
@@ -33,19 +33,19 @@ export default function SidebarComponent() {
     return (
         <div className="h-screen flex flex-col items-baseline justify-start pt-4 
         md:pt-8 pl-2 md:pl-8
-        md:w-70 bg-stone-50 gap-7">
+        md:w-70 theme-surface gap-7">
             <div className="flex items-center gap-4 ">
                 <BrainIcon/>
 
                 <span className="text-xl font-heading uppercase"><b> Your Brain </b>  </span>
             </div>
             {/* fields - tweet, yt, document etc. */}
-            <p className="uppercase text-gray-500 w-full 
+            <p className="uppercase text-text-muted w-full 
             text-start font-heading text-xs tracking-widest pt-2"> 
                 Spaces
             </p>
             <div className="grid grid-cols-1 text-md tracking-wide
-             text-sidebartext md:pl-1 w-full gap-3 "> 
+             text-text-sidebar md:pl-1 w-full gap-3 "> 
 
                 {
                     sidebarFieldsData.map((field, index) => (

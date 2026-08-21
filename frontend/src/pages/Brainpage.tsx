@@ -36,7 +36,7 @@ export default function BrainPage() {
     
     return (
         <>
-        <div className="bg-yellow-50 min-h-screen p-6" >
+        <div className="theme-page min-h-screen p-6" >
             {/*page component mei data given */}
             <Page data={data} loading={loading} error={error} />
         </div>
@@ -62,7 +62,7 @@ const Page = ({ data, loading, error }: PageProps) => {
     if (error) {
         return (
             <div className="flex justify-center items-center min-h-screen">
-                <div className="text-xl text-red-600">{error}</div>
+                <div className="text-xl theme-alert-error">{error}</div>
             </div>
         );
     }
@@ -79,7 +79,7 @@ const Page = ({ data, loading, error }: PageProps) => {
         <div className=" ">
             <div className="mb-6">
                 <h1 className="text-3xl font-bold mb-2">Welcome!</h1>
-                <p className="text-lg text-gray-700">
+                <p className="text-lg text-text-secondary">
                     You are viewing {data.username || 'a user'}'s brain
                 </p>
             </div>
@@ -98,7 +98,7 @@ const Page = ({ data, loading, error }: PageProps) => {
                           />
                       ))
                   ) : (
-                      <div className="col-span-full text-center text-gray-600">
+                      <div className="col-span-full text-center text-text-secondary">
                           No content available in this brain.
                       </div>
                   )}

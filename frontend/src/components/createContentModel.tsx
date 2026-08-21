@@ -174,7 +174,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
           </div>
 
             <div 
-            className="w-full max-w-md mx-auto bg-yellow-50 rounded-2xl 
+            className="theme-surface w-full max-w-md mx-auto rounded-2xl 
             shadow-2xl pt-0 pr-5 pl-5 pb-4   flex flex-col fixed
             gap-2 border border-slate-100">
                 {/* closing button */}
@@ -187,7 +187,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
             
                 {/* title */}
                 <div className="">
-                    <h2 className="text-[22px] font-semibold text-center text-slate-800 mb-0.5 tracking-tight">
+                        <h2 className="text-[22px] font-semibold text-center text-text-primary mb-0.5 tracking-tight">
                         Add Contents to List
                     </h2>
                 </div>  
@@ -199,28 +199,28 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 {/* <InputField label="Description"/> */}
                 <div className="flex flex-col">
                     {/* chose type */}
-                    <label htmlFor="title" className="text-slate-700 font-medium mb-1.5">Choose Type</label>
+                    <label htmlFor="title" className="text-text-secondary font-medium mb-1.5">Choose Type</label>
                     {/* type of link */}
                     <div className="grid grid-cols-2">
 
-                        <button  className={`content-button ${className} w-40 mb-3 ${type === "linkedIn" ? "bg-purple-850 text-amber-50" : ""}`}
+                        <button  className={`content-button ${className} w-40 mb-3 ${type === "linkedIn" ? "theme-button-primary" : ""}`}
                          onClick={() => setType("linkedIn")}
                          >LinkedIn</button>
-                        <button className={`${className} w-40 mb-3 ${type === "youtube" ? "bg-purple-850 text-amber-50" : ""}`}
+                        <button className={`${className} w-40 mb-3 ${type === "youtube" ? "theme-button-primary" : ""}`}
                          onClick={() => setType("youtube")}
                          >Youtube</button>
-                        <button className={` content-button ${className} w-40 mb-3 ${type ==="twitter" ? "bg-purple-850 text-amber-50" : ""}`} 
+                        <button className={` content-button ${className} w-40 mb-3 ${type ==="twitter" ? "theme-button-primary" : ""}`} 
                         onClick={() => setType("twitter")}
                         >Twitter</button>
-                        <button className={` content-button ${className} w-40 mb-3 ${type ==="instagram" ? "bg-purple-850 text-amber-50" : ""}`} 
+                        <button className={` content-button ${className} w-40 mb-3 ${type ==="instagram" ? "theme-button-primary" : ""}`} 
                         onClick={() => setType("instagram")}
                         >Instagram</button>
-                        <button className={` content-button ${className} w-40 mb-3 ${type ==="reddit" ? "bg-purple-850 text-amber-50" : ""}`} 
+                        <button className={` content-button ${className} w-40 mb-3 ${type ==="reddit" ? "theme-button-primary" : ""}`} 
                         onClick={() => setType("reddit")}
                         >Reddit</button>
                     </div>
                 
-                    <label htmlFor="title" className="text-slate-700 
+                    <label htmlFor="title" className="text-text-secondary 
                     font-medium mb-1.5">Enter tags</label>
                     <div className="grid grid-cols-3">
                         {tagsample.map((tag, index) => (
@@ -253,7 +253,7 @@ export const CreateContentModel = ({open ,onClose}:modelProps) => {
     return (
         <>
             {open &&
-             <div className="h-screen w-screen left-0 top-0 fixed     bg-gray-50 z-1000">
+             <div className="theme-page h-screen w-screen left-0 top-0 fixed z-1000">
                 <div> 
                     <div 
                     className=" h-screen w-full fixed flex items-center justify-center opacity-120 ">

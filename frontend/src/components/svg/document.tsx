@@ -10,13 +10,13 @@ export const DocumentLogo: () => React.JSX.Element = () => (
   <defs>
     {/* Premium Gradient Depth */}
     <linearGradient id="journalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#00A0DC" />
-      <stop offset="100%" stopColor="#006699" />
+      <stop offset="0%" stopColor="var(--brand-linkedin-start)" />
+      <stop offset="100%" stopColor="var(--brand-linkedin-end)" />
     </linearGradient>
 
     {/* Subtle Elevation Drop Shadow */}
     <filter id="journalShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="1.5" stdDeviation="1" floodColor="#000000" floodOpacity="0.2" />
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1" floodColor="var(--color-surface-dark)" floodOpacity="0.2" />
     </filter>
   </defs>
 

@@ -10,13 +10,13 @@ export const XLogo: () => React.JSX.Element = () => (
   <defs>
     {/* Premium Sleek Dark Metallic Gradient */}
     <linearGradient id="xGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#18181B" />
-      <stop offset="100%" stopColor="#000000" />
+      <stop offset="0%" stopColor="var(--brand-x-start)" />
+      <stop offset="100%" stopColor="var(--brand-x-end)" />
     </linearGradient>
 
     {/* Subtle Drop Shadow for Elevation on Light Theme */}
     <filter id="xGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="1.5" stdDeviation="1" floodColor="#000000" floodOpacity="0.2" />
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1" floodColor="var(--color-surface-dark)" floodOpacity="0.2" />
     </filter>
   </defs>
 

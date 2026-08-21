@@ -66,12 +66,12 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
             style={{
                 width: `${cardWidth}px`,
                 height: `${cardHeight}px`,
-                background: '#FFFFFF',
+                background: 'var(--color-surface)',
                 borderRadius: '16px',
-                border: '1px solid rgba(0, 0, 0, 0.08)',
+                border: '1px solid var(--color-border)',
                 boxShadow: isHovered
-                    ? '0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08)'
-                    : '0 2px 8px rgba(0, 0, 0, 0.06)',
+                    ? '0 12px 32px rgb(0 0 0 / 12%), 0 4px 8px rgb(0 0 0 / 8%)'
+                    : '0 2px 8px rgb(0 0 0 / 6%)',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
                 overflow: 'hidden',
@@ -99,7 +99,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                             justifyContent: 'center',
                             width: '24px',
                             height: '24px',
-                            background: '#F5F5F7',
+                            background: 'var(--color-surface-muted)',
                             borderRadius: '6px'
                         }}>
                             <DynamicIcon type={type} />
@@ -107,7 +107,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                         <span style={{
                             fontSize: '10px',
                             fontWeight: 600,
-                            color: '#999999',
+                            color: 'var(--color-text-muted)',
                             textTransform: 'uppercase',
                             letterSpacing: '0.5px'
                         }}>
@@ -118,7 +118,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                         margin: 0,
                         fontSize: '20px',
                         fontWeight: 600,
-                        color: '#000000',
+                        color: 'var(--color-text-primary)',
                         lineHeight: '1.3',
                         letterSpacing: '-0.01em',
                         overflow: 'hidden',
@@ -141,7 +141,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                         opacity: isHovered ? 1 : 0,
                         transform: isHovered ? 'scale(1)' : 'scale(0.8)',
                         transition: 'all 0.2s ease',
-                        background: isHovered ? 'rgba(0, 0, 0, 0.04)' : 'transparent',
+                        background: isHovered ? 'var(--color-surface-muted)' : 'transparent',
                         border: 'none',
                         borderRadius: '8px',
                         width: '32px',
@@ -153,10 +153,10 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                         flexShrink: 0
                     }}
                     onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.08)';
+                        e.currentTarget.style.background = 'var(--color-hover)';
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                        e.currentTarget.style.background = 'var(--color-surface-muted)';
                     }}
                 >
                     <DeleteIcon />
@@ -170,10 +170,10 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
             }}>
                 <div style={{
                     height: `${embedHeight}px`,
-                    background: '#FAFAFA',
+                    background: 'var(--color-surface-muted)',
                     borderRadius: '12px',
                     overflow: 'hidden',
-                    border: '1px solid rgba(0, 0, 0, 0.06)'
+                    border: '1px solid var(--color-border)'
                 }}>
                     <div style={{
                         height: '100%',
@@ -204,20 +204,20 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                             display: 'inline-flex',
                             alignItems: 'center',
                             padding: '5px 10px',
-                            background: '#F5F5F7',
+                            background: 'var(--color-surface-muted)',
                             borderRadius: '10px',
                             fontSize: '11px',
                             fontWeight: 500,
-                            color: '#000000',
+                            color: 'var(--color-text-primary)',
                             letterSpacing: '0.01em',
                             whiteSpace: 'nowrap',
                             transition: 'all 0.2s ease'
                         }}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.background = '#EBEBED';
+                            e.currentTarget.style.background = 'var(--color-hover)';
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.background = '#F5F5F7';
+                            e.currentTarget.style.background = 'var(--color-surface-muted)';
                         }}
                     >
                         #{tagValue}
@@ -225,7 +225,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                 )) || (
                     <span style={{
                         fontSize: '11px',
-                        color: '#999999',
+                        color: 'var(--color-text-muted)',
                         fontStyle: 'italic'
                     }}>
                         No tags

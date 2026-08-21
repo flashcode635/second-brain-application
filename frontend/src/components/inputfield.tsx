@@ -11,7 +11,7 @@ type Props = {
 export const InputField = forwardRef<HTMLInputElement, Props>(({ label, placeholder}, ref) => {
     return (
         <div className="flex flex-col">
-            {label && <label className="text-sm text-slate-700 mb-1">{label}</label>}
+            {label && <label className="text-sm text-text-secondary mb-1">{label}</label>}
             <input
                 ref={ref}
                 placeholder={placeholder}
