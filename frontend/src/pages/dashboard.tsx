@@ -118,7 +118,7 @@ export default function Dashboard() {
                           {/* buttons - Add Content & share */}
                           {/* <div className="flex gap-4 pr-3 mb-4"> */}
 
-                                <ButtonElement variant="secondary"
+                                <ButtonElement variant="primary"
                                    size="default" 
                                   onClickfn={()=>setModelOpen(true)}
                                   startIcon={<PlusIcon/>}
@@ -140,7 +140,7 @@ export default function Dashboard() {
 
                                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                       {loading ? (
-                                          <div className="col-span-full text-center">
+                                          <div className="col-span-full text-center text-gray-600">
                                             Loading your content...</div>
                                       ) : content.length > 0 ? (
                                           content.map((item) => (
@@ -160,7 +160,7 @@ export default function Dashboard() {
                                               />
                                           ))
                                       ) : (
-                                          <div className="col-span-full text-center">
+                                          <div className="col-span-full text-center text-gray-600">
                                               No content available. Add some content to get started!
                                           </div>
                                       )}

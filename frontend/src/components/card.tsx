@@ -6,13 +6,16 @@ import { BACKEND_URL, CONTENT, height, width, type CardProps } from "../config";
 import { TwitterEmbedding } from "./Embeddings/twitterEmbedding";
 import axios, { type AxiosResponse } from "axios";
 import { useState } from "react";
+import { InstagramEmbed, RedditEmbed } from "./Embeddings/oembed";
 
 const Embedd = ({ type, url }: { type: string, url: string }) => {
     return (
         <>
-            {type == "linkedIn" && <div key={type}><LinkedInEmbedding url={url} /></div>}
-            {type == "youtube" && <div key={type}><YouTubeEmbed url={url} /></div>}
-            {type == "twitter" && <div key={type}><TwitterEmbedding url={url} /></div>}
+            {type == "linkedIn" && <div id={type} key={`${url}`}><LinkedInEmbedding url={url} /></div>}
+            {type == "youtube" && <div id={type} key={`${url}`}><YouTubeEmbed url={url} /></div>}
+            {type == "twitter" && <div id={type} key={`${url}`}><TwitterEmbedding url={url} /></div>}
+            {type=="instagram" && <div id={type} key={`${url}`}> <InstagramEmbed url={url} /> </div>}
+            {type=="reddit" && <div id={type} key={`${url}`}> <RedditEmbed url={url} /> </div>}
         </>
     )
 }

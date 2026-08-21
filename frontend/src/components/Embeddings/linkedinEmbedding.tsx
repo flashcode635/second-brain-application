@@ -1,37 +1,3 @@
-// import { height, type EmbeddingProps } from '../../config';
-
-// export const LinkedInEmbedding = ({
-//   url
-// }: EmbeddingProps) => {
-//         if (!url) {
-//             return <p>No URL provided to embed.</p>;
-//         }
-// // find postID
-//         function getLinkedInPostId(url:string) {
-//   const match = url.match(/(ugcPost|activity)-(\d+)/);
-//   return match ? match[2] : null;
-// }
-// const postId = getLinkedInPostId(url);
-// if (!postId) return <p>Invalid LinkedIn URL</p>;
-//   return (
-//    // wrapper becomes the scrollable element we style
-//    <div className="linkedin-embed-wrapper w-full thin-scrollbar overflow-y-auto" style={{ height: `${height}px`, }}>
-//             <iframe 
-//             className="block w-full h-full border-0"
-//             src={`https://www.linkedin.com/embed/feed/update/urn:li:activity:${postId}`}
-//             loading='lazy'
-//             scrolling="no"
-//             // width={width} 
-//             height={height+90}
-//             // style={{"scrollbarWidth":"thin"}}
-//             // allowFullScreen={false}
-//             title="LinkedIn Post"
-            
-//             ></iframe>
-//     </div>
-//   );
-// };
-
 // Frontend Component
 import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../../config';
@@ -99,7 +65,8 @@ export const LinkedInEmbedding = ({ url }: EmbeddingProps) => {
 
       {/* PREVIEW CARD YAHAN DIKHEGA */}
       {preview && preview.success && (
-        <div className="h-full w-full border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        <div className="h-full w-full border border-gray-200 rounded-lg shadow-sm 
+        overflow-hidden">
           
           {/* 1. The Rich Card (Guaranteed to work) */}
           <div className="p-4 bg-white h-full overflow-hidden">
@@ -124,7 +91,8 @@ export const LinkedInEmbedding = ({ url }: EmbeddingProps) => {
               {preview.embedUrl && (
                 <button 
                   onClick={() => setShowIframe(!showIframe)}
-                  className="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-2 py-1 rounded font-medium whitespace-nowrap"
+                  className="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-2
+                   py-1 rounded font-medium whitespace-nowrap"
                 >
                   {showIframe ? "Hide Iframe" : "Try Iframe Embed"}
                 </button>

@@ -31,7 +31,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
     //  to get data
     // default to a valid content type that backend supports
-    const [type, setType]= useState<'linkedIn' | 'youtube' | 'twitter'>("youtube")
+    const [type, setType]= useState<'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit'>("youtube")
 
     const titleref= useRef<HTMLInputElement>(null)
     const linkref= useRef<HTMLInputElement>(null)
@@ -78,13 +78,13 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
             // ✅ Normalize and check domain
             const hostname = parsed.hostname.toLowerCase();
-            const allowed = ['x.com', 'twitter.com', 'linkedin.com', 'lnkd.in', 'youtube.com', 'youtu.be'];
+            const allowed = ['x.com', 'instagram.com', 'reddit.com', 'twitter.com', 'linkedin.com', 'lnkd.in', 'youtube.com', 'youtu.be'];
             const isAllowed = allowed.some(
                 (d) => hostname === d || hostname.endsWith('.' + d)
             );
             // If domain is not FOUND in list
             if (!isAllowed) {
-                setAlertMessage('Please enter a link from LinkedIn, Twitter (X), or YouTube.');
+                setAlertMessage('Please enter a link from LinkedIn, Twitter (X), Instagram, Reddit, or YouTube.');
                 setShowAlert(true);
                 return;
             }
@@ -96,6 +96,8 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 twitter: ['x.com', 'twitter.com'],
                 linkedIn: ['linkedin.com', 'lnkd.in'],
                 youtube: ['youtube.com', 'youtu.be'],
+                instagram: ['instagram.com'],
+                reddit: ['reddit.com'],
             };
 
             // If `contentType` is defined, make sure the link belongs to that platform
@@ -210,6 +212,12 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                         <button className={` content-button ${className} w-40 mb-3 ${type ==="twitter" ? "bg-purple-850 text-amber-50" : ""}`} 
                         onClick={() => setType("twitter")}
                         >Twitter</button>
+                        <button className={` content-button ${className} w-40 mb-3 ${type ==="instagram" ? "bg-purple-850 text-amber-50" : ""}`} 
+                        onClick={() => setType("instagram")}
+                        >Instagram</button>
+                        <button className={` content-button ${className} w-40 mb-3 ${type ==="reddit" ? "bg-purple-850 text-amber-50" : ""}`} 
+                        onClick={() => setType("reddit")}
+                        >Reddit</button>
                     </div>
                 
                     <label htmlFor="title" className="text-slate-700 

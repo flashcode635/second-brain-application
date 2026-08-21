@@ -12,12 +12,12 @@ export interface ButtonProps {
 }
 export const defaultStyles = "font-semibold flex justify-center hover:cursor-pointer"
 export const variantStyles={
-    "primary":" bg-purple-250 text-purple-750",
+    "primary":" hover:bg-purple-250 text-purple-750",
     "secondary":"bg-purple-750 text-white"
 }
 export const sizeStyles={
     sm:"px-1 py-1 rounded-md ",
-    default:"px-4 py-2 rounded-md ",
+    default:"px-2 py-2 rounded-lg ",
     lg:"px-6 py-3 rounded-lg"
 }
 export default function ButtonElement({variant,size,text,startIcon,endIcon,onClickfn,loading, full}:ButtonProps) {
