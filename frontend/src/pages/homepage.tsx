@@ -103,21 +103,24 @@ export const HeroSection: React.FC = () => {
           <p className="text-neutral-600 text-base max-w-full leading-relaxed">
             All your valuable media links, effortlessly stored, neatly organized, and instantly available at your fingertips. The powerful, intelligent digital link manager you've been patiently waiting for.
           </p>
-          <div className="pt-2 space-y-3">
-            <button className="bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3 px-6 rounded-full inline-flex items-center gap-2 transition-all shadow-md">
-              <span>Get Started</span>
-              {/* <span className="text-lg leading-none"> <PlusIcon/> </span> */}
-            </button>
+          <div className="pt-2 space-y-6">
+            {/* Action Button */}
+            <a 
+              href="/signin" 
+              className="bg-black hover:bg-black/90 text-white font-medium py-2.5 px-5 rounded-full inline-flex items-center justify-center gap-2 transition-all shadow-sm text-lg">
             
-             {/* Pagination Indicators */}
-            <div className="flex justify-between items-center max-w-7xl mx-auto mt-12 px-2">
+              <span>Get Started</span>
+            </a>
+
+            {/* Pagination Indicators */}
+            <div className="flex justify-between items-center max-w-7xl mx-auto pt-6">
               <div className="flex gap-2">
-                <span className="w-5 h-5 rounded-full bg-neutral-400 opacity-60"></span>
-                <span className="w-5 h-5 rounded-full bg-neutral-400"></span>
+                <span className="w-3 h-3 rounded-full bg-black/30"></span>
+                <span className="w-3 h-3 rounded-full bg-black/60"></span>
               </div>
               <div className="flex gap-2">
-                <span className="w-5.5 h-5.5 rounded-full bg-white shadow-sm border border-neutral-300"></span>
-                <span className="w-5.5 h-5.5 rounded-full bg-neutral-300"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-white shadow-sm border border-black/20"></span>
+                <span className="w-3.5 h-3.5 rounded-full bg-black/20"></span>
               </div>
             </div>
           </div>
@@ -156,9 +159,13 @@ export const MetricsSection: React.FC = () => {
           <p className="text-neutral-600 max-w-lg leading-relaxed text-sm md:text-base">
             With our innovative link storing and organisation tools, never lose a web resource again. Intuitive, fast, and secure , designed for productivity.
           </p>
-          <button className="bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3 px-6 rounded-full text-sm shadow-md transition-all">
-            Learn More
-          </button>
+         {/* Action Button */}
+            <a 
+              href="/signup" 
+              className="bg-black hover:bg-black/90 text-white font-medium py-2.5 px-5 rounded-full inline-flex items-center justify-center gap-2 transition-all shadow-sm text-lg"
+            >
+              <span>Learn More</span>
+            </a>
         </div>
 
         {/* Right Column - Metrics */}
@@ -189,7 +196,7 @@ const footerColumns = [
   },
   {
     title: 'Contact',
-    links: [{title: "Github",link:"https://github.com/flashcode635/second-brain-application"}, {title: "Sign In", link: "/signin"}],
+    links: [{title: "Github",link:"https://github.com/flashcode635/second-brain-application"}, {title: "Sign Up", link: "/signup"}],
   },
 ];
 
