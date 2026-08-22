@@ -106,7 +106,7 @@ export const HeroSection: React.FC = () => {
           <div className="pt-2 space-y-6">
             {/* Action Button */}
             <a 
-              href="/signin" 
+              href="/signup" 
               className="bg-black hover:bg-black/90 text-white font-medium py-2.5 px-5 rounded-full inline-flex items-center justify-center gap-2 transition-all shadow-sm text-lg">
             
               <span>Get Started</span>
