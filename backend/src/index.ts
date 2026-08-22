@@ -34,6 +34,11 @@ const UserObject= z.object({
              .max(12,{ message: "password is Longer than expected " })
 })
 
+app.get('/ping', (req, res) => {
+  // Returns instantly. No DB calls, no heavy logging.
+  res.status(200).send('OK');
+});
+
 app.post('/app/v1/signup', async(req, res) => {
 
 type UserObjectType = z.infer<typeof UserObject>
