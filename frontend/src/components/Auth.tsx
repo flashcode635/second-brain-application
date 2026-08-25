@@ -1,74 +1,29 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import ButtonElement from "../components/button";
 import { InputField } from "../components/inputfield";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
 import { CustomAlert } from "../components/customAlert";
 
-export default function Authentication({ endpoint, Title, destination }: { endpoint: string, Title: string, destination: string }) {
-    const [alertMessage, setAlertMessage] = useState('');
-    const [showAlert, setShowAlert] = useState(false);
-    const [loading, setLoading] = useState(false);
-   
+type AuthenticationProps = {
+    title: string;
+    loading: boolean;
+    code?: React.ReactNode;
+    alertMessage: string;
+    showAlert: boolean;
+    onSubmit: (username: string, password: string) => void;
+    onCloseAlert: () => void;
+};
+
+// Shared UI shell. Sign-in and sign-up components own all authentication logic.
+export default function Authentication({
+    title,
+    loading,
+    alertMessage,
+    showAlert,
+    onSubmit,
+    onCloseAlert,
+}: AuthenticationProps) {
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
-
-    async function auth() {
-        // Get values from input fields using refs
-        const username = usernameRef.current?.value;
-        const password = passwordRef.current?.value;
-        
-        // Basic client-side validation
-        if (!username || !password) {
-            const errorMessage = 'Please enter both username and password';
-            setAlertMessage(errorMessage);
-            setShowAlert(true);
-            setLoading(false);
-            return;
-        }
-        
-        try {
-            // Make a POST request to the signup endpoint with username and password
-            const response = await axios.post(`${BACKEND_URL}${endpoint}`, {
-                username: username,
-                password: password
-            }, {
-                headers: {
-                    // Ensure we're sending JSON data
-                    'Content-Type': 'application/json' 
-                }
-            });
-            
-            // getting the jwt token and storing in local storage
-            if (Title === "Sign In") {
-                // Handle post-sign-in logic here
-                const jwt = response.data.token;
-                const userId = response.data._id;
-                localStorage.setItem("token", jwt);
-                localStorage.setItem("userId", userId);
-            }
-
-            console.log(`${Title} response`, response);
-            window.location.href = `${destination}`; // Redirect to login page after successful signup
-           
-        } catch (error) {
-            console.error(`${Title} error:`, error);
-            // Handle different types of errors
-            if (axios.isAxiosError(error)) {
-                // Extract the error message from the response or use a default message
-                const errorMessage = error.response?.data?.error || ` ${Title} failed`;
-                setAlertMessage(errorMessage);
-                setShowAlert(true);
-            } else {
-                // For non-Axios errors, show a generic error message
-                setAlertMessage('An unexpected error occurred. Please try again.');
-                setShowAlert(true);
-            }
-        } finally {
-            setLoading(false);
-        }
-        // auth() ends here
-    }
 
     return (
         <>
@@ -87,7 +42,7 @@ export default function Authentication({ endpoint, Title, destination }: { endpo
                 <CustomAlert 
                     message={alertMessage}
                     isVisible={showAlert}
-                    onClose={() => setShowAlert(false)}
+                    onClose={onCloseAlert}
                 />
             </div>
 
@@ -100,10 +55,10 @@ export default function Authentication({ endpoint, Title, destination }: { endpo
                     {/* Header Section */}
                     <div className="flex flex-col items-center text-center gap-2">
                         <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-                            {Title}
+                            {title}
                         </h1>
                         <p className="text-sm text-gray-500 font-normal leading-relaxed">
-                            {Title === "Sign In" 
+                            {title === "Sign In" 
                                 ? "Welcome back. Please enter your details." 
                                 : "Create your account to get started."}
                         </p>
@@ -118,16 +73,21 @@ export default function Authentication({ endpoint, Title, destination }: { endpo
                     {/* Submit Button Section */}
                     <div className={`mt-2 transition-all duration-300 ease-out ${loading ? "opacity-60 pointer-events-none" : ""}`}>
                         <ButtonElement 
-                            variant="secondary" 
+                            variant="primary" 
                             full={true} 
                             size="default" 
                             text="Submit" 
                             onClickfn={() => {
-                                setLoading(true);
-                                auth();
-                                console.log("signup clicked");
+                                onSubmit(
+                                    usernameRef.current?.value || "",
+                                    passwordRef.current?.value || ""
+                                );
                             }}
                         /> 
+                    </div>
+
+                    <div> { title === "Sign Up" ? <p>Already have an account? <a href="/signin" className="text-blue-500 hover:underline">Login</a></p> : <p>Don't have an account? <a href="/signup" className="text-blue-500 hover:underline">Sign Up</a></p> } 
+                    
                     </div>
                 </div>
             </div>

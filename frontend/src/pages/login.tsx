@@ -1,14 +1,14 @@
-import Authentication from "../components/Auth";
-import { SIGN_IN, SIGN_UP } from "../config";
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
 
 export function SignInEP() {
     return(
-        <Authentication Title="Sign In" endpoint={SIGN_IN} destination="/dashboard"/>
+        <SignIn />
     )
 }
 
 export  function SignupEP() {
     return(
-        <Authentication Title="Sign Up" endpoint={SIGN_UP} destination="/signin"/>
+        <SignUp />
     )
 }

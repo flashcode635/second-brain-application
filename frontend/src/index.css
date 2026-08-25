@@ -71,6 +71,8 @@
 
 .theme-button-primary:hover {
     background: var(--color-text-secondary);
+    color: var(--color-text-on-dark);
+
 }
 
 .theme-sidebar-item:hover {

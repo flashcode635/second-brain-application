@@ -312,6 +312,6 @@ res.status(200).json({
 })
 
 
-app.listen(3001, () => {
+app.listen(3001,"0.0.0.0", () => {
   console.log('Server is running on http://localhost:3001');
 });

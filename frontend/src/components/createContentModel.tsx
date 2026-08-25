@@ -175,10 +175,10 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
             <div 
             className="theme-surface w-full max-w-md mx-auto rounded-2xl 
-            shadow-2xl pt-0 pr-5 pl-5 pb-4   flex flex-col fixed
+            shadow-2xl px-7 py-1 flex flex-col fixed
             gap-2 border border-slate-100">
                 {/* closing button */}
-                <div className=" flex justify-end-safe h-7.5  w-full ">
+                <div className=" flex justify-end-safe h-7.5 text-stone-500/90 w-full ">
                     <button className="hover:cursor-pointer" onClick={onClose}>
 
                                 <CancelIcon/>
@@ -203,19 +203,19 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                     {/* type of link */}
                     <div className="grid grid-cols-2">
 
-                        <button  className={`content-button ${className} w-40 mb-3 ${type === "linkedIn" ? "theme-button-primary" : ""}`}
+                        <button  className={` ${className} w-40 mb-3 ${type === "linkedIn" ? "theme-button-primary" : ""}`}
                          onClick={() => setType("linkedIn")}
                          >LinkedIn</button>
                         <button className={`${className} w-40 mb-3 ${type === "youtube" ? "theme-button-primary" : ""}`}
                          onClick={() => setType("youtube")}
                          >Youtube</button>
-                        <button className={` content-button ${className} w-40 mb-3 ${type ==="twitter" ? "theme-button-primary" : ""}`} 
+                        <button className={`  ${className} w-40 mb-3 ${type ==="twitter" ? "theme-button-primary" : ""}`} 
                         onClick={() => setType("twitter")}
                         >Twitter</button>
-                        <button className={` content-button ${className} w-40 mb-3 ${type ==="instagram" ? "theme-button-primary" : ""}`} 
+                        <button className={`  ${className} w-40 mb-3 ${type ==="instagram" ? "theme-button-primary" : ""}`} 
                         onClick={() => setType("instagram")}
                         >Instagram</button>
-                        <button className={` content-button ${className} w-40 mb-3 ${type ==="reddit" ? "theme-button-primary" : ""}`} 
+                        <button className={`  ${className} w-40 mb-3 ${type ==="reddit" ? "theme-button-primary" : ""}`} 
                         onClick={() => setType("reddit")}
                         >Reddit</button>
                     </div>
@@ -236,7 +236,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 </div>
             </div>
             
-                <ButtonElement variant="secondary" size="lg" 
+                <ButtonElement variant="primary" size="lg" 
                 onClickfn={addContent} text="Add Content"/>
 
             </div>

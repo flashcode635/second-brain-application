@@ -108,8 +108,8 @@ export default function Dashboard() {
                   <SidebarComponent/>
               </div>
               <div className="h-screen flex flex-col items-baseline justify-start pt-4 
-        md:pt-8 pl-2 md:pl-8
-        md:w-70 theme-surface gap-7"></div>
+        md:pt-8 pl-4 md:pl-8 w-20
+        md:w-70 bg-transparent gap-7"></div>
               {/* buttons & cards */}
               <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
