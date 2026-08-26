@@ -16,7 +16,7 @@ export interface CardProps{
     onDeleted?: () => void
 }
 // common className for input fields
-export const className = "theme-input px-4 py-2 rounded-lg outline-none transition-all"
+export const className = "p-3 py-2.5 rounded-lg outline-none transition-all cursor-pointer w-fit"
 
 // backend URL - use environment variable in production, fallback to localhost for development
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 

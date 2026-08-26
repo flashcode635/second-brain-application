@@ -90,8 +90,7 @@ export default function Dashboard() {
     return (
       <>
         {/* alert */}
-          <CustomAlert 
-                      message={alertMessage}
+          <CustomAlert message={alertMessage}
                       isVisible={showAlert}
                       onClose={() => setShowAlert(false)}
                   />
@@ -101,17 +100,18 @@ export default function Dashboard() {
               <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
           </div>
 
-            <div className="outerdiv theme-page flex min-h-screen">
+            <div className=" flex min-h-screen">
 
               {/* sidebar */}
               <div className="shrink-0 border-r fixed border-border bg-surface">
                   <SidebarComponent/>
               </div>
-              <div className="h-screen flex flex-col items-baseline justify-start pt-4 
+              {/* placeholder */}
+              <div className="h-screen theme-page flex flex-col items-baseline justify-start pt-4 
         md:pt-8 pl-4 md:pl-8 w-20
         md:w-70 bg-transparent gap-7"></div>
               {/* buttons & cards */}
-              <main className="min-w-0 flex-1 px-5 pb-10 sm:px-8">
+              <main className="theme-page min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
                       {/* buttons */}
                   <div className="flex w-full items-center justify-end gap-4 py-4" >
@@ -140,7 +140,7 @@ export default function Dashboard() {
 
                                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                       {loading ? (
-                                          <div className="col-span-full text-center text-text-secondary">
+                                          <div className="col-span-full text-center font-heading text-text-secondary">
                                             Loading your content...</div>
                                       ) : content.length > 0 ? (
                                           content.map((item) => (
@@ -160,7 +160,7 @@ export default function Dashboard() {
                                               />
                                           ))
                                       ) : (
-                                          <div className="col-span-full text-center text-text-secondary">
+                                          <div className="col-span-full font-heading text-center text-lg text-text-secondary">
                                               No content available. Add some content to get started!
                                           </div>
                                       )}

@@ -8,6 +8,12 @@ import { CustomAlert } from "./customAlert"
 import axios from "axios"
 // Imported Zustand store to trigger dashboard refresh after adding content
 import { useDashboardStore } from "../atoms"
+import { LinkedInLogo } from "./svg/linkedinLogo"
+import { YoutubeLogo } from "./svg/ytLogo"
+import { XLogo } from "./svg/xLogo"
+import { RedditIcon } from "./svg/redditicon"
+import { InstagramIcon } from "./svg/InstagramIcon"
+import { DocumentLogo } from "./svg/document"
 
 export interface fieldprops{
     label?:string, 
@@ -31,7 +37,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
     //  to get data
     // default to a valid content type that backend supports
-    const [type, setType]= useState<'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit'>("youtube")
+    const [type, setType]= useState<'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit' | 'document'>("youtube")
 
     const titleref= useRef<HTMLInputElement>(null)
     const linkref= useRef<HTMLInputElement>(null)
@@ -172,19 +178,19 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                     />
                 </div>
           </div>
+           
 
             <div 
             className="theme-surface w-full max-w-md mx-auto rounded-2xl 
-            shadow-2xl px-7 py-1 flex flex-col fixed
-            gap-2 border border-slate-100">
-                {/* closing button */}
-                <div className=" flex justify-end-safe h-7.5 text-stone-500/90 w-full ">
+            shadow-2xl px-7 py-6 flex flex-col fixed
+            gap-4 border border-slate-100">             
+              {/* closing button */}
+                <div className=" flex justify-end-safe h-7.5 text-stone-500/90 w-fit top-2 right-3 absolute">
                     <button className="hover:cursor-pointer" onClick={onClose}>
 
                                 <CancelIcon/>
                     </button>
                 </div>
-            
                 {/* title */}
                 <div className="">
                         <h2 className="text-[22px] font-semibold text-center text-text-primary mb-0.5 tracking-tight">
@@ -193,38 +199,48 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 </div>  
                     
             {/* input fields */}
-            <div className="flex flex-col  gap-2">
+            <div className="flex flex-col gap-4">
                         <InputField label="Title" ref={titleref} />
                         <InputField label="Link" ref={linkref} />
                 {/* <InputField label="Description"/> */}
                 <div className="flex flex-col">
                     {/* chose type */}
-                    <label htmlFor="title" className="text-text-secondary font-medium mb-1.5">Choose Type</label>
+                    <label htmlFor="title" className="text-text-primary font-[16px] font-sans mb-1">Choose Type</label>
                     {/* type of link */}
-                    <div className="grid grid-cols-2">
+                    <div className="grid md:grid-cols-6">
 
-                        <button  className={` ${className} w-40 mb-3 ${type === "linkedIn" ? "theme-button-primary" : ""}`}
+                        <button  className={` ${className} mb-3 
+                        ${type === "linkedIn" ? "bg-black/10" : "bg-transparent"}`}
                          onClick={() => setType("linkedIn")}
-                         >LinkedIn</button>
-                        <button className={`${className} w-40 mb-3 ${type === "youtube" ? "theme-button-primary" : ""}`}
+                         > <LinkedInLogo/> </button>
+
+                        <button className={`${className} mb-3 ${type === "youtube" ? "bg-black/10" : "bg-transparent"}`}
                          onClick={() => setType("youtube")}
-                         >Youtube</button>
-                        <button className={`  ${className} w-40 mb-3 ${type ==="twitter" ? "theme-button-primary" : ""}`} 
+                         > <YoutubeLogo/> </button>
+
+                        <button className={`  ${className} mb-3 ${type ==="twitter" ? "bg-black/10" : "bg-transparent"}`} 
                         onClick={() => setType("twitter")}
-                        >Twitter</button>
-                        <button className={`  ${className} w-40 mb-3 ${type ==="instagram" ? "theme-button-primary" : ""}`} 
+                        > <XLogo/> </button>
+
+                        <button className={`  ${className} mb-3 ${type ==="instagram" ? "bg-black/10" : "bg-transparent"}`} 
                         onClick={() => setType("instagram")}
-                        >Instagram</button>
-                        <button className={`  ${className} w-40 mb-3 ${type ==="reddit" ? "theme-button-primary" : ""}`} 
+                        > <InstagramIcon/> </button>
+
+                        <button className={`  ${className} mb-3 ${type ==="reddit" ? "bg-black/10" : "bg-transparent"}`} 
                         onClick={() => setType("reddit")}
-                        >Reddit</button>
+                        > <RedditIcon/> </button>
+                        
+                         <button className={`  ${className} mb-3 ${type ==="document" ? "bg-black/10" : "bg-transparent"}`} 
+                        onClick={() => setType("document")}
+                        >
+                            <DocumentLogo/></button>
                     </div>
                 
-                    <label htmlFor="title" className="text-text-secondary 
-                    font-medium mb-1.5">Enter tags</label>
-                    <div className="grid grid-cols-3">
+                    <label htmlFor="title" className="text-text-primary 
+                    font-[16px] font-sans mb-1">Enter tags</label>
+                    <div className="grid grid-cols-3 w-full gap-4">
                         {tagsample.map((tag, index) => (
-                            <span key={index} className="mr-3">
+                            <span key={index} className="min-w-0">
                                 <InputField 
                                     placeholder={`Enter ${tag}`} 
                                     ref={index === 0 ? tagref1 : index === 1 ? tagref2 : tagref3}
