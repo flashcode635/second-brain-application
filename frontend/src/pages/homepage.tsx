@@ -22,60 +22,7 @@ import BrainIcon from '@/components/svg/brainicon';
 import { BookmarkIcon, GithubIcon, PdfIcon, PinterestIcon } from '@/components/svg/homepageicons';
 import React from 'react';
 
-// Design tokens shared across this page — keep this in sync with the
-// auth screen if you're pulling the same system through the app.
-const DesignTokens = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,550&family=JetBrains+Mono:wght@400;500&display=swap');
 
-    .sb-display {
-      font-family: 'Fraunces', Georgia, serif;
-      font-optical-sizing: auto;
-      letter-spacing: -0.015em;
-    }
-    .sb-mono {
-      font-family: 'JetBrains Mono', ui-monospace, monospace;
-      letter-spacing: 0.02em;
-    }
-
-    /* Card catalog motif: a perforated top edge instead of a drop shadow */
-    .sb-card {
-      background: #FBFAF8;
-      border: 1px solid rgba(26,26,26,0.10);
-      position: relative;
-      transition: border-color 200ms ease, transform 200ms ease;
-    }
-
-    .sb-card:hover {
-      border-color: rgba(176,112,32,0.55);
-      transform: translateY(-2px);
-    }
-.sb-grid {
-  display: flex;
-  gap: 0.5rem;
-  align-items: flex-start;
-}
-.sb-grid > .sb-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-@media (min-width: 768px) {
-  .sb-grid { gap: 0.7rem; }
-  .sb-grid > .sb-col { gap: 0.7rem; }
-}
-@media (max-width: 639px) {
-  .sb-grid { flex-direction: column; }
-}
-    .sb-cta {
-      transition: gap 180ms ease, background 180ms ease;
-    }
-    .sb-cta:hover {
-      gap: 0.6rem;
-    }
-  `}</style>
-);
 
 interface HeroCardProps {
   data: SavedLink;
@@ -154,7 +101,6 @@ const CARDS_DATA: SavedLink[] = [
 export const HeroSection: React.FC = () => {
   return (
     <section className="bg-[#ECECE8] py-10 px-6 md:px-16 lg:px-20">
-      <DesignTokens />
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left Column */}
         <div className="lg:col-span-6 space-y-6">
@@ -332,7 +278,6 @@ export const Footer: React.FC = () => {
 export function HomePage() {
   return (
     <div className="min-h-screen bg-[#F6F6F4] text-neutral-900 font-sans antialiased">
-      <DesignTokens />
       <main>
         <HeroSection />
         <MetricsSection />

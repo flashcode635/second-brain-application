@@ -141,7 +141,8 @@ export default function Dashboard() {
                                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                       {loading ? (
                                           <div className="col-span-full text-center font-heading text-text-secondary">
-                                            Loading your content...</div>
+                                            Fetching your saved links…
+                                            </div>
                                       ) : content.length > 0 ? (
                                           content.map((item) => (
                                               <CardComponent 
