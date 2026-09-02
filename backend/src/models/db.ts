@@ -12,6 +12,7 @@ export async function connectDB() {
     try {
         const connection = await mongoose.connect(MONGO_URI, {
             serverSelectionTimeoutMS: 5000,
+            dbName: "secondbrain",
         });
 
         console.log("connection successful.");

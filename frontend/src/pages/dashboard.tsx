@@ -87,92 +87,92 @@ export default function Dashboard() {
     fetchContent();
   }, [fetchContent, refreshKey]);
 
-    return (
-      <>
-        {/* alert */}
-          <CustomAlert message={alertMessage}
-                      isVisible={showAlert}
-                      onClose={() => setShowAlert(false)}
-                  />
+  return (
+    <>
+      {/* alert */}
+        <CustomAlert message={alertMessage}
+                    isVisible={showAlert}
+                    onClose={() => setShowAlert(false)}
+                />
 
-          {/* create content model */}
-            <div className="h-auto w-auto">
-              <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
+        {/* create content model */}
+        <div className="h-auto w-auto">
+            <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
+        </div>
+
+        <div className=" flex min-h-screen">
+
+          {/* sidebar */}
+          <div className="shrink-0 border-r fixed border-border bg-surface">
+              <SidebarComponent/>
           </div>
+          {/* placeholder */}
+          <div className="h-screen theme-page flex flex-col items-baseline justify-start pt-4 
+            md:pt-8 pl-4 md:pl-8 w-20
+            md:w-70 bg-transparent gap-7"></div>
+          {/* buttons & cards */}
+          <main className="theme-page min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
-            <div className=" flex min-h-screen">
+                  {/* buttons */}
+              <div className="flex w-full items-center justify-end gap-4 py-4" >
+                      {/* buttons - Add Content & share */}
+                      {/* <div className="flex gap-4 pr-3 mb-4"> */}
 
-              {/* sidebar */}
-              <div className="shrink-0 border-r fixed border-border bg-surface">
-                  <SidebarComponent/>
+                            <ButtonElement variant="secondary"
+                                size="sm" 
+                              onClickfn={()=>setModelOpen(true)}
+                              startIcon={<PlusIcon/>}
+                          />
+
+                      <ButtonElement variant="secondary" 
+                      size="sm"  onClickfn={shareContent}  
+                      startIcon={<ShareIcon/>}
+                      />   
+                      {/* </div> */}
+
               </div>
-              {/* placeholder */}
-              <div className="h-screen theme-page flex flex-col items-baseline justify-start pt-4 
-        md:pt-8 pl-4 md:pl-8 w-20
-        md:w-70 bg-transparent gap-7"></div>
-              {/* buttons & cards */}
-              <main className="theme-page min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
-                      {/* buttons */}
-                  <div className="flex w-full items-center justify-end gap-4 py-4" >
-                          {/* buttons - Add Content & share */}
-                          {/* <div className="flex gap-4 pr-3 mb-4"> */}
+              {/* cards outer div*/}
+              <div className="mx-auto mt-10 w-full max-w-270">
+                  
+                  {/* cards sections */}
+                <div className="mr-0 w-full pr-0 ">
 
-                                <ButtonElement variant="secondary"
-                                   size="sm" 
-                                  onClickfn={()=>setModelOpen(true)}
-                                  startIcon={<PlusIcon/>}
-                              />
-
-                          <ButtonElement variant="secondary" 
-                          size="sm"  onClickfn={shareContent}  
-                          startIcon={<ShareIcon/>}
-                          />   
-                          {/* </div> */}
-
-                      </div>
-
-                      {/* cards outer div*/}
-                      <div className="mx-auto mt-10 w-full max-w-270">
-                          
-                              {/* cards sections */}
-                                <div className="mr-0 w-full pr-0 ">
-
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                                      {loading ? (
-                                          <div className="col-span-full text-center font-heading text-text-secondary">
-                                            Fetching your saved links…
-                                            </div>
-                                      ) : content.length > 0 ? (
-                                          content.map((item) => (
-                                              <CardComponent 
-                                                  key={JSON.stringify(item.link)}
-                                                  type={item.type}
-                                                  heading={item.title}
-                                                  tags={item.tags || []}
-                                                  url={item.link}
-                                                  onDeleted={() => {
-                                                    setContent((currentContent) =>
-                                                      currentContent.filter(
-                                                        (contentItem) => contentItem.link !== item.link
-                                                      )
-                                                    );
-                                                  }}
-                                              />
-                                          ))
-                                      ) : (
-                                          <div className="col-span-full font-heading text-center text-lg text-text-secondary">
-                                              No content available. Add some content to get started!
-                                          </div>
-                                      )}
-                                  </div>
-                
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {loading ? (
+                            <div className="col-span-full text-center font-heading text-text-secondary">
+                              Fetching your saved links…
                               </div>
-                        
-                      </div>
-              </main>
-            
-          </div>
-        </>
+                        ) : content.length > 0 ? (
+                            content.map((item) => (
+                                <CardComponent 
+                                    key={JSON.stringify(item.link)}
+                                    type={item.type}
+                                    heading={item.title}
+                                    tags={item.tags || []}
+                                    url={item.link}
+                                    onDeleted={() => {
+                                      setContent((currentContent) =>
+                                        currentContent.filter(
+                                          (contentItem) => contentItem.link !== item.link
+                                        )
+                                      );
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <div className="col-span-full font-heading text-center text-lg text-text-secondary">
+                                No content available. Add some content to get started!
+                            </div>
+                        )}
+                    </div>
+
+                </div>
+                
+              </div>
+          </main>
+          
+        </div>
+      </>
     )
 }

@@ -23,7 +23,7 @@ const SidebarFields = ({ link, text, collapsed }: SidebarFieldsProps & { collaps
             title={text}
         >
             {link()}
-            {!collapsed && <span className="font-heading tracking-wider font-medium">{text}</span>}
+            {!collapsed && <span className="font-sans tracking-wider font-medium">{text}</span>}
         </div>
     );
 };

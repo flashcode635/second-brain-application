@@ -111,7 +111,7 @@ export const HeroSection: React.FC = () => {
             Collect. Organise.<br />Access.
           </h1>
           <p className="text-neutral-600 text-base max-w-md leading-relaxed">
-            All your valuable media links, effortlessly stored, neatly organized, and instantly available at your fingertips — the digital link manager you've been waiting for.
+            All your valuable media links, effortlessly stored, neatly organized, and instantly available at your fingertips the digital link manager you've been waiting for.
           </p>
           <div className="pt-2 space-y-6">
             <a
