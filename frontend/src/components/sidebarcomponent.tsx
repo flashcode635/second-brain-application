@@ -17,13 +17,13 @@ export type SidebarFieldsProps = {
 const SidebarFields = ({ link, text, collapsed }: SidebarFieldsProps & { collapsed: boolean }) => {
     return (
         <div
-            className={`theme-sidebar-item flex items-center cursor-pointer rounded-md transition-all duration-200 p-1.5 ${
+            className={`theme-sidebar-item flex items-center cursor-pointer rounded-md transition-all duration-200 ease-in-out p-1.25 ${
                 collapsed ? "justify-center w-full" : "justify-start gap-4 w-3/4"
             }`}
             title={text}
         >
             {link()}
-            {!collapsed && <span className="font-sans tracking-wider font-medium">{text}</span>}
+            {!collapsed && <span className="font-['Nunito'] text-lg tracking-wider font-medium">{text}</span>}
         </div>
     );
 };
@@ -109,35 +109,40 @@ export default function SidebarComponent() {
 
     return (
         <div
-            className={`h-dvh md:h-screen flex flex-col justify-start pt-15 theme-surface gap-7 relative transition-all duration-250 ${
+            className={`h-dvh md:h-screen flex flex-col justify-start pt-5 theme-surface gap-7 relative transition-all duration-250 ${
                 collapsed ? "items-center px-2" : "items-baseline pl-2 md:pl-8"
             }`}
             style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
         >
-            <button
-                type="button"
-                onClick={handleToggleCollapse}
-                className="absolute top-3 right-2 text-xs px-2 py-1.5 rounded-md theme-sidebar-item"
-                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                title={collapsed ? "Expand" : "Collapse"}
-            >
-                {/* {collapsed ? ">" : "<"} */}
+            <div className={`${
+                collapsed ? "flex flex-col gap-4" : "flex justify-between items-center flex-row-reverse gap-5"
+            }  `}>
 
-               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-               className="hover:stroke-text-primary stroke-gray-600"
-               stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="16" height="18" rx="2"/>
-                    <line x1="9" y1="3" x2="9" y2="21"/>
-                </svg>
-            </button>
+                <button
+                    type="button"
+                    onClick={handleToggleCollapse}
+                    className=" text-xs px-2 py-1.5 rounded-md theme-sidebar-item"
+                    aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    title={collapsed ? "Expand" : "Collapse"}
+                >
+                    {/* collapse icon */}
 
-            <div className={`flex items-center ${collapsed ? "justify-center" : "gap-4"}`}>
-                <BrainIcon size="small" />
-                {!collapsed && (
-                    <span className="text-xl font-heading uppercase">
-                        <b>Your Brain</b>
-                    </span>
-                )}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                className="hover:stroke-text-primary stroke-gray-600"
+                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="16" height="18" rx="2"/>
+                        <line x1="9" y1="3" x2="9" y2="21"/>
+                    </svg>
+                </button>
+
+                <div className={`flex items-center ${collapsed ? "justify-center" : "gap-4"}`}>
+                    <BrainIcon size="small" />
+                    {!collapsed && (
+                        <span className="text-xl font-heading uppercase">
+                            <b>Your Brain</b>
+                        </span>
+                    )}
+                </div>
             </div>
 
             {!collapsed && (
@@ -147,7 +152,7 @@ export default function SidebarComponent() {
             )}
 
             <div
-                className={`grid grid-cols-1 text-md tracking-wide text-text-sidebar w-full gap-3 ${
+                className={`grid grid-cols-1 text-md tracking-wide text-text-sidebar w-full gap-1.5 ${
                     collapsed ? "place-items-center" : "md:pl-1"
                 }`}
             >

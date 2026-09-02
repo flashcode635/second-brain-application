@@ -6,25 +6,36 @@ import { HomePage } from "./pages/homepage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SignInEP, SignupEP } from "./pages/login";
 import BrainPage from "./pages/Brainpage";
+import { ProtectedRoute } from "./components/protectroutes";
 
 
 
 
 // Main App component
 export default function App() {
-
+  var isLoggedIn = false;
+  if (!localStorage.getItem("token")) {
+    isLoggedIn=false;
+  }else{
+    isLoggedIn=true;
+  }
   return (
-    // CHANGE: Removed RecoilRoot wrapper that was previously here
-    // WHY? Zustand doesn't require a provider wrapper like Recoil or Redux
-    // Zustand stores are self-contained and can be used directly in any component
-    // This simplifies the app structure and reduces boilerplate code
+    
     <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/signin" element={<SignInEP />} />
-          <Route path="/signup" element={<SignupEP />} />
+
+          <Route element={<ProtectedRoute isAllowed={isLoggedIn} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+           {/* Reverse guard: logged-in users shouldn't see signup */}
+          <Route element={<ProtectedRoute isAllowed={!isLoggedIn} redirectPath="/dashboard" />}>
+          
+            <Route path="/signin" element={<SignInEP />} />
+            <Route path="/signup" element={<SignupEP />} />
+          </Route>
+
           <Route path="/brain/:link" element={<BrainPage />} />
 
           <Route path="*" element={<div> 404 Not Found </div>} />
