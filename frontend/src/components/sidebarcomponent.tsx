@@ -3,12 +3,8 @@ import BrainIcon from "../components/svg/brainicon";
 // @ts-ignore
 import { Book, Bulb, folder, Grid, SearchIcon, UserIcon } from "@svg/gridIcons";
 import { GearIcon } from "./svg/gearIcon";
-
-const MOBILE_BREAKPOINT = 768;
-const MIN_SIDEBAR_WIDTH = 76;
-const MAX_SIDEBAR_WIDTH = 320;
-const DEFAULT_SIDEBAR_WIDTH = 280;
-const MOBILE_EXPANDED_WIDTH = 240;
+import { MOBILE_BREAKPOINT, MIN_SIDEBAR_WIDTH, MAX_SIDEBAR_WIDTH, DEFAULT_SIDEBAR_WIDTH, MOBILE_EXPANDED_WIDTH } from "../config";
+import { useDashboardStore } from "@/store";
 
 export type SidebarFieldsProps = {
     link: () => React.JSX.Element;
@@ -34,6 +30,7 @@ export default function SidebarComponent() {
     const [isMobile, setIsMobile] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
     const isResizingRef = useRef(false);
+    const OpenSetting = useDashboardStore((state) => state.toggleSettings);
 
     useEffect(() => {
         const syncLayout = () => {
@@ -167,7 +164,12 @@ export default function SidebarComponent() {
                         title="Resize sidebar"
                     />
                 )}
-                <div className={`sb-sidebar-settings mt-auto p-2 ${collapsed ? "overflow-hidden justify-center " : ""}  hover:text-black!`}>
+                <div className={`sb-sidebar-settings mt-auto p-2 ${collapsed ? "overflow-hidden justify-center " : ""}  hover:text-black!`}
+                onClick={() => {
+                    // Toggle the settings page visibility
+                    OpenSetting();
+                }}
+                >
                    
                         <GearIcon />
                         <span className={`${collapsed?"hidden":"block"}`}>Settings</span>

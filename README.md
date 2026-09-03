@@ -14,6 +14,7 @@ A modern web application for organizing and managing your digital content, from 
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React 19** - Latest React version with concurrent features
 - **TypeScript** - Type-safe JavaScript for better developer experience
 - **Vite** - Next-generation frontend tooling for fast development
@@ -23,6 +24,7 @@ A modern web application for organizing and managing your digital content, from 
 - **Axios** - Promise-based HTTP client
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express** - Web application framework
 - **MongoDB** (via Mongoose) - NoSQL database for flexible data storage
@@ -41,16 +43,18 @@ A modern web application for organizing and managing your digital content, from 
 ### Setup Instructions
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd second-brain-application
    ```
 
 2. **Set up the Backend**
+
    ```bash
    cd backend
    npm install
-   
+
    # Create a .env file in the backend directory with:
    # MONGODB_URI=your_mongodb_connection_string
    # JWT_SECRET=your_jwt_secret
@@ -58,21 +62,24 @@ A modern web application for organizing and managing your digital content, from 
    ```
 
 3. **Set up the Frontend**
+
    ```bash
    cd ../frontend
    npm install
-   
+
    # Create a .env file in the frontend directory with:
-   # VITE_BACKEND_URL=http://localhost:3000 
+   # VITE_BACKEND_URL=http://localhost:3000
    ```
 
 ## 🏃‍♂️ Running the Application
 
 1. **Start the Backend**
+
    ```bash
    cd backend
    npm run dev
    ```
+
    The backend will be available at `http://localhost:3001`
 
 2. **Start the Frontend**
@@ -97,7 +104,7 @@ second-brain-application/
     ├── src/               # Source files
     │   ├── components/    # Reusable UI components
     │   ├── pages/         # Page components
-    │   ├── atoms/         # State management
+    │   ├── store/         # State management
     │   └── App.tsx        # Main application component
     └── package.json       # Frontend dependencies
 ```
@@ -107,10 +114,13 @@ second-brain-application/
 ### Authentication
 
 #### Sign Up 🔓
+
 ```http
 POST /app/v1/signup
 ```
+
 **Request Body:**
+
 ```json
 {
   "username": "string",
@@ -119,17 +129,22 @@ POST /app/v1/signup
 ```
 
 #### Sign In 🔓
+
 ```http
 POST /app/v1/signin
 ```
+
 **Request Body:**
+
 ```json
 {
   "username": "string",
   "password": "string"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "token": "jwt_token_here"
@@ -139,24 +154,32 @@ POST /app/v1/signin
 ### Content Management
 
 #### Get All Content 🔒
+
 ```http
 GET /app/v1/content
 ```
+
 **Headers:**
+
 ```
 Authorization: Bearer <jwt_token>
 ```
 
 #### Add New Content 🔒
+
 ```http
 POST /app/v1/content
 ```
+
 **Headers:**
+
 ```
 Authorization: Bearer <jwt_token>
 Content-Type: application/json
 ```
+
 **Request Body:**
+
 ```json
 {
   "link": "string",
@@ -167,15 +190,20 @@ Content-Type: application/json
 ```
 
 #### Delete Content 🔒
+
 ```http
 DELETE /app/v1/content
 ```
+
 **Headers:**
+
 ```
 Authorization: Bearer <jwt_token>
 Content-Type: application/json
 ```
+
 **Request Body:**
+
 ```json
 {
   "contentId": "string"
@@ -185,21 +213,28 @@ Content-Type: application/json
 ### Sharing
 
 #### Create Shareable Link 🔒
+
 ```http
 POST /app/v1/brain/share
 ```
+
 **Headers:**
+
 ```
 Authorization: Bearer <jwt_token>
 Content-Type: application/json
 ```
+
 **Request Body:**
+
 ```json
 {
   "share": true
 }
 ```
+
 **Response:**
+
 ```json
 {
   "link": "unique_shareable_link"
@@ -207,10 +242,13 @@ Content-Type: application/json
 ```
 
 #### View Shared Content 🔓 (No auth needed)
+
 ```http
 GET /app/v1/brain/:sharelink
 ```
+
 **URL Parameters:**
+
 - `sharelink`: The unique shareable link ID
 
 ## 🤔 Why These Technologies?
@@ -222,4 +260,3 @@ GET /app/v1/brain/:sharelink
 - **Node.js/Express**: Lightweight and efficient backend with great TypeScript support
 - **MongoDB**: Flexible schema design perfect for varied content types
 - **JWT**: Secure, stateless authentication
-

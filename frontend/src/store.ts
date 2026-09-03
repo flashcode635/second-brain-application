@@ -5,7 +5,10 @@ import { create } from 'zustand';
 // Interface defining the shape of our dashboard store
 interface DashboardStore {
   refreshKey: number;           // A counter that increments to trigger re-fetches
-  triggerRefresh: () => void;   // Function to increment the refreshKey
+  triggerRefresh: () => void;
+   
+  isSetting: boolean;            // Flag to indicate if settings page is visible
+  toggleSettings: () => void;    // Function to toggle settings page visibility
 }
 
 // the Zustand store
@@ -18,4 +21,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   refreshKey: 0,  // Initial value - starts at 0
   // triggerRefresh uses Zustand's 'set' to update state immutably
   triggerRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
+  
+  isSetting: false, // Initial value for settings page visibility
+  toggleSettings: () => set((state) => ({ isSetting: !state.isSetting })),
 }));

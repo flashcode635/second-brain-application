@@ -7,7 +7,7 @@ import { CancelIcon } from "./svg/cancelicon"
 import { CustomAlert } from "./customAlert"
 import axios from "axios"
 // Imported Zustand store to trigger dashboard refresh after adding content
-import { useDashboardStore } from "../atoms"
+import { useDashboardStore } from "../store"
 import { LinkedInLogo } from "./svg/linkedinLogo"
 import { YoutubeLogo } from "./svg/ytLogo"
 import { XLogo } from "./svg/xLogo"
@@ -127,8 +127,6 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
             setShowAlert(true);
             return;
             }
-
-
 
 
         console.log("Adding content payload:", { title, link, tags, contentType })
@@ -269,7 +267,7 @@ export const CreateContentModel = ({open ,onClose}:modelProps) => {
     return (
         <>
             {open &&
-             <div className="theme-page h-screen w-screen left-0 top-0 fixed z-1000">
+             <div className="theme-page bg-[#090808CB] h-screen w-screen left-0 top-0 fixed z-1000">
                 <div> 
                     <div 
                     className=" h-screen w-full fixed flex items-center justify-center opacity-120 ">

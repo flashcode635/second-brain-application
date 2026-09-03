@@ -4,6 +4,7 @@
     --color-page: #FBFAF8;
     --color-page-deep: #e9e9e6;
     --color-surface: #ffffff;
+    --color-surface-bg: #ffffff;
     --color-surface-muted: #eeeeec;
     --color-surface-dark: #111111;
     --color-border: #d9d9d5;
@@ -50,7 +51,8 @@
 }
 
 .theme-page {
-    background-color: var(--color-page);
+    /* background-color: var(--color-page); */
+    /* background: #f3f2f2f7; */
     background-image: none;
     color: var(--color-text-primary);
 }

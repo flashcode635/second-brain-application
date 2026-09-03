@@ -24,3 +24,11 @@ export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ||
 export const SIGN_UP= "/app/v1/signup"
 export const SIGN_IN= "/app/v1/signin"
 export const CONTENT= "/app/v1/content"  // POST endpoint to  content
+
+
+
+export const MOBILE_BREAKPOINT = 768;
+export const MIN_SIDEBAR_WIDTH = 76;
+export const MAX_SIDEBAR_WIDTH = 320;
+export const DEFAULT_SIDEBAR_WIDTH = 280;
+export const MOBILE_EXPANDED_WIDTH = 240;

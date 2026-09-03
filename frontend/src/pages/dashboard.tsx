@@ -6,10 +6,11 @@ import { CardComponent } from "../components/card";
 import "../App.css";
 import SidebarComponent from "../components/sidebarcomponent";
 import { CreateContentModel } from "../components/createContentModel";
-import { useDashboardStore } from "../atoms";
+import { useDashboardStore } from "../store";
 import { BACKEND_URL, CONTENT } from "../config";
 import axios from "axios";
 import { CustomAlert } from "../components/customAlert";
+import { SettingsPage } from "./settingspage";
 
 interface ContentItem {
   id: string;
@@ -18,15 +19,17 @@ interface ContentItem {
   link: string;
   tags?: string[];
 }
-
+interface ShareResponse {
+  link?: string;
+  message: string;
+}
 export default function Dashboard() {
   const [modelOpen, setModelOpen] = useState(false);
   const [content, setContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState<ShareResponse>({ message: "" });
   const [showAlert, setShowAlert] = useState(false);
-  
-  const { refreshKey } = useDashboardStore();
+  const { refreshKey , isSetting} = useDashboardStore();
 
   const fetchContent = useCallback(async () => {
     try {
@@ -50,14 +53,14 @@ export default function Dashboard() {
       console.error("Error fetching content:", error);
       setContent([]);
       setShowAlert(true);
-      setAlertMessage("Failed to load content. Please try again.");
+      setAlertMessage({ message: "Failed to load content. Please try again." });
     } finally {
       setLoading(false);
     }
   }, []);
 
   const shareContent = useCallback(async () => {
-    const FrontendURL = "http://localhost:5173";
+    const FrontendURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
     
     try {
       const response = await axios.post<{ link: string }>(
@@ -75,11 +78,12 @@ export default function Dashboard() {
       const brainURL = `${FrontendURL}/brain/${link}`;
       
       setShowAlert(true);
-      setAlertMessage(`Share link created: ${brainURL}`);
+      setAlertMessage({ message: `Share link created:
+     ` , link: brainURL });
     } catch (error) {
       console.error("Error sharing content:", error);
       setShowAlert(true);
-      setAlertMessage("Failed to create share link. Please try again.");
+      setAlertMessage({ message: "Failed to create share link. Please try again." });
     }
   }, []);
 
@@ -89,12 +93,16 @@ export default function Dashboard() {
 
   return (
     <>
+                {/* settings popup */}
+      <div>
+        {isSetting && <SettingsPage />}
+      </div>
       {/* alert */}
-        <CustomAlert message={alertMessage}
+        <CustomAlert message={alertMessage.message}
+            link={alertMessage.link}
                     isVisible={showAlert}
                     onClose={() => setShowAlert(false)}
                 />
-
         {/* create content model */}
         <div className="h-auto w-auto">
             <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
@@ -107,11 +115,11 @@ export default function Dashboard() {
               <SidebarComponent/>
           </div>
           {/* placeholder */}
-          <div className="h-screen theme-page flex flex-col items-baseline justify-start pt-4 
+          <div className="h-screen theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 
             md:pt-8 pl-4 md:pl-8 w-20
-            md:w-70 bg-transparent gap-7"></div>
+            md:w-70 gap-7"></div>
           {/* buttons & cards */}
-          <main className="theme-page min-w-0 flex-1 px-5 pb-10 sm:px-8">
+          <main className="theme-page bg-[#f3f2f2f7] min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
                   {/* buttons */}
               <div className="flex w-full items-center justify-end gap-4 py-4" >
