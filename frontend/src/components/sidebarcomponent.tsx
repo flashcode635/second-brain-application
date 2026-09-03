@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import BrainIcon from "../components/svg/brainicon";
 // @ts-ignore
 import { Book, Bulb, folder, Grid, SearchIcon, UserIcon } from "@svg/gridIcons";
+import { GearIcon } from "./svg/gearIcon";
 
 const MOBILE_BREAKPOINT = 768;
 const MIN_SIDEBAR_WIDTH = 76;
@@ -13,20 +14,20 @@ export type SidebarFieldsProps = {
     link: () => React.JSX.Element;
     text: string;
 };
-
 const SidebarFields = ({ link, text, collapsed }: SidebarFieldsProps & { collapsed: boolean }) => {
     return (
         <div
-            className={`theme-sidebar-item flex items-center cursor-pointer rounded-md transition-all duration-200 ease-in-out p-1.25 ${
-                collapsed ? "justify-center w-full" : "justify-start gap-4 w-3/4"
-            }`}
+        className={`sb-sidebar-item 
+           py-1.25 px-2
+             ${collapsed ? "is-collapsed" : ""}`}
             title={text}
         >
             {link()}
-            {!collapsed && <span className="font-['Nunito'] text-lg tracking-wider font-medium">{text}</span>}
+            {!collapsed && <span>{text}</span>}
         </div>
     );
 };
+
 
 export default function SidebarComponent() {
     const [collapsed, setCollapsed] = useState(false);
@@ -106,70 +107,74 @@ export default function SidebarComponent() {
         { link: folder, text: "Projects" },
         { link: Book, text: "Reading List" },
     ];
-
     return (
-        <div
-            className={`h-dvh md:h-screen flex flex-col justify-start pt-5 theme-surface gap-7 relative transition-all duration-250 ${
-                collapsed ? "items-center px-2" : "items-baseline pl-2 md:pl-8"
-            }`}
-            style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
-        >
-            <div className={`${
-                collapsed ? "flex flex-col gap-4" : "flex justify-between items-center flex-row-reverse gap-5"
-            }  `}>
-
-                <button
-                    type="button"
-                    onClick={handleToggleCollapse}
-                    className=" text-xs px-2 py-1.5 rounded-md theme-sidebar-item"
-                    aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                    title={collapsed ? "Expand" : "Collapse"}
-                >
-                    {/* collapse icon */}
-
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
-                className="hover:stroke-text-primary stroke-gray-600"
-                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="16" height="18" rx="2"/>
-                        <line x1="9" y1="3" x2="9" y2="21"/>
-                    </svg>
-                </button>
-
-                <div className={`flex items-center ${collapsed ? "justify-center" : "gap-4"}`}>
-                    <BrainIcon size="small" />
-                    {!collapsed && (
-                        <span className="text-xl font-heading uppercase">
-                            <b>Your Brain</b>
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            {!collapsed && (
-                <p className="uppercase text-text-muted w-full text-start font-heading text-xs tracking-widest pt-2">
-                    Spaces
-                </p>
-            )}
+        <> 
+        <section className={`flex h-screen flex-col `}>
 
             <div
-                className={`grid grid-cols-1 text-md tracking-wide text-text-sidebar w-full gap-1.5 ${
-                    collapsed ? "place-items-center" : "md:pl-1"
-                }`}
+                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto p-5 pb-1  theme-surface ${collapsed ? "items-center justify-center px-2 pl-0" : " pl-8 items-stretch"}`}
+                style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
             >
-                {sidebarFieldsData.map((field, index) => (
-                    <SidebarFields key={index} link={field.link} text={field.text} collapsed={collapsed} />
-                ))}
-            </div>
+                <div className={`flex w-full items-center ${collapsed ? "flex-col gap-4" : "flex-row-reverse justify-between gap-5"}`}>
 
-            {!collapsed && !isMobile && (
+                    <button
+                        type="button"
+                        onClick={handleToggleCollapse}
+                        className="rounded-md px-2 py-1.5 text-xs theme-sidebar-item"
+                        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        title={collapsed ? "Expand" : "Collapse"}
+                    >
+                        {/* collapse icon */}
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                        className="hover:stroke-text-primary stroke-gray-600"
+                        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="3" width="16" height="18" rx="2"/>
+                            <line x1="9" y1="3" x2="9" y2="21"/>
+                        </svg>
+                    </button>
+
+                    <div className={`flex items-center ${collapsed ? "justify-center" : "gap-4"}`}>
+                        <BrainIcon size="small" />
+                        {!collapsed && (
+                            <span className="text-xl font-heading uppercase">
+                                <b>Your Brain</b>
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                {!collapsed && (
+                    <p className="uppercase text-text-muted w-full text-start font-heading text-xs tracking-widest pt-2">
+                        Spaces
+                    </p>
+                )}
+
                 <div
-                    role="separator"
-                    aria-orientation="vertical"
-                    className="absolute top-0 right-0 h-full w-1.5 cursor-col-resize"
-                    onMouseDown={handleResizeStart}
-                    title="Resize sidebar"
-                />
-            )}
-        </div>
+                    className={`grid w-full grid-cols-1 gap-1.5 ${collapsed ? "place-items-center" : ""}`}
+                >
+                    {sidebarFieldsData.map((field, index) => (
+                        <SidebarFields key={index} link={field.link} text={field.text} collapsed={collapsed} />
+                    ))}
+                </div>
+
+                {!collapsed && !isMobile && (
+                    <div
+                        role="separator"
+                        aria-orientation="vertical"
+                        className="absolute top-0 right-0 h-full w-1.5 cursor-col-resize"
+                        onMouseDown={handleResizeStart}
+                        title="Resize sidebar"
+                    />
+                )}
+                <div className={`sb-sidebar-settings mt-auto p-2 ${collapsed ? "overflow-hidden justify-center " : ""}  hover:text-black!`}>
+                   
+                        <GearIcon />
+                        <span className={`${collapsed?"hidden":"block"}`}>Settings</span>
+                    
+                </div>
+            </div>
+        </section>
+        </>
     );
 }
