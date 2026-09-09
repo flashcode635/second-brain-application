@@ -26,3 +26,4 @@ const contentSchema = new Schema<IContent>({
 export const ContentModel: Model<IContent> = 
   mongoose.models?.content as Model<IContent> || 
   mongoose.model<IContent>("content", contentSchema);
+  
