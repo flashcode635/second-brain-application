@@ -11,10 +11,10 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({ message, link, onClose
     if (!isVisible) return null;
 
     return (
-        <div className="fixed top-6 left-4 right-4 z-50 flex justify-start">
+        <div className="fixed top-16 right-44 z-50 flex justify-start">
 
             <div className="theme-surface w-full max-w-sm p-6 rounded-lg shadow-xl">
-                <h2 className="text-xl font-bold mb-4 text-text-primary">Second Brain App </h2>
+                <h2 className="text-xl font-heading font-bold mb-4 text-text-primary">Second Brain App </h2>
                 <p className="mb-6 text-text-secondary">{message}: {link && <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">{link}</a>}</p>
                 <button
                     onClick={onClose}
