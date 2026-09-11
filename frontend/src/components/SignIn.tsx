@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../api";
 import Authentication from "./Auth";
-import { BACKEND_URL, SIGN_IN } from "../config";
-
+import { SIGN_IN } from "../config";
+import { useAuthStore, type AuthUser } from "../store";
 export default function SignIn() {
     const [alertMessage, setAlertMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [loading, setLoading] = useState(false);
     const isProduction = import.meta.env.PROD;
+    const navigate = useNavigate();
+    const setUser = useAuthStore((state) => state.setUser);
 
     async function signIn(username: string, password: string) {
         // Disable the shared form while the sign-in request is running.
@@ -20,11 +24,13 @@ export default function SignIn() {
         }
 
         try {
-            const response = await axios.post(`${BACKEND_URL}${SIGN_IN}`, { username, password });
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("userId", response.data._id || response.data.id);
-            console.log("Sign In response", response);
-            window.location.href = "/dashboard";
+            const response = await api.post<{ user: AuthUser }>(
+                SIGN_IN,
+                { username, password },
+                { withCredentials: true },
+            );
+            setUser(response.data.user);
+            navigate("/dashboard", { replace: true });
         } catch (error) {
             console.error("Sign In error:", error);
             const message = axios.isAxiosError(error)

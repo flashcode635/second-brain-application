@@ -1,11 +1,12 @@
 // import { useState } from "react"
 import { useRef, useState } from "react"
-import { BACKEND_URL, className, CONTENT } from "../config"
+import { className, CONTENT } from "../config"
 import ButtonElement from "./button"
 import { InputField } from "./inputfield"
 import { CancelIcon } from "./svg/cancelicon"
 import { CustomAlert } from "./customAlert"
 import axios from "axios"
+import api from "../api"
 // Imported Zustand store to trigger dashboard refresh after adding content
 import { useDashboardStore } from "../store"
 import { LinkedInLogo } from "./svg/linkedinLogo"
@@ -130,16 +131,13 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
 
         console.log("Adding content payload:", { title, link, tags, contentType })
-        await axios.post(BACKEND_URL + CONTENT, {
+        await api.post(CONTENT, {
             title,
             link,
             type: contentType,
             tags:tags
         }, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: localStorage.getItem("token") || ""
-            }
+            headers: { "Content-Type": "application/json" }
         }  )
         .then((res) => {
             if (res.status === 200) {

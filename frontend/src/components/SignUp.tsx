@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import api from "../api";
 import Authentication from "./Auth";
-import { BACKEND_URL, SIGN_UP } from "../config";
+import { SIGN_UP } from "../config";
 
 export default function SignUp() {
     const [alertMessage, setAlertMessage] = useState("");
@@ -20,7 +21,7 @@ export default function SignUp() {
         }
 
         try {
-            const response = await axios.post(`${BACKEND_URL}${SIGN_UP}`, { username, password });
+            const response = await api.post(`${SIGN_UP}`, { username, password });
             console.log("Sign Up response", response);
             window.location.href = "/signin";
         } catch (error) {

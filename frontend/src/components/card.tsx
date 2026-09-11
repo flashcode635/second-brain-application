@@ -2,9 +2,10 @@ import { LinkedInEmbedding } from "./Embeddings/linkedinEmbedding"
 import { DeleteIcon } from "./svg/deleteicon"
 import { DynamicIcon } from "./svg/logos";
 import YouTubeEmbed from "./Embeddings/youtubeEmbedding";
-import { BACKEND_URL, CONTENT, height, width, type CardProps } from "../config";
+import { CONTENT, height, width, type CardProps } from "../config";
 import { TwitterEmbedding } from "./Embeddings/twitterEmbedding";
 import axios, { type AxiosResponse } from "axios";
+import api from "../api";
 import { useState } from "react";
 import { InstagramEmbed, RedditEmbed } from "./Embeddings/oembed";
 
@@ -30,14 +31,10 @@ const tagsHeight = 50;
 const deleteContent = async ({ link }: { link: string }) => {
     try {
         console.log("Delete content clicked");
-        const response: AxiosResponse = await axios.delete(BACKEND_URL + CONTENT,
-            {
-                data: { link },
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: localStorage.getItem("token")
-                }
-            });
+        const response: AxiosResponse = await api.delete(CONTENT, {
+            data: { link },
+            headers: { "Content-Type": "application/json" },
+        });
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {

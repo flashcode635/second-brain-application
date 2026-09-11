@@ -1,5 +1,4 @@
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+import api from "../api";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { CardComponent } from "../components/card";
@@ -20,7 +19,7 @@ export default function BrainPage() {
 
             try {
                 setLoading(true);
-                const response = await axios.get(`${BACKEND_URL}/app/v1/brain/${link}`);
+                const response = await api.get(`/app/v1/brain/${link}`);
                 setData(response.data);
                 console.log("Brain page data:", response.data);
             } catch (error) {

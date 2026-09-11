@@ -1,6 +1,6 @@
 // Frontend Component
 import { useEffect, useState } from 'react';
-import { BACKEND_URL } from '../../config';
+import api from '../../api';
 import type { EmbeddingProps } from '../../config';
 
 export type metaData = {
@@ -30,13 +30,8 @@ export const LinkedInEmbedding = ({ url }: EmbeddingProps) => {
 
     const generatePreview = async () => {
       try {
-        const res = await fetch(
-          `${BACKEND_URL}/api/linkedinpreview?url=${encodeURIComponent(url)}`
-        );
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.error || 'Failed to fetch LinkedIn preview');
-        }
+        const res = await api.get('/api/linkedinpreview', { params: { url } });
+        const data = res.data;
         if (!cancelled) {
           setPreview(data);
         }

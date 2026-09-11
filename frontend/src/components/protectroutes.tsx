@@ -5,7 +5,7 @@ type Props = {
   redirectPath?: string;
 };
 
-export function ProtectedRoute({ isAllowed, redirectPath = '/signup' }: Props) {
+export function ProtectedRoute({ isAllowed, redirectPath = '/signin' }: Props) {
   if (!isAllowed) {
     return <Navigate to={redirectPath} replace />;
   }

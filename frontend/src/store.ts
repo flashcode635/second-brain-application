@@ -2,6 +2,17 @@
 
 import { create } from 'zustand';
 
+export interface AuthUser {
+  id: string;
+  username: string;
+}
+
+interface AuthStore {
+  user: AuthUser | null;
+  setUser: (user: AuthUser | null) => void;
+  clearUser: () => void;
+}
+
 // Interface defining the shape of our dashboard store
 interface DashboardStore {
   refreshKey: number;           // A counter that increments to trigger re-fetches
@@ -24,4 +35,10 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   
   isSetting: false, // Initial value for settings page visibility
   toggleSettings: () => set((state) => ({ isSetting: !state.isSetting })),
+}));
+
+export const useAuthStore = create<AuthStore>((set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+  clearUser: () => set({ user: null }),
 }));

@@ -7,8 +7,8 @@ import "../App.css";
 import SidebarComponent from "../components/sidebarcomponent";
 import { CreateContentModel } from "../components/createContentModel";
 import { useDashboardStore } from "../store";
-import { BACKEND_URL, CONTENT } from "../config";
-import axios from "axios";
+import { CONTENT } from "../config";
+import api from "../api";
 import { CustomAlert } from "../components/customAlert";
 import { SettingsPage } from "./settingspage";
 
@@ -34,14 +34,7 @@ export default function Dashboard() {
   const fetchContent = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get<ContentItem[] | { content: ContentItem[] }>(
-        `${BACKEND_URL}${CONTENT}`,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token") || "",
-          },
-        }
-      );
+      const response = await api.get<ContentItem[] | { content: ContentItem[] }>(CONTENT);
 
       if (response.status === 200) {
         const contentData = Array.isArray(response.data)
@@ -63,18 +56,9 @@ export default function Dashboard() {
     const FrontendURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
     
     try {
-      const response = await axios.post<{ link: string }>(
-        `${BACKEND_URL}/app/v1/brain/share`,
-        { share: true },
-        {
-          headers: {
-            Authorization: localStorage.getItem("token") || "",
-          },
-        }
-      );
+      const response = await api.post<{ link: string }>("/app/v1/brain/share", { share: true });
 
       const link = response.data.link;
-      localStorage.setItem("sharedBrainLink", link);
       const brainURL = `${FrontendURL}/brain/${link}`;
       
       setShowAlert(true);

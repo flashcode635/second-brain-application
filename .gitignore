@@ -3,7 +3,8 @@
 node_modules/
 backend/dist
 **/dist
-
+/.idea/
+.junie/
 # Environment variables
 .env
 

@@ -28,7 +28,7 @@ A modern web application for organizing and managing your digital content, from 
 - **Node.js** - JavaScript runtime
 - **Express** - Web application framework
 - **MongoDB** (via Mongoose) - NoSQL database for flexible data storage
-- **JWT** - JSON Web Tokens for authentication
+- **JWT** - Short-lived access tokens and rotating refresh tokens stored in HttpOnly cookies
 - **Zod** - TypeScript-first schema validation
 - **CORS** - Cross-Origin Resource Sharing support
 
@@ -37,7 +37,7 @@ A modern web application for organizing and managing your digital content, from 
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm (v9 or higher) or yarn
+- pnpm (v9 or higher)
 - MongoDB (local or cloud instance)
 
 ### Setup Instructions
@@ -53,23 +53,30 @@ A modern web application for organizing and managing your digital content, from 
 
    ```bash
    cd backend
-   npm install
+   pnpm install
 
    # Create a .env file in the backend directory with:
-   # MONGODB_URI=your_mongodb_connection_string
-   # JWT_SECRET=your_jwt_secret
-   # PORT=3000 (or your preferred port)
    ```
+
+# MONGODB_URI=your_mongodb_connection_string
+
+# ACCESS_TOKEN_SECRET=your_access_token_secret
+
+# REFRESH_TOKEN_SECRET=your_refresh_token_secret
+
+# FRONTEND_URL=http://localhost:5173
+
+````
 
 3. **Set up the Frontend**
 
-   ```bash
-   cd ../frontend
-   npm install
+```bash
+cd ../frontend
+pnpm install
 
-   # Create a .env file in the frontend directory with:
-   # VITE_BACKEND_URL=http://localhost:3000
-   ```
+# Create a .env file in the frontend directory with:
+# VITE_BACKEND_URL=http://localhost:3001
+````
 
 ## 🏃‍♂️ Running the Application
 
@@ -77,7 +84,7 @@ A modern web application for organizing and managing your digital content, from 
 
    ```bash
    cd backend
-   npm run dev
+   pnpm dev
    ```
 
    The backend will be available at `http://localhost:3001`
@@ -85,7 +92,7 @@ A modern web application for organizing and managing your digital content, from 
 2. **Start the Frontend**
    ```bash
    cd frontend
-   npm run dev
+   pnpm dev
    ```
    The application will be available at `http://localhost:5173`
 
@@ -128,10 +135,10 @@ POST /app/v1/signup
 }
 ```
 
-#### Sign In 🔓
+#### Login 🔓
 
 ```http
-POST /app/v1/signin
+POST /api/auth/login
 ```
 
 **Request Body:**
@@ -147,9 +154,50 @@ POST /app/v1/signin
 
 ```json
 {
-  "token": "jwt_token_here"
+  "message": "logging in....",
+  "user": {
+    "id": "user_id",
+    "username": "username"
+  }
 }
 ```
+
+The access token and refresh token are returned as cookies, not JSON fields:
+
+- `accessToken`: HttpOnly cookie, valid for 15 minutes, scoped to `/`
+- `refreshToken`: HttpOnly cookie, valid for 7 days, scoped to `/api/auth/refresh`
+- `csrfToken`: readable cookie used with the `X-CSRF-Token` header for state-changing requests
+
+Cookies are `SameSite=Strict` and use `Secure` in production. The legacy
+`POST /app/v1/signin` route remains available for compatibility.
+
+#### Refresh Session 🔒
+
+```http
+POST /api/auth/refresh
+```
+
+Refresh tokens are checked against the MongoDB `refresh_tokens` collection and
+rotated after every successful request. Reuse of a revoked refresh token
+revokes all refresh tokens for that user.
+
+#### Get Current User 🔒
+
+```http
+GET /api/auth/me
+```
+
+#### Logout 🔒
+
+```http
+POST /api/auth/logout
+```
+
+The refresh-token record is revoked and all authentication cookies are cleared.
+
+For `POST`, `PUT`, `PATCH`, and `DELETE` requests, send the value of the
+`csrfToken` cookie in the `X-CSRF-Token` request header. Axios requests in the
+frontend do this automatically.
 
 ### Content Management
 
@@ -159,11 +207,7 @@ POST /app/v1/signin
 GET /app/v1/content
 ```
 
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token>
-```
+Authentication cookies must be included with the request.
 
 #### Add New Content 🔒
 
@@ -171,12 +215,7 @@ Authorization: Bearer <jwt_token>
 POST /app/v1/content
 ```
 
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token>
-Content-Type: application/json
-```
+Authentication cookies and the `X-CSRF-Token` header are required.
 
 **Request Body:**
 
@@ -195,12 +234,7 @@ Content-Type: application/json
 DELETE /app/v1/content
 ```
 
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token>
-Content-Type: application/json
-```
+Authentication cookies, the `X-CSRF-Token` header, and `Content-Type: application/json` are required.
 
 **Request Body:**
 
@@ -218,12 +252,7 @@ Content-Type: application/json
 POST /app/v1/brain/share
 ```
 
-**Headers:**
-
-```
-Authorization: Bearer <jwt_token>
-Content-Type: application/json
-```
+Authentication cookies, the `X-CSRF-Token` header, and `Content-Type: application/json` are required.
 
 **Request Body:**
 

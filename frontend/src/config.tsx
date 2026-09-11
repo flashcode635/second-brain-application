@@ -18,11 +18,14 @@ export interface CardProps{
 // common className for input fields
 export const className = "p-3 py-2.5 rounded-lg outline-none transition-all cursor-pointer w-fit"
 
-// backend URL - use environment variable in production, fallback to localhost for development
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 
-"http://localhost:3001"
+// backend URL - use environment variable in production; in dev use relative URLs via Vite proxy
+export const BACKEND_URL = import.meta.env.DEV
+  ? ""
+  : import.meta.env.VITE_BACKEND_URL || "";
+
+
 export const SIGN_UP= "/app/v1/signup"
-export const SIGN_IN= "/app/v1/signin"
+export const SIGN_IN= "/api/auth/login"
 export const CONTENT= "/app/v1/content"  // POST endpoint to  content
 
 

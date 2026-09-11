@@ -18,8 +18,10 @@ export default defineConfig({
     },
   },
   server: {
+    host: true,
     proxy: {
-      '/app': 'http://localhost:3000'
+      '/api': 'http://localhost:3001',
+      '/app': 'http://localhost:3001'
     }
   }
 })

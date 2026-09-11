@@ -1,20 +1,14 @@
 import { type RequestHandler } from 'express';
-import express from 'express'
 import * as z from "zod";
-import jwt from "jsonwebtoken";
 import {connectDB } from './models/db.js';
 import {UserModel} from './models/userSchema.js';
 import { ContentModel } from './models/contentSchema.js';
 import { userMiddleware} from './midlleware.js';
-import { jwt_password } from './config.js';
-import { random } from './utils.js';
+import { random, signAccessToken, signRefreshToken, verifyRefreshToken } from './utils.js';
 import LinkModel from './models/linkSchema.js';
+import { RefreshTokenModel } from './models/refreshTokenSchema.js';
+import { clearAuthCookies, setAuthCookies, setCsrfCookie } from './authCookies.js';
 
-import cors from 'cors'; 
-
-if (!jwt_password) {
-  throw new Error("JWT_PASSWORD is not set in environment variables");
-}
 
 const UserObject= z.object({
   username: z.string()
@@ -68,13 +62,8 @@ try {
 }
 
 export const SignInHandler: RequestHandler = async(req,res)=>{
-   const {username, password}= UserObject.parse(req.body);
-   if (!username|| !password) {
-      return res.status(401).json({
-        message:"enter credentials properly",
-      })
-   } 
    try {
+     const { username, password } = UserObject.parse(req.body);
      await connectDB();
  
     const existingUser= await UserModel.findOne({
@@ -89,13 +78,19 @@ export const SignInHandler: RequestHandler = async(req,res)=>{
      }
    )
  } else {
-  const token = jwt.sign({
-    id: existingUser._id
-  }, jwt_password)
+  const accessToken = signAccessToken({ id: existingUser._id.toString() });
+  const refresh = signRefreshToken({ id: existingUser._id.toString() });
+  await RefreshTokenModel.create({
+    jti: refresh.jti,
+    userId: existingUser._id,
+    expiresAt: refresh.expiresAt,
+  });
+  setAuthCookies(res, accessToken, refresh.token);
+  setCsrfCookie(res);
      return res.status(200).json({
        message:"logging in....",
-      token: token,
-      id: existingUser._id
+       redirectTo: "/dashboard",
+      user: { id: existingUser._id, username: existingUser.username }
      })
  }
    } catch (error) {
@@ -163,6 +158,79 @@ export const DeleteContentHandler: RequestHandler = async(req,res)=>{
       return res.status(500).json({ message: "Failed to delete content" });
     }
 }
+
+  export const RefreshHandler: RequestHandler = async (req, res) => {
+    const refreshToken = req.cookies?.refreshToken;
+   if (typeof refreshToken !== "string") {
+    // Nothing was ever set thus no churn out clearCookie headers for no reason.
+    return res.status(401).json({ message: "Refresh token is required" });
+  }
+
+    try {
+      await connectDB();
+      const payload = verifyRefreshToken(refreshToken);
+      const jti = payload.jti;
+      const userId = payload.id;
+      if (!jti || !userId) throw new Error("Invalid refresh token payload");
+
+      const storedToken = await RefreshTokenModel.findOne({ jti });
+      if (!storedToken) {
+        clearAuthCookies(res);
+        return res.status(401).json({ message: "Invalid refresh token" });
+      }
+
+      if (storedToken.revoked) {
+        await RefreshTokenModel.updateMany({ userId: storedToken.userId }, { revoked: true });
+        clearAuthCookies(res);
+        return res.status(401).json({ message: "Refresh token reuse detected" });
+      }
+
+      if (storedToken.expiresAt.getTime() <= Date.now()) {
+        clearAuthCookies(res);
+        return res.status(401).json({ message: "Refresh token expired" });
+      }
+
+      const nextRefresh = signRefreshToken({ id: String(userId) });
+      storedToken.revoked = true;
+      await storedToken.save();
+      await RefreshTokenModel.create({
+        jti: nextRefresh.jti,
+        userId: storedToken.userId,
+        expiresAt: nextRefresh.expiresAt,
+      });
+      setAuthCookies(res, signAccessToken({ id: String(userId) }), nextRefresh.token);
+      setCsrfCookie(res);
+      return res.status(200).json({ message: "Session refreshed" });
+    } catch {
+      clearAuthCookies(res);
+      return res.status(401).json({ message: "Invalid refresh token" });
+    }
+  };
+
+  export const LogoutHandler: RequestHandler = async (req, res) => {
+    try {
+      const refreshToken = req.cookies?.refreshToken;
+      if (typeof refreshToken === "string") {
+        const payload = verifyRefreshToken(refreshToken);
+        if (payload.jti) {
+          await connectDB();
+          await RefreshTokenModel.updateOne({ jti: payload.jti }, { revoked: true });
+        }
+      }
+    } catch {
+      // Logout remains idempotent even if the cookie is already invalid.
+    }
+    clearAuthCookies(res);
+    return res.status(200).json({ message: "Logged out" });
+  };
+
+  export const MeHandler: RequestHandler = async (req, res) => {
+    if (!req.userId) return res.status(401).json({ message: "You are not logged in" });
+    await connectDB();
+    const user = await UserModel.findById(req.userId).select("_id username");
+    if (!user) return res.status(401).json({ message: "User not found" });
+    return res.status(200).json({ user: { id: user._id, username: user.username } });
+  };
 
 // linkedin Preview Specific API Endpint
 async function resolveLinkedInLink(shortUrl: string): Promise<string> {

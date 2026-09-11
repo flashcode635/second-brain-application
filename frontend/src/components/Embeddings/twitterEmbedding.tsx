@@ -14,7 +14,7 @@ export const TwitterEmbedding = ({ url }: { url: string }) => {
         height: `${230}px`,
         overflowY: "hidden",
         marginBottom:"0",
-         overflowX:"hidden"}}>
+        overflowX:"hidden"}}>
             <blockquote style={{width:`${width}px`}}
             className="twitter-tweet" >
                  <a href={newUrl}></a> 
