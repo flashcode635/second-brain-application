@@ -111,7 +111,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                             {type}
                         </span>
                     </div>
-                    <h3 className="font-heading" style={{
+                    <h3 className="font-heading truncate" style={{
                         margin: 0,
                         fontSize: '20px',
                         fontWeight: 600,

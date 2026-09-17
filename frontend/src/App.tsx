@@ -10,7 +10,7 @@ import BrainPage from "./pages/Brainpage";
 import { ProtectedRoute } from "./components/protectroutes";
 import api, { hasSessionHint } from "./api";
 import { useAuthStore, type AuthUser } from "./store";
-
+import {NotFoundPage} from "@/pages/error";
 
 
 
@@ -44,7 +44,9 @@ useEffect(() => {
           <Route path="/" element={<HomePage />} />
 
           <Route element={<ProtectedRoute isAllowed={isLoggedIn} />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} >
+
+            </Route>
           </Route>
            {/* Reverse guard: logged-in users shouldn't see signup */}
           <Route element={<ProtectedRoute isAllowed={!isLoggedIn} redirectPath="/dashboard" />}>
@@ -55,7 +57,7 @@ useEffect(() => {
 
           <Route path="/brain/:link" element={<BrainPage />} />
 
-          <Route path="*" element={<div> 404 Not Found </div>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </div>

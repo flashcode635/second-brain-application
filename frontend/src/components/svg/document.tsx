@@ -3,7 +3,7 @@ export const DocumentLogo: () => React.JSX.Element = () => (
         <svg 
   xmlns="http://www.w3.org/2000/svg" 
   viewBox="0 0 24 24" 
-  className="w-7 h-7"
+  className="w-7 h-7 bg-white!"
   role="img"
 >
   <title>Journal</title>
@@ -16,7 +16,7 @@ export const DocumentLogo: () => React.JSX.Element = () => (
 
     {/* Subtle Elevation Drop Shadow */}
     <filter id="journalShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="1.5" stdDeviation="1" floodColor="var(--color-surface-dark)" floodOpacity="0.2" />
+      <feDropShadow dx="0" dy="1.5" stdDeviation="1" floodColor="var(--color-text-on-dark)" floodOpacity="0.2" />
     </filter>
   </defs>
 

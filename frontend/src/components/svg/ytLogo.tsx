@@ -3,7 +3,7 @@ export const YoutubeLogo: () => React.JSX.Element = () => (
         <svg 
   xmlns="http://www.w3.org/2000/svg" 
   viewBox="0 0 24 24" 
-  className="w-6 h-6"
+  className="w-6 h-6 bg-white"
   role="img"
 >
   <title>YouTube</title>

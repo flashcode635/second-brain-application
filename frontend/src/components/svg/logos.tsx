@@ -4,11 +4,13 @@ import { LinkedInLogo } from "./linkedinLogo";
 import {XLogo} from "./xLogo";
 import { YoutubeLogo } from "./ytLogo";
 import { DocumentLogo } from "./document";
+import { InstagramIcon } from "./InstagramIcon";
+import { RedditIcon } from "./redditicon";
 
 // Rename the component to something more generic since it handles multiple icons
 export const DynamicIcon = ({ type }: CardProps) => {
     // 1. Declare a variable to hold the image source
-    let imageSrc: () => React.JSX.Element;
+    let imageSrc: () => React.JSX.Element
 
     // 2. Use the switch statement to correctly assign the appropriate image based on 'type'
     switch (type) {
@@ -22,6 +24,12 @@ export const DynamicIcon = ({ type }: CardProps) => {
             break;
         case "twitter":
             imageSrc = XLogo; // Logically, this should be documentImage for Twitter
+            break;
+        case "instagram":
+            imageSrc = InstagramIcon;
+            break;
+        case "reddit":
+            imageSrc = RedditIcon;
             break;
         default:
             // Optional: Handle a default case (e.g., set to image1 or an empty string)
