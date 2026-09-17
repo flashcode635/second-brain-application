@@ -95,13 +95,13 @@ export default function Dashboard() {
         <div className=" flex min-h-screen">
 
           {/* sidebar */}
-          <div className="shrink-0 border-r fixed border-border bg-surface">
+          <div className="shrink-0 border-r fixed border-border
+          z-99 bg-surface">
               <SidebarComponent/>
           </div>
-          {/* placeholder */}
-          <div className="h-screen theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 
-            md:pt-8 pl-4 md:pl-8 w-20
-            md:w-70 gap-7"></div>
+            {/* placeholder */}
+          <div className="h-screen z-1 theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 
+            md:pt-8 pl-4 md:pl-8 w-20            md:w-70 gap-7"></div>
           {/* buttons & cards */}
           <main className="theme-page bg-[#f3f2f2f7] min-w-0 flex-1 px-5 pb-10 sm:px-8">
 

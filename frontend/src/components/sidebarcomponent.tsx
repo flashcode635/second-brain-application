@@ -14,7 +14,7 @@ const SidebarFields = ({ link, text, collapsed }: SidebarFieldsProps & { collaps
     return (
         <div
         className={`sb-sidebar-item 
-           py-1.25 px-2
+           py-2 px-3
              ${collapsed ? "is-collapsed" : ""}`}
             title={text}
         >
@@ -98,7 +98,7 @@ export default function SidebarComponent() {
 
     const sidebarFieldsData: SidebarFieldsProps[] = [
         { link: Grid, text: "All" },
-        { link: SearchIcon, text: "Search" },
+        { link: SearchIcon, text: "Research" },
         { link: Bulb, text: "Inspirations" },
         { link: UserIcon, text: "Personal" },
         { link: folder, text: "Projects" },
@@ -106,13 +106,15 @@ export default function SidebarComponent() {
     ];
     return (
         <> 
-        <section className={`flex h-screen flex-col `}>
+      
+            {/* actual sidebar */}
+        <section className={`flex z-99 absolute h-screen flex-col `}>
 
             <div
-                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto p-5 pb-1  theme-surface ${collapsed ? "items-center justify-center px-2 pl-0" : " pl-8 items-stretch"}`}
+                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto p-5 pb-1  theme-surface ${collapsed ? "items-center justify-center px-2 pl-0" : " pl-6 items-stretch"}`}
                 style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
             >
-                <div className={`flex w-full items-center ${collapsed ? "flex-col gap-4" : "flex-row-reverse justify-between gap-5"}`}>
+                <div className={`flex w-full items-center ${collapsed ? "flex-col gap-4" : "flex-row-reverse justify-between gap-1"}`}>
 
                     <button
                         type="button"
@@ -123,7 +125,8 @@ export default function SidebarComponent() {
                     >
                         {/* collapse icon */}
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                        viewBox="0 0 24 24" fill="none" 
                         className="hover:stroke-text-primary stroke-gray-600"
                         stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="3" y="3" width="16" height="18" rx="2"/>
@@ -148,7 +151,7 @@ export default function SidebarComponent() {
                 )}
 
                 <div
-                    className={`grid w-full grid-cols-1 gap-1.5 ${collapsed ? "place-items-center" : ""}`}
+                    className={`grid pl-1 w-full grid-cols-1 gap-2.5 ${collapsed ? "place-items-center" : ""}`}
                 >
                     {sidebarFieldsData.map((field, index) => (
                         <SidebarFields key={index} link={field.link} text={field.text} collapsed={collapsed} />
@@ -164,7 +167,7 @@ export default function SidebarComponent() {
                         title="Resize sidebar"
                     />
                 )}
-                <div className={`sb-sidebar-settings mt-auto p-2 ${collapsed ? "overflow-hidden justify-center " : ""}  hover:text-black!`}
+                <div className={`sb-sidebar-settings cursor-pointer mt-auto p-2 ${collapsed ? "overflow-hidden justify-center " : ""}  hover:text-black!`}
                 onClick={() => {
                     // Toggle the settings page visibility
                     OpenSetting();
