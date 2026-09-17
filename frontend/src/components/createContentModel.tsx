@@ -1,6 +1,6 @@
 // import { useState } from "react"
 import { useRef, useState } from "react"
-import { className, CONTENT } from "../config"
+import { CONTENT } from "../config"
 import ButtonElement from "./button"
 import { InputField } from "./inputfield"
 import { CancelIcon } from "./svg/cancelicon"
@@ -9,12 +9,6 @@ import axios from "axios"
 import api from "../api"
 // Imported Zustand store to trigger dashboard refresh after adding content
 import { useDashboardStore } from "../store"
-import { LinkedInLogo } from "./svg/linkedinLogo"
-import { YoutubeLogo } from "./svg/ytLogo"
-import { XLogo } from "./svg/xLogo"
-import { RedditIcon } from "./svg/redditicon"
-import { InstagramIcon } from "./svg/InstagramIcon"
-import { DocumentLogo } from "./svg/document"
 
 export interface fieldprops{
     label?:string, 
@@ -23,6 +17,25 @@ export interface fieldprops{
 }
 
 const tagsample = ["tag1", "tag2", "tag3"]
+const domainMap = {
+    twitter: ["x.com", "twitter.com"],
+    linkedIn: ["linkedin.com", "lnkd.in"],
+    youtube: ["youtube.com", "youtu.be"],
+    instagram: ["instagram.com"],
+    reddit: ["reddit.com"],
+} as const
+type ContentType = keyof typeof domainMap
+
+function getContentType(link: string): ContentType | null {
+    try {
+        const hostname = new URL(link).hostname.toLowerCase()
+        return (Object.entries(domainMap).find(([, domains]) =>
+            domains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))
+        )?.[0] as ContentType | undefined) ?? null
+    } catch {
+        return null
+    }
+}
 interface InputBoxProps {
     onClose: () => void;
 }
@@ -36,9 +49,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
     //controls alert visibility
     const [showAlert, setShowAlert] = useState(false); 
 
-    //  to get data
-    // default to a valid content type that backend supports
-    const [type, setType]= useState<'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit' | 'document'>("youtube")
+    const [detectedType, setDetectedType] = useState<ContentType | null>(null)
 
     const titleref= useRef<HTMLInputElement>(null)
     const linkref= useRef<HTMLInputElement>(null)
@@ -61,7 +72,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
 
         // minimal logging removed
 
-        const contentType = type
+        const contentType = getContentType(link)
 
         if (!title || !link || tags.length === 0 || !contentType) {
             const errormessage = "Missing required fields"
@@ -83,42 +94,10 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 return;
             }
 
-            // ✅ Normalize and check domain
-            const hostname = parsed.hostname.toLowerCase();
-            const allowed = ['x.com', 'instagram.com', 'reddit.com', 'twitter.com', 'linkedin.com', 'lnkd.in', 'youtube.com', 'youtu.be'];
-            const isAllowed = allowed.some(
-                (d) => hostname === d || hostname.endsWith('.' + d)
-            );
-            // If domain is not FOUND in list
-            if (!isAllowed) {
+            if (!getContentType(link)) {
                 setAlertMessage('Please enter a link from LinkedIn, Twitter (X), Instagram, Reddit, or YouTube.');
                 setShowAlert(true);
                 return;
-            }
-
-            // ✅ Additional check: match domain with provided contentType
-        
-            const domainMap: Record<string, string[]> = {
-                // mapping of types with their respective domains.
-                twitter: ['x.com', 'twitter.com'],
-                linkedIn: ['linkedin.com', 'lnkd.in'],
-                youtube: ['youtube.com', 'youtu.be'],
-                instagram: ['instagram.com'],
-                reddit: ['reddit.com'],
-            };
-
-            // If `contentType` is defined, make sure the link belongs to that platform
-            if (contentType) {
-                const expectedDomains = domainMap[contentType] || [];
-                const matchesContentType = expectedDomains.some(
-                (d) => hostname === d || hostname.endsWith('.' + d)
-                );
-
-                if (!matchesContentType) {
-                setAlertMessage(`The link does not match the selected content type (${contentType}).`);
-                setShowAlert(true);
-                return;
-                }
             }
 
             // ✅ If all checks passed, proceed
@@ -195,43 +174,18 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 </div>  
                     
             {/* input fields */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col mb-3 gap-4">
                         <InputField label="Title" ref={titleref} />
-                        <InputField label="Link" ref={linkref} />
+                        <InputField
+                            label="Link"
+                            ref={linkref}
+                            onChange={(event) => setDetectedType(getContentType(event.target.value))}
+                        />
+                        {detectedType && (
+                            <p className="text-sm text-text-muted">Detected type: {detectedType}</p>
+                        )}
                 {/* <InputField label="Description"/> */}
                 <div className="flex flex-col">
-                    {/* chose type */}
-                    <label htmlFor="title" className="text-text-primary font-[16px] font-sans mb-1">Choose Type</label>
-                    {/* type of link */}
-                    <div className="grid md:grid-cols-6">
-
-                        <button  className={` ${className} mb-3 
-                        ${type === "linkedIn" ? "bg-black/10" : "bg-transparent"}`}
-                         onClick={() => setType("linkedIn")}
-                         > <LinkedInLogo/> </button>
-
-                        <button className={`${className} mb-3 ${type === "youtube" ? "bg-black/10" : "bg-transparent"}`}
-                         onClick={() => setType("youtube")}
-                         > <YoutubeLogo/> </button>
-
-                        <button className={`  ${className} mb-3 ${type ==="twitter" ? "bg-black/10" : "bg-transparent"}`} 
-                        onClick={() => setType("twitter")}
-                        > <XLogo/> </button>
-
-                        <button className={`  ${className} mb-3 ${type ==="instagram" ? "bg-black/10" : "bg-transparent"}`} 
-                        onClick={() => setType("instagram")}
-                        > <InstagramIcon/> </button>
-
-                        <button className={`  ${className} mb-3 ${type ==="reddit" ? "bg-black/10" : "bg-transparent"}`} 
-                        onClick={() => setType("reddit")}
-                        > <RedditIcon/> </button>
-                        
-                         <button className={`  ${className} mb-3 ${type ==="document" ? "bg-black/10" : "bg-transparent"}`} 
-                        onClick={() => setType("document")}
-                        >
-                            <DocumentLogo/></button>
-                    </div>
-                
                     <label htmlFor="title" className="text-text-primary 
                     font-[16px] font-sans mb-1">Enter tags</label>
                     <div className="grid grid-cols-3 w-full gap-4">

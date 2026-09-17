@@ -1,4 +1,5 @@
 import React from 'react';
+import ButtonElement from './button';
 
 interface CustomAlertProps {
     message: string;
@@ -13,15 +14,11 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({ message, link, onClose
     return (
         <div className="fixed top-16 right-44 z-50 flex justify-start">
 
-            <div className="theme-surface w-full max-w-sm p-6 rounded-lg shadow-xl">
-                <h2 className="text-xl font-heading font-bold mb-4 text-text-primary">Second Brain App </h2>
-                <p className="mb-6 text-text-secondary">{message}: {link && <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">{link}</a>}</p>
-                <button
-                    onClick={onClose}
-                    className="theme-button-primary w-full py-2 px-4 rounded"
-                >
-                    OK
-                </button>
+            <div className=" border-red-400 border theme-surface  w-full max-w-sm p-6 rounded-lg shadow-xl">
+                <h2 className="text-xl font-heading font-bold mb-4 text-text-primary">Oops!! </h2>
+                <p className="mb-6 text-red-600">{message} {link && <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">: {link}</a>}</p>
+                <ButtonElement size='submit' onClickfn={onClose} text="OK" variant="primary" />
+                
             </div>
         </div>
     );

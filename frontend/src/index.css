@@ -3,6 +3,7 @@
 @theme {
     --color-page: #FBFAF8;
     --color-page-deep: #e9e9e6;
+    
     --color-surface: #ffffff;
     --color-surface-bg: #ffffff;
     --color-surface-muted: #eeeeec;
@@ -10,7 +11,7 @@
     --color-border: #d9d9d5;
     --color-border-strong: #b8b8b2;
     --color-text-primary: #111111;
-    --color-text-secondary: #5f5f5b;
+    --color-text-secondary: #2b2b2b;
     --color-text-muted: #8b8b85;
     --color-text-sidebar: #3f3f3b;
     --color-text-on-dark: #ffffff;
@@ -68,12 +69,13 @@
 }
 
 .theme-button-primary {
-    background: var(--color-surface-dark);
+    background: var(--color-text-secondary);
     color: var(--color-text-on-dark);
 }
 
 .theme-button-primary:hover {
-    background: var(--color-text-secondary);
+    background: var(--color-surface-dark);
+
     color: var(--color-text-on-dark);
 
 }

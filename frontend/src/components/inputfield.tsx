@@ -3,15 +3,17 @@ import { forwardRef } from "react";
 type Props = {
     label?: string;
     placeholder?: string;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-export const InputField = forwardRef<HTMLInputElement, Props>(({ label, placeholder}, ref) => {
+export const InputField = forwardRef<HTMLInputElement, Props>(({ label, placeholder, onChange}, ref) => {
     return (
         <div className="flex flex-col">
             {label && <label className="text-[15px] text-text-primary tracking-wider font-sans mb-1">{label}</label>}
             <input
                 ref={ref}
                 placeholder={placeholder}
+                onChange={onChange}
                 className={`border border-gray-300 bg-white cursor-text rounded-lg px-3 py-2.5 
                      text-sm w-full min-w-0 text-black
                      shadow-[0_1px_3px_rgba(0,0,0,0.08)]
