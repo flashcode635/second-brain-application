@@ -29,7 +29,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState<ShareResponse>({ message: "" });
   const [showAlert, setShowAlert] = useState(false);
-  const { refreshKey , isSetting} = useDashboardStore();
+  const { refreshKey, isSetting, sidebarWidth } = useDashboardStore();
 
   const fetchContent = useCallback(async () => {
     try {
@@ -62,8 +62,8 @@ export default function Dashboard() {
       const brainURL = `${FrontendURL}/brain/${link}`;
       
       setShowAlert(true);
-      setAlertMessage({ message: `Share link created:
-     ` , link: brainURL });
+      setAlertMessage({ message: `Share link created
+      ` , link: brainURL });
     } catch (error) {
       console.error("Error sharing content:", error);
       setShowAlert(true);
@@ -84,6 +84,7 @@ export default function Dashboard() {
       {/* alert */}
         <CustomAlert message={alertMessage.message}
             link={alertMessage.link}
+          isError={!alertMessage.message.includes("created")}
                     isVisible={showAlert}
                     onClose={() => setShowAlert(false)}
                 />
@@ -100,8 +101,10 @@ export default function Dashboard() {
               <SidebarComponent/>
           </div>
             {/* placeholder */}
-          <div className="h-screen z-1 theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 
-            md:pt-8 pl-4 md:pl-8 w-20            md:w-70 gap-7"></div>
+          <div
+            className="h-screen z-1 theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 pl-4 md:pt-8 md:pl-8 gap-7 shrink-0"
+            style={{ width: sidebarWidth }}
+          ></div>
           {/* buttons & cards */}
           <main className="theme-page bg-[#f3f2f2f7] min-w-0 flex-1 px-5 pb-10 sm:px-8">
 

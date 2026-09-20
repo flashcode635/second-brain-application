@@ -148,6 +148,7 @@ const InputBox: React.FC<InputBoxProps> = ({ onClose }) => {
                 <div className="pointer-events-auto">
                     <CustomAlert 
                         message={alertMessage}
+                        isError={!alertMessage.includes('successfully')}
                         isVisible={showAlert}
                         onClose={() => setShowAlert(false)}
                     />

@@ -17,6 +17,8 @@ interface AuthStore {
 interface DashboardStore {
   refreshKey: number;           // A counter that increments to trigger re-fetches
   triggerRefresh: () => void;
+  sidebarWidth: number;
+  setSidebarWidth: (width: number) => void;
    
   isSetting: boolean;            // Flag to indicate if settings page is visible
   toggleSettings: () => void;    // Function to toggle settings page visibility
@@ -32,6 +34,8 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   refreshKey: 0,  // Initial value - starts at 0
   // triggerRefresh uses Zustand's 'set' to update state immutably
   triggerRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
+  sidebarWidth: 280,
+  setSidebarWidth: (width) => set({ sidebarWidth: width }),
   
   isSetting: false, // Initial value for settings page visibility
   toggleSettings: () => set((state) => ({ isSetting: !state.isSetting })),

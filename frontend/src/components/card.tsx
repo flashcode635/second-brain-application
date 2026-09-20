@@ -88,7 +88,7 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
                         display: 'flex',
                         alignItems: 'center',
                         gap: '8px',
-                        marginBottom: '4px'
+                        marginBottom: '6px'
                     }}>
                         <div style={{
                             display: 'flex',

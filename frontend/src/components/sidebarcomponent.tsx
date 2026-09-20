@@ -31,6 +31,7 @@ export default function SidebarComponent() {
     const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
     const isResizingRef = useRef(false);
     const OpenSetting = useDashboardStore((state) => state.toggleSettings);
+    const setSharedSidebarWidth = useDashboardStore((state) => state.setSidebarWidth);
 
     useEffect(() => {
         const syncLayout = () => {
@@ -41,8 +42,10 @@ export default function SidebarComponent() {
             if (mobile) {
                 setCollapsed(true);
                 setSidebarWidth(MIN_SIDEBAR_WIDTH);
+                setSharedSidebarWidth(MIN_SIDEBAR_WIDTH);
             } else if (sidebarWidth <= MIN_SIDEBAR_WIDTH) {
                 setSidebarWidth(DEFAULT_SIDEBAR_WIDTH);
+                setSharedSidebarWidth(DEFAULT_SIDEBAR_WIDTH);
             }
         };
 
@@ -64,6 +67,7 @@ export default function SidebarComponent() {
 
             const nextWidth = Math.max(MIN_SIDEBAR_WIDTH, Math.min(MAX_SIDEBAR_WIDTH, event.clientX));
             setSidebarWidth(nextWidth);
+            setSharedSidebarWidth(nextWidth);
         };
 
         const handleResizeEnd = () => {
@@ -81,14 +85,20 @@ export default function SidebarComponent() {
             const next = !prev;
 
             if (next) {
+                setSharedSidebarWidth(MIN_SIDEBAR_WIDTH);
                 if (isMobile) {
                     setSidebarWidth(MIN_SIDEBAR_WIDTH);
                 }
             } else {
                 if (isMobile) {
                     setSidebarWidth(MOBILE_EXPANDED_WIDTH);
-                } else if (sidebarWidth <= MIN_SIDEBAR_WIDTH) {
-                    setSidebarWidth(DEFAULT_SIDEBAR_WIDTH);
+                    setSharedSidebarWidth(MOBILE_EXPANDED_WIDTH);
+                } else {
+                    const expandedWidth = sidebarWidth <= MIN_SIDEBAR_WIDTH
+                        ? DEFAULT_SIDEBAR_WIDTH
+                        : sidebarWidth;
+                    setSidebarWidth(expandedWidth);
+                    setSharedSidebarWidth(expandedWidth);
                 }
             }
 
