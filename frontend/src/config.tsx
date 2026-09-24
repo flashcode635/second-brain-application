@@ -27,11 +27,8 @@ export const BACKEND_URL = import.meta.env.DEV
   : import.meta.env.VITE_BACKEND_URL || "";
 
 
-export const SIGN_UP= "/app/v1/signup"
-export const SIGN_IN= "/api/auth/login"
 export const CONTENT= "/app/v1/content"  // POST/PATCH/DELETE endpoint for content
 export const SETTINGS = "/app/v1/settings"
-export const ME = "/api/auth/me"
 
 
 

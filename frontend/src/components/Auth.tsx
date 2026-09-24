@@ -3,6 +3,13 @@ import ButtonElement from "../components/button";
 import { InputField } from "../components/inputfield";
 import { CustomAlert } from "../components/customAlert";
 import { EyeIcon, EyeOffIcon } from "../components/svg/eyeicon";
+import { GoogleIcon } from "../components/svg/googleicon";
+
+export type AuthFormValues = {
+    username: string;
+    password: string;
+    email?: string;
+};
 
 type AuthenticationProps = {
     title: string;
@@ -10,7 +17,8 @@ type AuthenticationProps = {
     code?: React.ReactNode;
     alertMessage: string;
     showAlert: boolean;
-    onSubmit: (username: string, password: string) => void;
+    onSubmit: (values: AuthFormValues) => void;
+    onGoogle: () => void;
     onCloseAlert: () => void;
 };
 
@@ -21,8 +29,10 @@ export default function Authentication({
     alertMessage,
     showAlert,
     onSubmit,
+    onGoogle,
     onCloseAlert,
 }: AuthenticationProps) {
+    const emailRef = useRef<HTMLInputElement>(null);
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const isSignUp = title === "Sign Up";
@@ -115,20 +125,21 @@ export default function Authentication({
                     <div className="w-full max-w-95 flex flex-col gap-8">
 
                         <div className="flex flex-col gap-2">
-                            <span className="text-xs tracking-[0.15em] uppercase font-medium" style={{ color: "var(--accent)" }}>
+                            {/* <span className="text-xs tracking-[0.15em] uppercase font-medium" style={{ color: "var(--accent)" }}>
                                 {isSignUp ? "Create account" : "Sign in"}
-                            </span>
+                            </span> */}
                             <h1 className="auth-display text-3xl font-medium" style={{ color: "var(--ink)" }}>
                                 {title}
                             </h1>
-                            <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
+                            {/* <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
                                 {isSignUp
                                     ? "A few details and you're in."
                                     : "Enter your details to continue."}
-                            </p>
+                            </p> */}
                         </div>
 
                         <div className="flex flex-col gap-5">
+                            {isSignUp && <InputField label="Email" ref={emailRef} type="email" />}
                             <InputField label="Username" ref={usernameRef} />
                             <InputField
                                 label="Password"
@@ -147,19 +158,36 @@ export default function Authentication({
                             />
                         </div>
 
-                        <div className={`transition-opacity duration-200 ${loading ? "opacity-50 pointer-events-none" : ""}`}>
+                        <div className={`flex flex-col gap-4 transition-opacity duration-200 ${loading ? "opacity-50 pointer-events-none" : ""}`}>
                             <ButtonElement
                                 variant="primary"
                                 full={true}
                                 size="default"
                                 text={loading ? "Please wait…" : (isSignUp ? "Create account" : "Sign in")}
                                 onClickfn={() => {
-                                    onSubmit(
-                                        usernameRef.current?.value || "",
-                                        passwordRef.current?.value || ""
-                                    );
+                                    onSubmit({
+                                        username: usernameRef.current?.value || "",
+                                        password: passwordRef.current?.value || "",
+                                        email: emailRef.current?.value || "",
+                                    });
                                 }}
                             />
+
+                            <div className="flex items-center gap-3 text-xs uppercase tracking-widest" style={{ color: "var(--muted)" }}>
+                                <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+                                or
+                                <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={onGoogle}
+                                className="flex w-full items-center justify-center gap-3 rounded-lg border py-2.5 text-sm font-medium transition-colors hover:bg-black/3"
+                                style={{ borderColor: "var(--line)", color: "var(--ink)" }}
+                            >
+                                <GoogleIcon />
+                                Continue with Google
+                            </button>
                         </div>
 
                         <div className="pt-2 border-t text-sm" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>

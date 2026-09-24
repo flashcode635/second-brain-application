@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDashboardStore, useAuthStore, type ThemeMode } from "../store";
+import { useDashboardStore, type ThemeMode } from "../store";
 import { CancelIcon } from "@/components/svg/cancelicon";
-import api from "../api";
-import { ME } from "../config";
+import { authClient } from "../authClient";
 
 type SettingsTab = "general" | "theme" | "notifications" | "account";
 
@@ -86,9 +84,8 @@ function ThemeSettings() {
 }
 
 function AccountSettings() {
-    const user = useAuthStore((state) => state.user);
-    const setUser = useAuthStore((state) => state.setUser);
-    const clearUser = useAuthStore((state) => state.clearUser);
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
     const navigate = useNavigate();
 
     const [username, setUsername] = useState(user?.username ?? "");
@@ -110,26 +107,20 @@ function AccountSettings() {
         }
         setSaving(true);
         setError("");
-        try {
-            const res = await api.patch<{ user: typeof user }>(ME, { username: trimmed });
-            if (res.data.user) setUser(res.data.user);
-            setEditing(false);
-        } catch (err) {
-            const msg = axios.isAxiosError(err) ? err.response?.data?.message : undefined;
-            setError(msg || "Failed to update username");
-        } finally {
-            setSaving(false);
+        const { error: updateError } = await authClient.updateUser({ username: trimmed });
+        setSaving(false);
+        if (updateError) {
+            setError(updateError.message || "Failed to update username");
+            return;
         }
+        setEditing(false);
     }
 
     async function signOut() {
         setSigningOut(true);
         try {
-            await api.post("/api/auth/logout");
-        } catch {
-            // Sign out locally even if the request fails.
+            await authClient.signOut();
         } finally {
-            clearUser();
             navigate("/signin", { replace: true });
         }
     }

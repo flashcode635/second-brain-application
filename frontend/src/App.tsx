@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import Dashboard from "./pages/dashboard";
 import { HomePage } from "./pages/homepage";
 // import Login from "./pages/signin";
@@ -8,34 +6,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SignInEP, SignupEP } from "./pages/login";
 import BrainPage from "./pages/Brainpage";
 import { ProtectedRoute } from "./components/protectroutes";
-import api, { hasSessionHint } from "./api";
-import { useAuthStore, type AuthUser } from "./store";
+import { authClient } from "./authClient";
 import {NotFoundPage} from "@/pages/error";
 
 
 
 // Main App component
 export default function App() {
-  const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearUser = useAuthStore((state) => state.clearUser);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: session, isPending } = authClient.useSession();
 
-useEffect(() => {
-  if (!hasSessionHint()) {
-    clearUser();
-    setIsLoading(false);
-    return;
-  }
-
-  api.get<{ user: AuthUser }>("/api/auth/me")
-    .then((response) => setUser(response.data.user))
-    .catch(() => clearUser())
-    .finally(() => setIsLoading(false));
-}, [clearUser, setUser]);
-
-  if (isLoading) return null;
-  const isLoggedIn = Boolean(user);
+  if (isPending) return null;
+  const isLoggedIn = Boolean(session?.user);
   return (
     
     <div>

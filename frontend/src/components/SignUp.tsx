@@ -1,44 +1,49 @@
 import { useState } from "react";
-import axios from "axios";
-import api from "../api";
-import Authentication from "./Auth";
-import { SIGN_UP } from "../config";
+import { authClient } from "../authClient";
+import Authentication, { type AuthFormValues } from "./Auth";
 
 export default function SignUp() {
     const [alertMessage, setAlertMessage] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [loading, setLoading] = useState(false);
-    const isProduction = import.meta.env.PROD;
 
-    async function signUp(username: string, password: string) {
-        // Disable the shared form while the sign-up request is running.
+    async function signUp({ username, password, email }: AuthFormValues) {
         setLoading(true);
-        if (!username || !password) {
-            setAlertMessage("Please enter both username and password");
+        if (!username || !password || !email) {
+            setAlertMessage("Please fill in your email, username and password");
             setShowAlert(true);
             setLoading(false);
             return;
         }
 
-        try {
-            const response = await api.post(`${SIGN_UP}`, { username, password });
-            console.log("Sign Up response", response);
-            window.location.href = "/signin";
-        } catch (error) {
-            console.error("Sign Up error:", error);
-            const responseData = axios.isAxiosError(error) ? error.response?.data : undefined;
-            const message = axios.isAxiosError(error)
-                ? responseData?.error
-                || responseData?.message
-                || (typeof responseData === "string" ? responseData : undefined)
-                || (isProduction ? "Sign Up failed" : `${error.response?.status}: ${JSON.stringify(responseData)}`)
-                : isProduction ? "An unexpected error occurred. Please try again." : String(error);
-            setAlertMessage(message);
+        // The app doesn't use a separate display name — the username is the name.
+        const { error } = await authClient.signUp.email({ email, password, name: username, username });
+        setLoading(false);
+
+        if (error) {
+            setAlertMessage(error.message || "Sign Up failed");
             setShowAlert(true);
-        } finally {
-            setLoading(false);
+            return;
         }
+
+        window.location.href = "/dashboard";
     }
 
-    return <Authentication title="Sign Up" loading={loading} alertMessage={alertMessage} showAlert={showAlert} onSubmit={signUp} onCloseAlert={() => setShowAlert(false)} />;
+    async function signUpWithGoogle() {
+        // The OAuth callback is handled on the backend's origin, so this must be an
+        // absolute URL back to the frontend — a relative path would resolve there instead.
+        await authClient.signIn.social({ provider: "google", callbackURL: `${window.location.origin}/dashboard` });
+    }
+
+    return (
+        <Authentication
+            title="Sign Up"
+            loading={loading}
+            alertMessage={alertMessage}
+            showAlert={showAlert}
+            onSubmit={signUp}
+            onGoogle={signUpWithGoogle}
+            onCloseAlert={() => setShowAlert(false)}
+        />
+    );
 }

@@ -1,12 +1,12 @@
 import express from 'express'
 import cookieParser from 'cookie-parser';
 
-import { csrfMiddleware, userMiddleware} from './midlleware.js';
+import { originMiddleware, userMiddleware} from './midlleware.js';
+import { auth } from './auth.js';
+import { toNodeHandler } from 'better-auth/node';
 
-import {pingHandler, SignUpHandler,
- SignInHandler,
- RefreshHandler, LogoutHandler, MeHandler,
- UpdateUsernameHandler, GetSettingsHandler, UpdateSettingsHandler,
+import {pingHandler,
+ GetSettingsHandler, UpdateSettingsHandler,
  CreateContentHandler,  ViewSharedBrainHandler,
  FindContentHandler, DeleteContentHandler, UpdateContentHandler,
  LinkedInHandler, ShareBrainHandler} from './handlers.js';
@@ -15,8 +15,6 @@ import cors from 'cors';
 import { allowed_frontend_urls } from './config.js';
 
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
 app.use(cors(
   {
   origin: (origin, callback) => {
@@ -30,40 +28,36 @@ app.use(cors(
 }
 ));
 
+// Better Auth owns everything under /api/auth/* (sign-up, sign-in, Google
+// OAuth, sessions, sign-out, user updates) — mount it before body parsing.
+app.all("/api/auth/*splat", toNodeHandler(auth));
+
+app.use(express.json());
+app.use(cookieParser());
+
 app.get('/ping', pingHandler);
-
-app.post('/app/v1/signup',SignUpHandler);
-
-
-// app.post("/app/v1/signin",SignInHandler )
-app.post("/api/auth/login", SignInHandler);
-
-app.post("/api/auth/refresh", RefreshHandler);
-app.post("/api/auth/logout", csrfMiddleware, LogoutHandler);
-app.get("/api/auth/me", userMiddleware, MeHandler);
-app.patch("/api/auth/me", userMiddleware, csrfMiddleware, UpdateUsernameHandler);
 
 // per-user settings (theme, etc.)
 app.get("/app/v1/settings", userMiddleware, GetSettingsHandler);
-app.patch("/app/v1/settings", userMiddleware, csrfMiddleware, UpdateSettingsHandler);
+app.patch("/app/v1/settings", userMiddleware, originMiddleware, UpdateSettingsHandler);
 
 // content create krne ke liye
-app.post("/app/v1/content", userMiddleware, csrfMiddleware, CreateContentHandler)
+app.post("/app/v1/content", userMiddleware, originMiddleware, CreateContentHandler)
 
 // content find krne ke liye
 app.get("/app/v1/content", userMiddleware,FindContentHandler)
 
 // update content (edit)
-app.patch("/app/v1/content", userMiddleware, csrfMiddleware, UpdateContentHandler)
+app.patch("/app/v1/content", userMiddleware, originMiddleware, UpdateContentHandler)
 
 // delete content by link
-app.delete("/app/v1/content", userMiddleware, csrfMiddleware, DeleteContentHandler)
+app.delete("/app/v1/content", userMiddleware, originMiddleware, DeleteContentHandler)
 
 // API ENDPOINT
 app.get('/api/linkedinpreview', LinkedInHandler);
 
 // share brain link create and delete
-app.post("/app/v1/brain/share", userMiddleware, csrfMiddleware, ShareBrainHandler)
+app.post("/app/v1/brain/share", userMiddleware, originMiddleware, ShareBrainHandler)
 
 // view shared brain
 app.get("/app/v1/brain/:sharelink", ViewSharedBrainHandler)

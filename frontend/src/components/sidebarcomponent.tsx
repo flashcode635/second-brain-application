@@ -21,7 +21,7 @@ const SidebarFields = ({
         <button
             type="button"
             onClick={onClick}
-            className={`sb-sidebar-item w-full cursor-pointer
+            className={`sb-sidebar-item hover:text-neutral-800! w-full cursor-pointer
            py-2 px-3
              ${collapsed ? "is-collapsed" : ""}
              ${active ? "is-active" : ""}`}
@@ -146,9 +146,9 @@ export default function SidebarComponent() {
             {/* actual sidebar */}
         <section className={`flex z-99 absolute h-screen flex-col `}>
 
-            <div
-                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto p-5 pb-1 theme-surface ${isResizing ? "" : "transition-[width] duration-300 ease-in-out"} ${collapsed ? "items-center justify-center px-2 " : " pl-6 items-stretch"}`}
-                style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
+            <div 
+                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto  p-5 pb-1 theme-surface ${isResizing ? "" : "transition-[width] duration-300 ease-in-out"} ${collapsed ? "items-center justify-center px-2 " : " pl-6 items-stretch"}`}
+                style={{backgroundColor: "#fbfaf8dd", width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
             >
                 <div className={`flex w-full items-center ${collapsed ? "flex-col gap-4" : "flex-row-reverse justify-between gap-1"}`}>
 
@@ -223,6 +223,7 @@ export default function SidebarComponent() {
                 </div>
             </div>
         </section>
+       
         </>
     );
 }
