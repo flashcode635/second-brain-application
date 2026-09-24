@@ -1,11 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import ButtonElement from "../components/button";
 import { PlusIcon } from "../components/svg/plusicon";
 import { ShareIcon } from "../components/svg/shareicon";
 import { CardComponent } from "../components/card";
 import "../App.css";
+// @ts-ignore
+import { SearchIcon } from "@svg/gridIcons";
 import SidebarComponent from "../components/sidebarcomponent";
-import { CreateContentModel } from "../components/createContentModel";
+import { CreateContentModel, type EditableContentItem } from "../components/createContentModel";
 import { useDashboardStore } from "../store";
 import { CONTENT } from "../config";
 import api from "../api";
@@ -13,10 +15,11 @@ import { CustomAlert } from "../components/customAlert";
 import { SettingsPage } from "./settingspage";
 
 interface ContentItem {
-  id: string;
-  type: 'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit';
+  _id: string;
+  type: 'linkedIn' | 'youtube' | 'twitter' | 'instagram' | 'reddit' | 'document';
   title: string;
   link: string;
+  description?: string;
   tags?: string[];
 }
 interface ShareResponse {
@@ -25,11 +28,30 @@ interface ShareResponse {
 }
 export default function Dashboard() {
   const [modelOpen, setModelOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<EditableContentItem | null>(null);
   const [content, setContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState<ShareResponse>({ message: "" });
   const [showAlert, setShowAlert] = useState(false);
-  const { refreshKey, isSetting, sidebarWidth } = useDashboardStore();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { refreshKey, isSetting, sidebarWidth, selectedCategory, isSidebarResizing } = useDashboardStore();
+
+  const filteredContent = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    const category = selectedCategory.toLowerCase();
+
+    return content.filter((item) => {
+      const matchesCategory =
+        category === "all" || (item.tags || []).some((tag) => tag.toLowerCase() === category);
+      if (!matchesCategory) return false;
+
+      if (!query) return true;
+      const haystack = [item.title, item.type, ...(item.tags || [])]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(query);
+    });
+  }, [content, searchQuery, selectedCategory]);
 
   const fetchContent = useCallback(async () => {
     try {
@@ -90,7 +112,14 @@ export default function Dashboard() {
                 />
         {/* create content model */}
         <div className="h-auto w-auto">
-            <CreateContentModel open={modelOpen} onClose={()=>setModelOpen(false)} />
+            <CreateContentModel
+                open={modelOpen}
+                editItem={editingItem}
+                onClose={() => {
+                  setModelOpen(false);
+                  setEditingItem(null);
+                }}
+            />
         </div>
 
         <div className=" flex min-h-screen">
@@ -102,28 +131,42 @@ export default function Dashboard() {
           </div>
             {/* placeholder */}
           <div
-            className="h-screen z-1 theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 pl-4 md:pt-8 md:pl-8 gap-7 shrink-0"
+            className={`h-screen z-1 theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 pl-4 md:pt-8 md:pl-8 gap-7 shrink-0 ${isSidebarResizing ? "" : "transition-[width] duration-300 ease-in-out"}`}
             style={{ width: sidebarWidth }}
           ></div>
           {/* buttons & cards */}
           <main className="theme-page bg-[#f3f2f2f7] min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
-                  {/* buttons */}
-              <div className="flex w-full items-center justify-end gap-4 py-4" >
-                      {/* buttons - Add Content & share */}
-                      {/* <div className="flex gap-4 pr-3 mb-4"> */}
+                  {/* search & buttons */}
+              <div className="flex w-full items-center justify-end gap-3 py-4" >
+                      {/* search bar */}
+                      <label className="theme-input relative flex w-full md:max-w-80 max-w-60 items-center gap-2 rounded-lg px-3 md:mr-3 py-2">
+                          <span className="text-text-muted">
+                              <SearchIcon />
+                          </span>
+                          <input
+                              type="text"
+                              value={searchQuery}
+                              onChange={(event) => setSearchQuery(event.target.value)}
+                              placeholder="Search your content..."
+                              aria-label="Search saved content"
+                              className="w-full min-w-0 bg-transparent text-sm text-text-primary outline-none placeholder:text-text-muted"
+                          />
+                      </label>
 
+                      {/* buttons - Add Content & share */}
+                      <div className="flex shrink-0 items-center gap-4">
                             <ButtonElement variant="secondary"
-                                size="sm" 
-                              onClickfn={()=>setModelOpen(true)}
+                                size="sm"
+                              onClickfn={()=>{ setEditingItem(null); setModelOpen(true); }}
                               startIcon={<PlusIcon/>}
                           />
 
-                      <ButtonElement variant="secondary" 
-                      size="sm"  onClickfn={shareContent}  
+                      <ButtonElement variant="secondary"
+                      size="sm"  onClickfn={shareContent}
                       startIcon={<ShareIcon/>}
-                      />   
-                      {/* </div> */}
+                      />
+                      </div>
 
               </div>
 
@@ -138,23 +181,39 @@ export default function Dashboard() {
                             <div className="col-span-full text-center font-heading text-text-secondary">
                               Fetching your saved links…
                               </div>
-                        ) : content.length > 0 ? (
-                            content.map((item) => (
-                                <CardComponent 
-                                    key={JSON.stringify(item.link)}
+                        ) : filteredContent.length > 0 ? (
+                            filteredContent.map((item) => (
+                                <CardComponent
+                                    key={item._id}
                                     type={item.type}
                                     heading={item.title}
                                     tags={item.tags || []}
                                     url={item.link}
+                                    description={item.description}
+                                    onEdit={() => {
+                                      setEditingItem({
+                                        _id: item._id,
+                                        title: item.title,
+                                        link: item.link,
+                                        type: item.type,
+                                        description: item.description,
+                                        tags: item.tags,
+                                      });
+                                      setModelOpen(true);
+                                    }}
                                     onDeleted={() => {
                                       setContent((currentContent) =>
                                         currentContent.filter(
-                                          (contentItem) => contentItem.link !== item.link
+                                          (contentItem) => contentItem._id !== item._id
                                         )
                                       );
                                     }}
                                 />
                             ))
+                        ) : content.length > 0 ? (
+                            <div className="col-span-full font-heading text-center text-lg text-text-secondary">
+                                No content matches "{searchQuery}".
+                            </div>
                         ) : (
                             <div className="col-span-full font-heading text-center text-lg text-text-secondary">
                                 No content available. Add some content to get started!

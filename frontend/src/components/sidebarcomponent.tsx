@@ -10,17 +10,35 @@ export type SidebarFieldsProps = {
     link: () => React.JSX.Element;
     text: string;
 };
-const SidebarFields = ({ link, text, collapsed }: SidebarFieldsProps & { collapsed: boolean }) => {
+const SidebarFields = ({
+    link,
+    text,
+    collapsed,
+    active,
+    onClick,
+}: SidebarFieldsProps & { collapsed: boolean; active: boolean; onClick: () => void }) => {
     return (
-        <div
-        className={`sb-sidebar-item 
+        <button
+            type="button"
+            onClick={onClick}
+            className={`sb-sidebar-item w-full cursor-pointer
            py-2 px-3
-             ${collapsed ? "is-collapsed" : ""}`}
+             ${collapsed ? "is-collapsed" : ""}
+             ${active ? "is-active" : ""}`}
             title={text}
+            aria-current={active ? "true" : undefined}
         >
-            {link()}
-            {!collapsed && <span>{text}</span>}
-        </div>
+            <span className={`flex items-center justify-center transition-transform duration-300 ease-out ${collapsed ? "scale-125" : ""}`}>
+                {link()}
+            </span>
+            <span
+                className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity,margin] duration-300 ease-out ${
+                    collapsed ? "ml-0 max-w-0 opacity-0" : "ml-0 max-w-40 opacity-100"
+                }`}
+            >
+                {text}
+            </span>
+        </button>
     );
 };
 
@@ -29,9 +47,13 @@ export default function SidebarComponent() {
     const [collapsed, setCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
+    const [isResizing, setIsResizing] = useState(false);
     const isResizingRef = useRef(false);
     const OpenSetting = useDashboardStore((state) => state.toggleSettings);
     const setSharedSidebarWidth = useDashboardStore((state) => state.setSidebarWidth);
+    const setSharedIsResizing = useDashboardStore((state) => state.setIsSidebarResizing);
+    const selectedCategory = useDashboardStore((state) => state.selectedCategory);
+    const setSelectedCategory = useDashboardStore((state) => state.setSelectedCategory);
 
     useEffect(() => {
         const syncLayout = () => {
@@ -61,6 +83,8 @@ export default function SidebarComponent() {
         if (collapsed || isMobile) return;
 
         isResizingRef.current = true;
+        setIsResizing(true);
+        setSharedIsResizing(true);
 
         const handleResizeMove = (event: MouseEvent) => {
             if (!isResizingRef.current) return;
@@ -72,6 +96,8 @@ export default function SidebarComponent() {
 
         const handleResizeEnd = () => {
             isResizingRef.current = false;
+            setIsResizing(false);
+            setSharedIsResizing(false);
             window.removeEventListener("mousemove", handleResizeMove);
             window.removeEventListener("mouseup", handleResizeEnd);
         };
@@ -121,7 +147,7 @@ export default function SidebarComponent() {
         <section className={`flex z-99 absolute h-screen flex-col `}>
 
             <div
-                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto p-5 pb-1  theme-surface ${collapsed ? "items-center justify-center px-2 pl-0" : " pl-6 items-stretch"}`}
+                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto p-5 pb-1 theme-surface ${isResizing ? "" : "transition-[width] duration-300 ease-in-out"} ${collapsed ? "items-center justify-center px-2 " : " pl-6 items-stretch"}`}
                 style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
             >
                 <div className={`flex w-full items-center ${collapsed ? "flex-col gap-4" : "flex-row-reverse justify-between gap-1"}`}>
@@ -161,10 +187,17 @@ export default function SidebarComponent() {
                 )}
 
                 <div
-                    className={`grid pl-1 w-full grid-cols-1 gap-2.5 ${collapsed ? "place-items-center" : ""}`}
+                    className={`grid pl-1 w-full grid-cols-1 gap-1.5 ${collapsed ? "place-items-center" : ""}`}
                 >
                     {sidebarFieldsData.map((field, index) => (
-                        <SidebarFields key={index} link={field.link} text={field.text} collapsed={collapsed} />
+                        <SidebarFields
+                            key={index}
+                            link={field.link}
+                            text={field.text}
+                            collapsed={collapsed}
+                            active={selectedCategory === field.text}
+                            onClick={() => setSelectedCategory(field.text)}
+                        />
                     ))}
                 </div>
 
@@ -183,10 +216,10 @@ export default function SidebarComponent() {
                     OpenSetting();
                 }}
                 >
-                   
+                    <span className={`flex items-center justify-center transition-transform duration-300 ease-out ${collapsed ? "scale-125" : ""}`}>
                         <GearIcon />
-                        <span className={`${collapsed?"hidden":"block"}`}>Settings</span>
-                    
+                    </span>
+                    <span className={`${collapsed?"hidden":"block"}`}>Settings</span>
                 </div>
             </div>
         </section>

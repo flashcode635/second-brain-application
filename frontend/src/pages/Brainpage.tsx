@@ -91,9 +91,10 @@ const Page = ({ data, loading, error }: PageProps) => {
                           <CardComponent 
                               key={item._id} 
                               type={item.type}
-                              heading={item.title} 
+                              heading={item.title}
                               tags={item.tags || []}
                               url={item.link}
+                              description={item.description}
                           />
                       ))
                   ) : (

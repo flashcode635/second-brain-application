@@ -8,6 +8,7 @@ import { random, signAccessToken, signRefreshToken, verifyRefreshToken } from '.
 import LinkModel from './models/linkSchema.js';
 import { RefreshTokenModel } from './models/refreshTokenSchema.js';
 import { clearAuthCookies, setAuthCookies, setCsrfCookie } from './authCookies.js';
+import { SettingsModel } from './models/settings.js';
 
 
 const UserObject= z.object({
@@ -111,6 +112,7 @@ export const CreateContentHandler: RequestHandler = async(req,res)=>{
       link:link,
       type:type,
       title: req.body.title,
+      description: req.body.description,
       userId: req.userId,
       tags: Array.isArray(req.body.tags) ? req.body.tags : []
    })
@@ -131,6 +133,42 @@ export const FindContentHandler: RequestHandler = async(req,res)=>{
     res.json({
         content
     })
+}
+
+export const UpdateContentHandler: RequestHandler = async(req,res)=>{
+    try {
+      const { id, title, link, type, description, tags } = req.body;
+      if (typeof id !== "string" || !id.trim()) {
+        return res.status(400).json({ message: "id is required" });
+      }
+
+      await connectDB();
+
+      const update: Record<string, unknown> = {};
+      if (typeof title === "string") update.title = title;
+      if (typeof link === "string") update.link = link;
+      if (typeof type === "string") update.type = type;
+      if (typeof description === "string") update.description = description;
+      if (Array.isArray(tags)) update.tags = tags;
+
+      const updated = await ContentModel.findOneAndUpdate(
+        { _id: id, userId: req.userId },
+        update,
+        { new: true }
+      );
+
+      if (!updated) {
+        return res.status(404).json({ message: "Content not found" });
+      }
+
+      return res.status(200).json({
+        message: "Content updated",
+        content: updated,
+      });
+    } catch (error) {
+      console.error("Update content error:", error);
+      return res.status(500).json({ message: "Failed to update content" });
+    }
 }
 
 export const DeleteContentHandler: RequestHandler = async(req,res)=>{
@@ -230,6 +268,67 @@ export const DeleteContentHandler: RequestHandler = async(req,res)=>{
     const user = await UserModel.findById(req.userId).select("_id username");
     if (!user) return res.status(401).json({ message: "User not found" });
     return res.status(200).json({ user: { id: user._id, username: user.username } });
+  };
+
+  const UsernameUpdate = z.object({
+    username: z.string()
+      .min(3, { message: "Too short username" })
+      .max(10, { message: "Username is Longer than expected " }),
+  });
+
+  export const UpdateUsernameHandler: RequestHandler = async (req, res) => {
+    if (!req.userId) return res.status(401).json({ message: "You are not logged in" });
+    try {
+      const { username } = UsernameUpdate.parse(req.body);
+      await connectDB();
+
+      const updated = await UserModel.findByIdAndUpdate(
+        req.userId,
+        { username },
+        { new: true }
+      ).select("_id username");
+
+      if (!updated) return res.status(404).json({ message: "User not found" });
+
+      return res.status(200).json({
+        message: "Username updated",
+        user: { id: updated._id, username: updated.username },
+      });
+    } catch (error: any) {
+      if (error?.code === 11000) {
+        return res.status(409).json({ message: "That username is already taken" });
+      }
+      console.error("Update username error:", error);
+      return res.status(400).json({ message: "Failed to update username" });
+    }
+  };
+
+  export const GetSettingsHandler: RequestHandler = async (req, res) => {
+    if (!req.userId) return res.status(401).json({ message: "You are not logged in" });
+    await connectDB();
+    const settings = await SettingsModel.findOne({ userId: req.userId });
+    return res.status(200).json({ theme: settings?.theme ?? "light" });
+  };
+
+  const SettingsUpdate = z.object({
+    theme: z.enum(["light", "dark"]),
+  });
+
+  export const UpdateSettingsHandler: RequestHandler = async (req, res) => {
+    if (!req.userId) return res.status(401).json({ message: "You are not logged in" });
+    try {
+      const { theme } = SettingsUpdate.parse(req.body);
+      await connectDB();
+      const settings = await SettingsModel.findOneAndUpdate(
+        { userId: req.userId },
+        { theme },
+        { upsert: true, new: true }
+      );
+      return res.status(200).json({ theme: settings.theme });
+    } catch (error) {
+      console.error("Update settings error:", error);
+      return res.status(400).json({ message: "Failed to update settings" });
+    }
   };
 
 // linkedin Preview Specific API Endpint

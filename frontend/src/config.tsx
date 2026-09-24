@@ -3,6 +3,7 @@ export const width =200;
 export const height = 185;
 export interface EmbeddingProps {
   url: string;
+  description?: string;
 
 }
 // card props for content cards
@@ -13,7 +14,9 @@ export interface CardProps{
     heading?: string,
   tags?: string[],
     url?: string
+    description?: string,
     onDeleted?: () => void
+    onEdit?: () => void
 }
 // common className for input fields
 export const className = "p-3 py-2.5 rounded-lg outline-none transition-all cursor-pointer w-fit"
@@ -26,9 +29,14 @@ export const BACKEND_URL = import.meta.env.DEV
 
 export const SIGN_UP= "/app/v1/signup"
 export const SIGN_IN= "/api/auth/login"
-export const CONTENT= "/app/v1/content"  // POST endpoint to  content
+export const CONTENT= "/app/v1/content"  // POST/PATCH/DELETE endpoint for content
+export const SETTINGS = "/app/v1/settings"
+export const ME = "/api/auth/me"
 
 
+
+// categories used by the sidebar "spaces" nav and the content category selector
+export const CATEGORY_OPTIONS = ["Research", "Inspirations", "Personal", "Projects", "Reading List"];
 
 export const MOBILE_BREAKPOINT = 768;
 export const MIN_SIDEBAR_WIDTH = 76;

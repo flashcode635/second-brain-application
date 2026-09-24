@@ -6,8 +6,9 @@ import { csrfMiddleware, userMiddleware} from './midlleware.js';
 import {pingHandler, SignUpHandler,
  SignInHandler,
  RefreshHandler, LogoutHandler, MeHandler,
- CreateContentHandler,  ViewSharedBrainHandler, 
- FindContentHandler, DeleteContentHandler, 
+ UpdateUsernameHandler, GetSettingsHandler, UpdateSettingsHandler,
+ CreateContentHandler,  ViewSharedBrainHandler,
+ FindContentHandler, DeleteContentHandler, UpdateContentHandler,
  LinkedInHandler, ShareBrainHandler} from './handlers.js';
 
 import cors from 'cors';
@@ -40,12 +41,20 @@ app.post("/api/auth/login", SignInHandler);
 app.post("/api/auth/refresh", RefreshHandler);
 app.post("/api/auth/logout", csrfMiddleware, LogoutHandler);
 app.get("/api/auth/me", userMiddleware, MeHandler);
+app.patch("/api/auth/me", userMiddleware, csrfMiddleware, UpdateUsernameHandler);
+
+// per-user settings (theme, etc.)
+app.get("/app/v1/settings", userMiddleware, GetSettingsHandler);
+app.patch("/app/v1/settings", userMiddleware, csrfMiddleware, UpdateSettingsHandler);
 
 // content create krne ke liye
 app.post("/app/v1/content", userMiddleware, csrfMiddleware, CreateContentHandler)
 
 // content find krne ke liye
 app.get("/app/v1/content", userMiddleware,FindContentHandler)
+
+// update content (edit)
+app.patch("/app/v1/content", userMiddleware, csrfMiddleware, UpdateContentHandler)
 
 // delete content by link
 app.delete("/app/v1/content", userMiddleware, csrfMiddleware, DeleteContentHandler)

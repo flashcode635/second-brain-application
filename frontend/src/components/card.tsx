@@ -1,15 +1,18 @@
 import { LinkedInEmbedding } from "./Embeddings/linkedinEmbedding"
 import { DeleteIcon } from "./svg/deleteicon"
+import { EditIcon } from "./svg/editicon"
+import { ThreeDotIcon } from "./svg/threedoticon"
 import { DynamicIcon } from "./svg/logos";
 import YouTubeEmbed from "./Embeddings/youtubeEmbedding";
 import { CONTENT, height, width, type CardProps } from "../config";
 import { TwitterEmbedding } from "./Embeddings/twitterEmbedding";
 import axios, { type AxiosResponse } from "axios";
 import api from "../api";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InstagramEmbed, RedditEmbed } from "./Embeddings/oembed";
+import { DocumentEmbedding } from "./Embeddings/documentEmbedding";
 
-const Embedd = ({ type, url }: { type: string, url: string }) => {
+const Embedd = ({ type, url, description }: { type: string, url: string, description?: string }) => {
     return (
         <>
             {type == "linkedIn" && <div id={type} key={`${url}`}><LinkedInEmbedding url={url} /></div>}
@@ -17,13 +20,14 @@ const Embedd = ({ type, url }: { type: string, url: string }) => {
             {type == "twitter" && <div id={type} key={`${url}`}><TwitterEmbedding url={url} /></div>}
             {type=="instagram" && <div id={type} key={`${url}`}> <InstagramEmbed url={url} /> </div>}
             {type=="reddit" && <div id={type} key={`${url}`}> <RedditEmbed url={url} /> </div>}
+            {type=="document" && <div id={type} key={`${url}`}> <DocumentEmbedding url={url} description={description} /> </div>}
         </>
     )
 }
 
 export let sampleLink = ["link1", "link2", "link3"]
 const cardWidth = width + 102;
-const cardHeight = 350; // Optimized height - compact but airy
+const cardHeight = 330; // Optimized height - compact but airy
 const embedHeight = 210; // Optimized for space efficiency
 const tagsHeight = 50;
 
@@ -47,8 +51,21 @@ const deleteContent = async ({ link }: { link: string }) => {
     }
 }
 
-export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps) => {
+export const CardComponent = ({ type, heading, tags, url, description, onDeleted, onEdit }: CardProps) => {
     const [isHovered, setIsHovered] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!menuOpen) return;
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [menuOpen]);
 
     if (!url) {
         return (<p style={{ height: `${height}px`, width: `${width}px` }}>
@@ -57,176 +74,97 @@ export const CardComponent = ({ type, heading, tags, url, onDeleted }: CardProps
 
     return (
         <div
-            className="group relative"
+            className={`group relative theme-surface mb-4 flex flex-col rounded-2xl border border-border p-5 transition-all duration-300 ease-out ${
+                isHovered
+                    ? "-translate-y-0.5 shadow-[0_12px_32px_rgba(0,0,0,0.12),0_4px_8px_rgba(0,0,0,0.08)]"
+                    : "translate-y-0 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+            }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            style={{
-                width: `${cardWidth}px`,
-                height: `${cardHeight}px`,
-                background: 'var(--color-surface)',
-                borderRadius: '16px',
-                border: '1px solid var(--color-border)',
-                boxShadow: isHovered
-                    ? '0 12px 32px rgb(0 0 0 / 12%), 0 4px 8px rgb(0 0 0 / 8%)'
-                    : '0 2px 8px rgb(0 0 0 / 6%)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
-                overflow: 'hidden',
-                marginBottom: '16px'
-            }}
+            style={{ width: cardWidth, height: cardHeight }}
         >
-            {/* Header */}
-            <div style={{
-                padding: '16px 20px 12px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                gap: '10px'
-            }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        marginBottom: '6px'
-                    }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: '24px',
-                            height: '24px',
-                            background: 'var(--color-surface-muted)',
-                            borderRadius: '6px'
-                        }}>
-                            <DynamicIcon type={type} />
-                        </div>
-                        <span style={{
-                            fontSize: '10px',
-                            fontWeight: 600,
-                            color: 'var(--color-text-muted)',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
-                        }}>
-                            {type}
-                        </span>
+            {/* Embed Container: shadow instead of a flat grey fill */}
+            <div
+                className="mb-3 overflow-hidden rounded-xl"
+                style={{ height: embedHeight }}
+            >
+                <div className="flex h-full items-center justify-center overflow-hidden rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
+                    <Embedd type={type} url={url} description={description} />
+                </div>
+            </div>
+
+            {/* Header: icon directly next to title, no type label */}
+            <div className="flex items-start justify-between gap-2.5 pb-3">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
+                    <div className="theme-icon-badge flex h-6 w-6 shrink-0 items-center justify-center rounded-md">
+                        <DynamicIcon type={type} />
                     </div>
-                    <h3 className="font-heading truncate" style={{
-                        margin: 0,
-                        fontSize: '20px',
-                        fontWeight: 600,
-                        color: 'var(--color-text-primary)',
-                        lineHeight: '1.3',
-                        letterSpacing: '-0.01em',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical'
-                    }}>
+                    <h3 className="font-heading line-clamp-2 text-xl font-semibold leading-tight tracking-tight text-text-primary">
                         {heading || 'Untitled'}
                     </h3>
                 </div>
 
-                {/* Delete Button */}
-                <button
-                    onClick={async () => {
-                        await deleteContent({ link: url });
-                        onDeleted?.();
-                    }}
-                    style={{
-                        opacity: isHovered ? 1 : 0,
-                        transform: isHovered ? 'scale(1)' : 'scale(0.8)',
-                        transition: 'all 0.2s ease',
-                        background: isHovered ? 'var(--color-surface-muted)' : 'transparent',
-                        border: 'none',
-                        borderRadius: '8px',
-                        width: '32px',
-                        height: '32px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                        flexShrink: 0
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'var(--color-hover)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'var(--color-surface-muted)';
-                    }}
-                >
-                    <DeleteIcon />
-                </button>
-            </div>
+                {/* 3-dot menu: Edit / Delete */}
+                <div className="relative shrink-0" ref={menuRef}>
+                    <button
+                        onClick={() => setMenuOpen((prev) => !prev)}
+                        aria-label="More options"
+                        aria-haspopup="menu"
+                        aria-expanded={menuOpen}
+                        className={`flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition-all duration-200 hover:bg-hover ${
+                            isHovered || menuOpen ? "scale-100 opacity-100" : "scale-[0.8] opacity-0"
+                        }`}
+                    >
+                        <ThreeDotIcon />
+                    </button>
 
-            {/* Embed Container */}
-            <div style={{
-                padding: '0 25px',
-                marginBottom: '12px'
-            }}>
-                <div style={{
-                    height: `${embedHeight}px`,
-                    background: 'var(--color-surface-muted)',
-                    borderRadius: '12px',
-                    overflow: 'hidden',
-                    border: '1px solid var(--color-border)'
-                }}>
-                    <div style={{
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                    }}>
-                        <Embedd type={type} url={url} />
-                    </div>
+                    {menuOpen && (
+                        <div
+                            role="menu"
+                            className="theme-surface absolute right-0 top-9 z-10 w-32 overflow-hidden rounded-lg border border-border shadow-[0_8px_24px_rgba(0,0,0,0.12)]"
+                        >
+                            <button
+                                role="menuitem"
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    onEdit?.();
+                                }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-text-primary hover:bg-hover [&_svg]:h-4 [&_svg]:w-4"
+                            >
+                                <EditIcon /> Edit
+                            </button>
+                            <button
+                                role="menuitem"
+                                onClick={async () => {
+                                    setMenuOpen(false);
+                                    await deleteContent({ link: url });
+                                    onDeleted?.();
+                                }}
+                                className="flex w-full items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-red-50 [&_svg]:h-4 [&_svg]:w-4"
+                            >
+                                <DeleteIcon /> Delete
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Tags Section */}
-            <div style={{
-                padding: '0 20px 16px',
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '6px',
-                maxHeight: `${tagsHeight}px`,
-                overflowY: 'auto',
-                overflowX: 'hidden'
-            }}>
-                {tags?.map((tagValue, index) => (
-                    <span
-                        key={index}
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            padding: '5px 10px',
-                            background: 'var(--color-surface-muted)',
-                            borderRadius: '10px',
-                            fontSize: '11px',
-                            fontWeight: 500,
-                            color: 'var(--color-text-primary)',
-                            letterSpacing: '0.01em',
-                            whiteSpace: 'nowrap',
-                            transition: 'all 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--color-hover)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--color-surface-muted)';
-                        }}
-                    >
-                        #{tagValue}
-                    </span>
-                )) || (
-                    <span style={{
-                        fontSize: '11px',
-                        color: 'var(--color-text-muted)',
-                        fontStyle: 'italic'
-                    }}>
-                        No tags
-                    </span>
+            <div
+                className="flex flex-wrap gap-1.5 overflow-x-hidden overflow-y-auto"
+                style={{ maxHeight: tagsHeight }}
+            >
+                {tags?.length ? (
+                    tags.map((tagValue, index) => (
+                        <span
+                            key={index}
+                            className="theme-muted-surface hover:bg-hover inline-flex items-center whitespace-nowrap rounded-[10px] px-2.5 py-1 text-[11px] font-medium tracking-wide text-text-primary transition-colors duration-200"
+                        >
+                            #{tagValue}
+                        </span>
+                    ))
+                ) : (
+                    <span className="text-[11px] italic text-text-muted">No tags</span>
                 )}
             </div>
         </div>

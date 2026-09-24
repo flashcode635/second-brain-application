@@ -28,6 +28,26 @@
     --font-body: "Avenir Next", "Trebuchet MS", sans-serif;
 }
 
+/* Dark mode overrides — toggled by setting data-theme="dark" on <html> (see store.ts) */
+:root[data-theme="dark"] {
+    --color-page: #131313;
+    --color-page-deep: #0a0a0a;
+
+    --color-surface: #1b1b1b;
+    --color-surface-bg: #1b1b1b;
+    --color-surface-muted: #262626;
+    --color-surface-dark: #050505;
+    --color-border: #333331;
+    --color-border-strong: #47473f;
+    --color-text-primary: #f2f2ee;
+    --color-text-secondary: #d6d6d0;
+    --color-text-muted: #8f8f88;
+    --color-text-sidebar: #d6d6d0;
+    --color-text-on-dark: #ffffff;
+    --color-hover: #2b2b28;
+    --color-danger: #ff6b5e;
+}
+
 @layer base {
     :root {
         font-family: var(--font-body);
@@ -49,6 +69,15 @@
 * {
     scrollbar-width: thin;
     scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
 }
 
 .theme-page {
@@ -122,6 +151,11 @@
 
 .theme-muted-surface {
     background: var(--color-surface-muted);
+}
+
+/* Subtle icon badge background — a soft highlight instead of a flat grey block */
+.theme-icon-badge {
+    background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
 }
 
 .theme-alert-error {

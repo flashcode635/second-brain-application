@@ -1,6 +1,10 @@
-import { useState } from "react";
-import { useDashboardStore } from "../store";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDashboardStore, useAuthStore, type ThemeMode } from "../store";
 import { CancelIcon } from "@/components/svg/cancelicon";
+import api from "../api";
+import { ME } from "../config";
 
 type SettingsTab = "general" | "theme" | "notifications" | "account";
 
@@ -32,11 +36,16 @@ function SettingsIcon({ tab }: { tab: SettingsTab }) {
     );
 }
 
-function Toggle({ checked = false }: { checked?: boolean }) {
+function Toggle({ checked = false, onClick }: { checked?: boolean; onClick?: () => void }) {
     return (
-        <span className={`flex h-6 w-11 items-center rounded-full p-1 transition-colors ${checked ? "bg-black" : "bg-border-strong"}`}>
+        <button
+            type="button"
+            onClick={onClick}
+            aria-pressed={checked}
+            className={`flex h-6 w-11 items-center rounded-full p-1 transition-colors ${checked ? "bg-black" : "bg-border-strong"}`}
+        >
             <span className={`h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${checked ? "translate-x-5" : "translate-x-0"}`} />
-        </span>
+        </button>
     );
 }
 
@@ -52,20 +61,146 @@ function OptionRow({ label, description, children }: { label: string; descriptio
     );
 }
 
+function ThemeSettings() {
+    const theme = useDashboardStore((state) => state.theme);
+    const setTheme = useDashboardStore((state) => state.setTheme);
+
+    return (
+        <SettingsSection title="Theme" description="Shape the way your second brain looks and feels.">
+            <OptionRow label="Interface theme" description="Switch between a light or dark workspace.">
+                <select
+                    className="theme-input rounded-md px-3 py-2 text-sm"
+                    value={theme}
+                    onChange={(event) => setTheme(event.target.value as ThemeMode)}
+                    aria-label="Interface theme"
+                >
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </OptionRow>
+            <OptionRow label="Dark mode" description="Quickly toggle dark mode on or off.">
+                <Toggle checked={theme === "dark"} onClick={() => setTheme(theme === "dark" ? "light" : "dark")} />
+            </OptionRow>
+        </SettingsSection>
+    );
+}
+
+function AccountSettings() {
+    const user = useAuthStore((state) => state.user);
+    const setUser = useAuthStore((state) => state.setUser);
+    const clearUser = useAuthStore((state) => state.clearUser);
+    const navigate = useNavigate();
+
+    const [username, setUsername] = useState(user?.username ?? "");
+    const [editing, setEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState("");
+    const [signingOut, setSigningOut] = useState(false);
+
+    useEffect(() => {
+        setUsername(user?.username ?? "");
+    }, [user?.username]);
+
+    async function saveUsername() {
+        const trimmed = username.trim();
+        if (!trimmed || trimmed === user?.username) {
+            setEditing(false);
+            setUsername(user?.username ?? "");
+            return;
+        }
+        setSaving(true);
+        setError("");
+        try {
+            const res = await api.patch<{ user: typeof user }>(ME, { username: trimmed });
+            if (res.data.user) setUser(res.data.user);
+            setEditing(false);
+        } catch (err) {
+            const msg = axios.isAxiosError(err) ? err.response?.data?.message : undefined;
+            setError(msg || "Failed to update username");
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function signOut() {
+        setSigningOut(true);
+        try {
+            await api.post("/api/auth/logout");
+        } catch {
+            // Sign out locally even if the request fails.
+        } finally {
+            clearUser();
+            navigate("/signin", { replace: true });
+        }
+    }
+
+    return (
+        <SettingsSection title="Account" description="Manage the details that keep your workspace yours.">
+            <div className="border-b border-border py-5">
+                <span className="text-sm font-medium">Display name</span>
+                <div className="mt-2 flex items-center gap-2">
+                    <input
+                        className="theme-input block w-full min-w-0 rounded-md px-3 py-2 disabled:opacity-60"
+                        value={username}
+                        disabled={!editing}
+                        onChange={(event) => setUsername(event.target.value)}
+                        placeholder="Your username"
+                    />
+                    {editing ? (
+                        <>
+                            <button
+                                type="button"
+                                onClick={saveUsername}
+                                disabled={saving}
+                                className="theme-button-primary shrink-0 rounded-md px-3 py-2 text-sm disabled:opacity-60"
+                            >
+                                {saving ? "Saving…" : "Save"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setEditing(false);
+                                    setUsername(user?.username ?? "");
+                                    setError("");
+                                }}
+                                className="shrink-0 rounded-md border border-border px-3 py-2 text-sm"
+                            >
+                                Cancel
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setEditing(true)}
+                            className="shrink-0 rounded-md border border-border px-3 py-2 text-sm"
+                        >
+                            Change
+                        </button>
+                    )}
+                </div>
+                {error && <p className="mt-2 text-xs theme-alert-error">{error}</p>}
+            </div>
+            <OptionRow label="Sign-in security" description="Your account is protected with secure authentication.">
+                <button type="button" className="text-sm font-medium underline underline-offset-4">Review</button>
+            </OptionRow>
+            <OptionRow label="Sign out" description="End your session on this device.">
+                <button
+                    type="button"
+                    onClick={signOut}
+                    disabled={signingOut}
+                    className="theme-alert-error rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-red-50 disabled:opacity-60"
+                >
+                    {signingOut ? "Signing out…" : "Sign out"}
+                </button>
+            </OptionRow>
+        </SettingsSection>
+    );
+}
+
 export function SettingsSwitcher({ value }: { value: SettingsTab }) {
     switch (value) {
         case "theme":
-            return (
-                <SettingsSection title="Theme"  description="Shape the way your second brain looks and feels.">
-                    <OptionRow label="Interface theme" description="Use the light workspace theme for a clear, calm canvas.">
-                        <select className="theme-input rounded-md px-3 py-2 text-sm" defaultValue="light" aria-label="Interface theme">
-                            <option value="light">Light</option>
-                            <option value="system">System</option>
-                        </select>
-                    </OptionRow>
-                    <OptionRow label="Compact cards" description="Fit more saved knowledge into each row."><Toggle /></OptionRow>
-                </SettingsSection>
-            );
+            return <ThemeSettings />;
         case "notifications":
             return (
                 <SettingsSection title="Notifications"  description="Decide which updates deserve your attention.">
@@ -74,12 +209,7 @@ export function SettingsSwitcher({ value }: { value: SettingsTab }) {
                 </SettingsSection>
             );
         case "account":
-            return (
-                <SettingsSection title="Account"  description="Manage the details that keep your workspace yours.">
-                    <label className="block border-b border-border py-5"><span className="text-sm font-medium">Display name</span><input className="theme-input mt-2 block w-full rounded-md px-3 py-2" placeholder="Your name" /></label>
-                    <OptionRow label="Sign-in security" description="Your account is protected with secure authentication."><button type="button" className="text-sm font-medium underline underline-offset-4">Review</button></OptionRow>
-                </SettingsSection>
-            );
+            return <AccountSettings />;
         case "general":
         default:
             return (
@@ -109,14 +239,14 @@ export function SettingsPage() {
 
     return (
         <section className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-3 backdrop-blur-sm sm:p-6" aria-label="Settings">
-            <div className="flex h-[min(760px,calc(100vh-1.5rem))] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-2xl sm:h-[min(760px,calc(100vh-3rem))] md:flex-row">
+            <div className="relative flex h-[min(760px,calc(100vh-1.5rem))] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-2xl sm:h-[min(760px,calc(100vh-3rem))] md:flex-row">
                 <aside className="flex w-full shrink-0 flex-col border-b border-border bg-surface-muted md:w-60 md:border-b-0 md:border-r" aria-label="Settings categories">
                     <div className="flex items-center justify-between border-b border-border px-5 py-4 md:block">
                         <div>
                             {/* <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted">Workspace</p> */}
                             <h1 className="mt-1 font-heading text-2xl">Settings</h1>
                         </div>
-                        <button type="button" onClick={closeSettings} className="rounded-md p-2 text-text-secondary hover:bg-hover hover:text-text-primary md:absolute md:mr-4 md:mt-0 md:hidden" aria-label="Close settings">&times;</button>
+                        <button type="button" onClick={closeSettings} className="rounded-md p-2 text-text-secondary hover:bg-hover hover:text-text-primary md:hidden" aria-label="Close settings">&times;</button>
                     </div>
                     <nav className="flex min-h-0 gap-2.5 overflow-x-auto p-3 md:flex-1 md:flex-col md:overflow-y-auto" aria-label="Settings navigation">
                         {tabs.map((tab) => (
@@ -128,16 +258,15 @@ export function SettingsPage() {
                     </nav>
                     {/* <div className="hidden border-t border-border p-4 md:block"><p className="text-xs leading-5 text-text-muted">{tabs.length} areas to tune your workspace.</p></div> */}
                 </aside>
+                <button
+                    type="button"
+                    onClick={closeSettings}
+                    className="absolute top-4 right-4 z-10 hidden rounded-md p-1.5 text-xl leading-none text-text-secondary hover:bg-hover hover:text-text-primary md:flex"
+                    aria-label="Close settings"
+                >
+                    <CancelIcon/>
+                </button>
                 <main className="min-h-0 flex-1 overflow-y-auto bg-surface px-5 py-6 sm:px-8 sm:py-8 md:px-12 md:py-10 ">
-                    <div className="hidden absolute top-10 right-37 items-start justify-end md:flex">
-                        {/* <div>
-                            <p className="text-sm text-text-muted">Settings / {activeTabDetails.label}</p>
-                        </div> */}
-                        <button type="button" onClick={closeSettings} className="rounded-md p-1.5 text-xl leading-none text-text-secondary hover:bg-hover hover:text-text-primary" aria-label="Close settings">
-                            {/* &times; */}
-                            <CancelIcon/>
-                            </button>
-                    </div>
                     <SettingsSwitcher value={activeTab} />
                 </main>
             </div>

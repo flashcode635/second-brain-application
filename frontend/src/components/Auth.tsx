@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ButtonElement from "../components/button";
 import { InputField } from "../components/inputfield";
 import { CustomAlert } from "../components/customAlert";
+import { EyeIcon, EyeOffIcon } from "../components/svg/eyeicon";
 
 type AuthenticationProps = {
     title: string;
@@ -25,6 +26,7 @@ export default function Authentication({
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const isSignUp = title === "Sign Up";
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <>
@@ -128,7 +130,21 @@ export default function Authentication({
 
                         <div className="flex flex-col gap-5">
                             <InputField label="Username" ref={usernameRef} />
-                            <InputField label="Password" ref={passwordRef} />
+                            <InputField
+                                label="Password"
+                                ref={passwordRef}
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((prev) => !prev)}
+                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        className="flex items-center text-(--muted) hover:text-(--ink)"
+                                    >
+                                        {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                                    </button>
+                                }
+                            />
                         </div>
 
                         <div className={`transition-opacity duration-200 ${loading ? "opacity-50 pointer-events-none" : ""}`}>
