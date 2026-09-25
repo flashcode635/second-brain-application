@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ButtonElement from "../components/button";
 import { InputField } from "../components/inputfield";
 import { CustomAlert } from "../components/customAlert";
@@ -37,6 +37,19 @@ export default function Authentication({
     const passwordRef = useRef<HTMLInputElement>(null);
     const isSignUp = title === "Sign Up";
     const [showPassword, setShowPassword] = useState(false);
+
+    // This page always renders with its own fixed light palette, regardless
+    // of the logged-in user's dark-mode preference — pin data-theme to light
+    // while it's mounted and restore whatever it was on the way out.
+    useEffect(() => {
+        const html = document.documentElement;
+        const previousTheme = html.getAttribute("data-theme");
+        html.setAttribute("data-theme", "light");
+        return () => {
+            if (previousTheme) html.setAttribute("data-theme", previousTheme);
+            else html.removeAttribute("data-theme");
+        };
+    }, []);
 
     return (
         <>

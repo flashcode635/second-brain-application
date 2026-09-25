@@ -126,18 +126,18 @@ export default function Dashboard() {
 
           {/* sidebar */}
           <div className="shrink-0 border-r fixed border-border
-          z-99 bg-surface">
+          z-99 bg-surface-muted">
               <SidebarComponent/>
           </div>
             {/* placeholder */}
           <div
-            className={`h-screen z-1 theme-page bg-[#f3f2f2f7] flex flex-col items-baseline justify-start pt-4 pl-4 md:pt-8 md:pl-8 gap-7 shrink-0 ${isSidebarResizing ? "" : "transition-[width] duration-300 ease-in-out"}`}
+            className={`h-screen z-1 theme-page flex flex-col items-baseline justify-start pt-4 pl-4 md:pt-8 md:pl-8 gap-7 shrink-0 ${isSidebarResizing ? "" : "transition-[width] duration-300 ease-in-out"}`}
             style={{ width: sidebarWidth }}
           ></div>
                <section className="bg-black/15 w-0.5 h-screen"></section>
 
           {/* buttons & cards */}
-          <main className="theme-page bg-[#f3f2f2f7] min-w-0 flex-1 px-5 pb-10 sm:px-8">
+          <main className="theme-page min-w-0 flex-1 px-5 pb-10 sm:px-8">
 
                   {/* search & buttons */}
               <div className="flex w-full items-center justify-end gap-3 py-4" >

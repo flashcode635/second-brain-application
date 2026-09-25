@@ -21,10 +21,11 @@ const SidebarFields = ({
         <button
             type="button"
             onClick={onClick}
-            className={`sb-sidebar-item hover:text-neutral-800! w-full cursor-pointer
-           py-2 px-3
-             ${collapsed ? "is-collapsed" : ""}
-             ${active ? "is-active" : ""}`}
+            className={`flex w-full cursor-pointer items-center gap-4 rounded-md px-3 py-2 text-left font-body text-base font-medium transition-colors duration-200
+             ${collapsed ? "justify-center" : ""}
+             ${active
+                ? "bg-surface text-text-primary font-semibold shadow-[0_1px_2px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.08)]"
+                : "text-text-sidebar hover:bg-hover hover:text-text-primary"}`}
             title={text}
             aria-current={active ? "true" : undefined}
         >
@@ -147,15 +148,15 @@ export default function SidebarComponent() {
         <section className={`flex z-99 absolute h-screen flex-col `}>
 
             <div 
-                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto  p-5 pb-1 theme-surface ${isResizing ? "" : "transition-[width] duration-300 ease-in-out"} ${collapsed ? "items-center justify-center px-2 " : " pl-6 items-stretch"}`}
-                style={{backgroundColor: "#fbfaf8dd", width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
+                className={`relative flex min-h-0 flex-1 flex-col gap-7 overflow-y-auto  p-5 pb-1 bg-surface-muted text-text-primary ${isResizing ? "" : "transition-[width] duration-300 ease-in-out"} ${collapsed ? "items-center justify-center px-2 " : " pl-6 items-stretch"}`}
+                style={{ width: collapsed ? MIN_SIDEBAR_WIDTH : isMobile ? MOBILE_EXPANDED_WIDTH : sidebarWidth }}
             >
                 <div className={`flex w-full items-center ${collapsed ? "flex-col gap-4" : "flex-row-reverse justify-between gap-1"}`}>
 
                     <button
                         type="button"
                         onClick={handleToggleCollapse}
-                        className="rounded-md px-2 py-1.5 text-xs theme-sidebar-item"
+                        className="rounded-md px-2 py-1.5 text-xs hover:bg-hover"
                         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                         title={collapsed ? "Expand" : "Collapse"}
                     >
@@ -210,7 +211,7 @@ export default function SidebarComponent() {
                         title="Resize sidebar"
                     />
                 )}
-                <div className={`sb-sidebar-settings cursor-pointer mt-auto p-2 ${collapsed ? "overflow-hidden justify-center " : ""}  hover:text-black!`}
+                <div className={`flex w-full cursor-pointer items-center gap-4 border-t border-border mt-auto p-2 text-left font-body text-base font-medium text-text-sidebar transition-colors duration-200 hover:text-text-primary ${collapsed ? "overflow-hidden justify-center " : ""}`}
                 onClick={() => {
                     // Toggle the settings page visibility
                     OpenSetting();
