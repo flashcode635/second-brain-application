@@ -43,7 +43,7 @@ jobs:
           name: node-app
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: 'second-brain'
+          app-name: 'second-brain-backend-eaazd7dcgre9ckbw.centralindia-01'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: .
