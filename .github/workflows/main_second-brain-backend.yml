@@ -43,7 +43,7 @@ jobs:
           name: node-app
       - uses: azure/webapps-deploy@v3
         with:
-          app-name: 'YOUR-APP-NAME'
+          app-name: 'second-brain'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_xxxx }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: .
