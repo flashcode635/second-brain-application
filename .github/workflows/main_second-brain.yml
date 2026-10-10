@@ -9,6 +9,7 @@ on:
       - 'main'
     paths:
       - 'backend/**'
+      - '.github/workflows/main_second-brain.yml'
 
   workflow_dispatch:
 
@@ -23,7 +24,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      
+
       - uses: pnpm/action-setup@v4
         with:
           package_json_file: backend/package.json
@@ -31,24 +32,24 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v5
         with:
-          node-version: '22'
+          node-version: '24'
           cache: 'pnpm'
           cache-dependency-path: backend/pnpm-lock.yaml
-          
+
       - run: pnpm install --frozen-lockfile
         working-directory: backend
 
-      - run: pnpm run build --if-present
+      - run: pnpm run build
         working-directory: backend
 
-      - run: pnpm run test --if-present
+      - run: pnpm run test
         working-directory: backend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: backend
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,7 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -77,4 +78,3 @@ jobs:
           app-name: 'second-brain'
           slot-name: 'Production'
           package: .
-          
