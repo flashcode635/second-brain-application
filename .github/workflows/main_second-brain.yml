@@ -22,18 +22,27 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: backend/package.json
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
-          node-version: '24.x'
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: backend/pnpm-lock.yaml
+          
+      - run: pnpm install --frozen-lockfile
+        working-directory: backend
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      - run: pnpm run build --if-present
+        working-directory: backend
+
+      - run: pnpm run test --if-present
+        working-directory: backend
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

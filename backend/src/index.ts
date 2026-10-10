@@ -12,19 +12,17 @@ import {pingHandler,
  LinkedInHandler, ShareBrainHandler} from './handlers.js';
 
 import cors from 'cors';
-import { allowed_frontend_urls } from './config.js';
+import { frontend_url} from './config.js';
 
 const app = express();
 app.use(cors(
   {
-  origin: (origin, callback) => {
-    if (!origin || allowed_frontend_urls.includes(origin)) {
-      callback(null, true);
-      return;
-    }
-    callback(new Error("Origin is not allowed by CORS"));
-  },
-  credentials: true,
+  origin: [frontend_url,
+    "http://localhost:5173",
+    "http://192.168.1.10:5173"],
+   credentials: true, // needed because get-session relies on cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }
 ));
 

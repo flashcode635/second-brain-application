@@ -17,7 +17,7 @@ if (!mongoUri) {
 }
 
 const client = new MongoClient(mongoUri);
-const db = client.db("secondbrain");
+const db = client.db("secondbrain")
 
 const isProduction = process.env.NODE_ENV === "production";
 
