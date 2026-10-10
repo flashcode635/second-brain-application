@@ -6,5 +6,5 @@ export function random(len: number) {
         ans += options[Math.floor(Math.random() * options.length)];
     }
 
-    return ans;
+    return ans ;
 }
