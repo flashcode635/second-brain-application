@@ -10,7 +10,7 @@ export const allowed_frontend_urls = [
 	"http://192.168.1.10:5173",
 ].filter((origin, index, origins) => origins.indexOf(origin) === index);
 
-export const backend_url = (process.env.BACKEND_URL || process.env.BETTER_AUTH_URL || "http://localhost:3001")
+export const backend_url = (process.env.BETTER_AUTH_URL || "http://localhost:3001")
 	.trim()
 	.replace(/\/$/, "");
 

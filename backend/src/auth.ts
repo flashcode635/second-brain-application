@@ -43,6 +43,14 @@ export const auth = betterAuth({
     baseURL: backend_url,
     secret: better_auth_secret,
     trustedOrigins: allowed_frontend_urls,
+     advanced: {
+        useSecureCookies: isProduction,
+        defaultCookieAttributes: {
+            secure: isProduction,
+            sameSite: isProduction ? "none" : "lax",
+            partitioned: isProduction,
+        },
+    },
     database: mongodbAdapter(db, { client }),
     user: {
         modelName: "users",
@@ -72,10 +80,5 @@ export const auth = betterAuth({
             },
         },
     },
-    advanced: {
-        defaultCookieAttributes: {
-            secure: isProduction,
-            sameSite: isProduction ? "none" : "lax",
-        },
-    },
+   
 });
