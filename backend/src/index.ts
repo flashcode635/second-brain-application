@@ -1,6 +1,6 @@
 import express ,{type Express}from 'express'
 import cookieParser from 'cookie-parser';
-
+import "./express-types.js";
 import { originMiddleware, userMiddleware} from './midlleware.js';
 import { auth } from './auth.js';
 import { toNodeHandler } from 'better-auth/node';
