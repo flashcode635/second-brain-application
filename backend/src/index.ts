@@ -1,4 +1,4 @@
-import express from 'express'
+import express ,{type Express}from 'express'
 import cookieParser from 'cookie-parser';
 
 import { originMiddleware, userMiddleware} from './midlleware.js';
@@ -14,7 +14,7 @@ import {pingHandler,
 import cors from 'cors';
 import { frontend_url} from './config.js';
 
-const app = express();
+const app:Express = express();
 app.use(cors(
   {
   origin: [frontend_url,
@@ -61,6 +61,12 @@ app.post("/app/v1/brain/share", userMiddleware, originMiddleware, ShareBrainHand
 app.get("/app/v1/brain/:sharelink", ViewSharedBrainHandler)
 
 
-app.listen(3001,"0.0.0.0", () => {
-  console.log('Server is running on http://localhost:3001');
-});
+
+// local dev ke liye hi listen karo, Vercel pe nahi
+if (!process.env.VERCEL) {
+  app.listen(3001, "0.0.0.0", () => {
+    console.log("Server is running on http://localhost:3001");
+  });
+}
+
+export default app;
