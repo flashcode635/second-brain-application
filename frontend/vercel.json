@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://second-brain-application-cdih.vercel.app/api/:path*" },
+    { "source": "/app/:path*", "destination": "https://second-brain-application-cdih.vercel.app/app/:path*" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
