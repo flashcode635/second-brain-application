@@ -104,9 +104,9 @@ export const HeroSection: React.FC = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left Column */}
         <div className="lg:col-span-6 space-y-6">
-          <span className="sb-mono text-xs uppercase tracking-widest text-[#B07020]">
+          {/* <span className="sb-mono text-xs uppercase tracking-widest text-[#B07020]">
             Second Brain
-          </span>
+          </span> */}
           <h1 className="sb-display text-5xl lg:text-6xl font-medium tracking-tight text-neutral-900 leading-[1.05]">
             Collect. Organise.<br />Access.
           </h1>

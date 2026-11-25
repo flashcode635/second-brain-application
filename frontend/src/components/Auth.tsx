@@ -4,6 +4,7 @@ import { InputField } from "../components/inputfield";
 import { CustomAlert } from "../components/customAlert";
 import { EyeIcon, EyeOffIcon } from "../components/svg/eyeicon";
 import { GoogleIcon } from "../components/svg/googleicon";
+import { GOOGLE_SIGNUP_ENABLED } from "../config";
 
 export type AuthFormValues = {
     username: string;
@@ -130,7 +131,7 @@ export default function Authentication({
                         </p>
                     </div>
 
-                    <p className="text-xs text-white/30">© {new Date().getFullYear()}</p>
+                    <p className="text-xs text-white/30">Second Brain© {new Date().getFullYear()}</p>
                 </div>
 
                 {/* Right: form panel */}
@@ -186,21 +187,25 @@ export default function Authentication({
                                 }}
                             />
 
-                            <div className="flex items-center gap-3 text-xs uppercase tracking-widest" style={{ color: "var(--muted)" }}>
-                                <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-                                or
-                                <span className="h-px flex-1" style={{ background: "var(--line)" }} />
-                            </div>
+                            {GOOGLE_SIGNUP_ENABLED && (
+                                <>
+                                    <div className="flex items-center gap-3 text-xs uppercase tracking-widest" style={{ color: "var(--muted)" }}>
+                                        <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+                                        or
+                                        <span className="h-px flex-1" style={{ background: "var(--line)" }} />
+                                    </div>
 
-                            <button
-                                type="button"
-                                onClick={onGoogle}
-                                className="flex w-full items-center justify-center gap-3 rounded-lg border py-2.5 text-sm font-medium transition-colors hover:bg-black/3"
-                                style={{ borderColor: "var(--line)", color: "var(--ink)" }}
-                            >
-                                <GoogleIcon />
-                                Continue with Google
-                            </button>
+                                    <button
+                                        type="button"
+                                        onClick={onGoogle}
+                                        className="flex w-full items-center justify-center gap-3 rounded-lg border py-2.5 text-sm font-medium transition-colors hover:bg-black/3"
+                                        style={{ borderColor: "var(--line)", color: "var(--ink)" }}
+                                    >
+                                        <GoogleIcon />
+                                        Continue with Google
+                                    </button>
+                                </>
+                            )}
                         </div>
 
                         <div className="pt-2 border-t text-sm" style={{ borderColor: "var(--line)", color: "var(--muted)" }}>

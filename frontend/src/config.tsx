@@ -24,6 +24,11 @@ export const className = "p-3 py-2.5 rounded-lg outline-none transition-all curs
 // Use VITE_BACKEND_URL when configured; otherwise use relative URLs via the Vite proxy.
 export const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || "").replace(/\/+$/, "");
 
+const googleSignupFlag = import.meta.env.VITE_GOOGLE_SIGNUP_ENABLED ?? "false";
+if (googleSignupFlag !== "true" && googleSignupFlag !== "false") {
+  throw new Error("VITE_GOOGLE_SIGNUP_ENABLED must be either 'true' or 'false'.");
+}
+export const GOOGLE_SIGNUP_ENABLED = googleSignupFlag === "true";
 
 export const CONTENT= "/app/v1/content"  // POST/PATCH/DELETE endpoint for content
 export const SETTINGS = "/app/v1/settings"
